@@ -9,8 +9,7 @@
     "seed": "npx rapid seed",
     "clear": "npx rapid clear",
     "refresh": "npx rapid refresh",
-    "compileReportTemplates": "npx babel reportTemplatesSrc --out-dir reportTemplates",
-    "postinstall": "cd tgb-shared && npm install"
+    "compileReportTemplates": "npx babel reportTemplatesSrc --out-dir reportTemplates"
   },
   "dependencies": {
     "@simplej/rapid": "0.0.63",
@@ -44,7 +43,7 @@
     "react-minimal-pie-chart": "^3.0.2",
     "recharts": "^1.0.0-beta.10",
     "regenerator-runtime": "^0.11.1",
-    "tgb-shared": "./tgb-shared",
+    "tgb-shared": "git+https://github.com/NTACT/transition-gradebook-shared.git",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
