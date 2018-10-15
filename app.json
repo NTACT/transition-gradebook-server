@@ -6,5 +6,8 @@
   "keywords": ["node"],
   "addons": [
     "heroku-postgresql"
-  ]
+  ],
+  "scripts": {
+    "postdeploy": "npm run migrate && npm run seed"
+  }
 }
