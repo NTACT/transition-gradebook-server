@@ -2,7 +2,7 @@
   "name": "Transition Gradebook",
   "description": "",
   "repository": "https://github.com/NTACT/transition-gradebook-server",
-  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "logo": "https://avatars1.githubusercontent.com/u/44178248?s=200&v=4",
   "keywords": ["node"],
   "addons": [
     "heroku-postgresql"
