@@ -1,0 +1,10 @@
+/config/config.js
+/config/local.config.js
+/config/config.local.js
+/logs
+/logs/*
+/tests/logs.json
+/.jwtsecret
+/node_modules
+.DS_Store
+.vscode
