@@ -1,0 +1,3 @@
+[submodule "tgb-shared"]
+	path = tgb-shared
+	url = https://github.com/NTACT/transition-gradebook-shared

@@ -1,0 +1,10 @@
+{
+  "name": "Transition Gradebook",
+  "description": "",
+  "repository": "https://github.com/NTACT/transition-gradebook-server",
+  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "keywords": ["node"],
+  "addons": [
+    "heroku-postgresql"
+  ]
+}

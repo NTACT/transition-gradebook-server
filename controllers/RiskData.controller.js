@@ -1,7 +1,7 @@
 module.exports = context => {
   const { controllers, models } = context;
 
-  const riskUtils = require('../utils/riskUtils');
+  const { riskUtils } = require('tgb-shared');
   const { calcTermInfoRiskData } = riskUtils;
 
   class RiskDataController {

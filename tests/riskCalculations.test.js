@@ -1,10 +1,8 @@
 jest.setTimeout(60000);
 const testUtils = require('./testUtils');
 const { rapidTest, shouldSucceed } = testUtils;
-const { grades } = require('../enums');
-const normalizeGpa = require('../utils/normalizeGpa');
-const convertGradeToGpa = require('../utils/convertGradeToGpa');
-const getGpaRange = require('../utils/getGpaRange');
+const { enums, convertGradeToGpa, normalizeGpa, getGpaRange } = require('tgb-shared');
+const { grades } = enums;
 
 describe('Risk Calculations', () => {
   rapidTest('getStudentRiskDataByTerms should succeed when passed a valid term ids', async rapid => {
