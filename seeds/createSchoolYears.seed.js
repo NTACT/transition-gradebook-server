@@ -4,6 +4,7 @@ const sampleSize = require('lodash/sampleSize');
 const range = require('lodash/range');
 const faker = require('faker');
 const isTest = process.env.NODE_ENV === 'test';
+const mockData = isTest || process.env.NODE_ENV === 'development' || process.env.MOCK_DATA === 'true';
 const randomFloat = (min, max) => min + (Math.random() * (max - min));
 const randomInt = (min, max) => Math.floor(randomFloat(min, max));
 const maybeNull = v => Math.random() > 0.9 ? null : v;
@@ -11,7 +12,7 @@ const randomBool = (thres=0.5) => Math.random() > thres;
 let studentIdCounter = 1;
 
 module.exports = async function createSchoolYears({ models }) {
-  if(process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'test') return;
+  if(!mockData) return;
 
   const disabilities = await models.Disability.query();
   let previousSchoolYear = null;
