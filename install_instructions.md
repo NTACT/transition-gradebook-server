@@ -20,16 +20,16 @@ npm install
 
 3. Configure the server
 
-Open `transition-gradebook-server-1-0-0/config/config.js` and add any custom configuration options you may need (such as webserver port, database name/user/password, etc.). Reference `transition-gradebook-server-1-0-0/config/config.default.js` for all options.
+Create `transition-gradebook-server/config/local.config.js` and add any custom configuration options you may need (such as webserver port, database name/user/password, etc.). Reference `transition-gradebook-server/config/development.config.js` for all options. You can also configure most options via environemnt variables, which you can referrence at the top of `transition-gradebook-server/config/production.config.js`.
 
-At a minimum you will need to configure the database connection here, set the site URL, and configure the email provider (for password reset functionality).
+At a minimum you will need to configure a database connection, set the site URL, and configure the email provider (for password reset functionality).
 
 4. Create, migrate and seed the database
 
-Create a PostgreSQL database and make sure `config.js` has the correct connection info set in it. Then migrate and seed the database to populate the tables and create the base user and admin accounts.
+Create a PostgreSQL database and make sure `local.config.js` or the `DATABASE_URL` environment variable has the correct connection info set in it. Then migrate and seed the database to populate the tables and create the base user and admin accounts.
 
 ```
-cd transition-gradebook-server-1-0-0
+cd transition-gradebook-server
 npm run migrate
 npm run seed
 ```
@@ -37,7 +37,7 @@ npm run seed
 5. Start the server
 
 ```
-cd transition-gradebook-server-1-0-0
+cd transition-gradebook-server
 npm run start
 ```
 
