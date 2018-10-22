@@ -306,7 +306,7 @@ module.exports = context => {
     ],
 
     getStudentNeeds: data => [
-      countFilteredData(data, 'absentPercent', (value) => value >= 20, 'who are absent 20% or more of the time'),
+      countFilteredData(data, 'absentPercent', (value) => value >= 10, 'who are absent 10% or more of the time'),
       countFilteredData(data, 'behaviorMarks', (value) => value > 0, 'who have 1 or more behavior marks'),
       countFilteredData(data, 'suspended', true, 'who have 1 or more suspensions this term'),
       countFilteredData(data, 'gpa', (value) => value < 2.0, 'who have less than 2.0 GPA'),
