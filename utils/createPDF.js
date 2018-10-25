@@ -1,5 +1,3 @@
-const React = require('react');
-const { renderToStaticMarkup } = require('react-dom/server');
 const pdf = require('html-pdf');
 const markupWrapper = require('./markupWrapper');
 const getMonthName = require('../utils/getMonthName');
