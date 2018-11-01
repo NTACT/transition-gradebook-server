@@ -12,7 +12,7 @@
     "compileReportTemplates": "npx babel reportTemplatesSrc --out-dir reportTemplates"
   },
   "dependencies": {
-    "@simplej/rapid": "0.0.82",
+    "@simplej/rapid": "0.0.86",
     "@simplej/rapid-cli": "0.0.47",
     "array-promise-filter": "^1.0.1",
     "babel-cli": "^6.26.0",
