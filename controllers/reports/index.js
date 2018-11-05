@@ -7,6 +7,7 @@ module.exports = context => ({
   riskSummary: require('./riskSummary')(context),
   summary: require('./summary')(context),
   student: require('./student')(context),
+  studentActivities: require('./studentActivities')(context),
   studentRiskStandard: require('./studentRiskStandard')(context),
   studentRiskLongitudinal: require('./studentRiskLongitudinal')(context),
 });
