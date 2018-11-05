@@ -120,6 +120,38 @@ module.exports = context => {
       ctx.response.body = stream;
     })
 
+    .get('/reports/numberOfStudentsCross', middleware.auth(), async ctx => {
+      ctx.request.socket.setTimeout(timeout);
+      const reportName = 'numberOfStudentsCross';
+      const template = require('../reportTemplates/numberOfStudentsCross');
+      const {
+        startYearId,
+        startTermId,
+        byPostSchoolOutcome,
+        byRiskLevel,
+        bySkillTraining,
+        bySupportNeed,
+        byIEPRole,
+        byDisability,
+        byActivityGroupTypes,
+      } = ctx.request.query;
+      const options = {
+        startYearId: +startYearId,
+        startTermId: +startTermId,
+        byPostSchoolOutcome: byPostSchoolOutcome === 'true',
+        byRiskLevel: byRiskLevel === 'true',
+        bySkillTraining: bySkillTraining === 'true',
+        bySupportNeed: bySupportNeed === 'true',
+        byIEPRole: byIEPRole === 'true',
+        byDisability: byDisability === 'true',
+        byActivityGroupTypes: byActivityGroupTypes === 'true',
+      };
+      const data = await controllers.reportController.runReport(reportName, options);
+      const html = template(data);
+      const stream = await createPDF(siteUrl, html);
+      ctx.response.body = stream;
+    })
+
     .get('/reports/student', middleware.auth(), async ctx => {
       ctx.request.socket.setTimeout(timeout);
       const {

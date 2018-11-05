@@ -1,4 +1,5 @@
 module.exports = context => ({
+  numberOfStudentsCross: require('./numberOfStudentsCross')(context),
   numberOfStudentsLongitudinal: require('./numberOfStudentsLongitudinal')(context),
   numberOfStudentsStandard: require('./numberOfStudentsStandard')(context),
   postSchoolStudent: require('./postSchoolStudent')(context),

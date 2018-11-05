@@ -11,7 +11,7 @@ const pickRepeatedColor = (index, barColors) => {
 }
 
 // displays up to 20 stripes
-const DiagonalStripes = ({ x, y, height, width, stroke}) =>
+const DiagonalStripes = ({ x, y, height, width, stroke}) => (
   <svg x={x} y={y-0.75} width={width} height={height}>
     <rect x={0} y={0} height={height} width={width} stroke={stroke} fill='white' />
     <line stroke={stroke} strokeWidth={0.88} x1='397.12' y1='-454.68' x2='-426.58' y2='481.35'/>
@@ -35,6 +35,7 @@ const DiagonalStripes = ({ x, y, height, width, stroke}) =>
     <line stroke={stroke} strokeWidth={0.88} x1='621.76' y1='-233.82' x2='-201.94' y2='702.21'/>
     <line stroke={stroke} strokeWidth={0.88} x1='634.24' y1='-221.55' x2='-189.45' y2='714.48'/>
   </svg>
+);
 
 const CaptionDiagonalStripes = ({stroke}) => (
   <svg height={5} style={{marginBottom: 20}}>
