@@ -303,8 +303,6 @@ module.exports = context => {
       },
     };
 
-    require('fs').writeFileSync('./report-data', JSON.stringify(data, null, 2));
-
     return data;
   };
 };
