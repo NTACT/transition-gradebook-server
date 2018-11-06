@@ -77,7 +77,6 @@ module.exports = context => {
 
       criteria1Labels,
       criteria2Labels,
-      studentGroups,
     };
 
     return resultData;
