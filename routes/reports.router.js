@@ -59,24 +59,18 @@ module.exports = context => {
       const {
         startYearId,
         startTermId,
-        byPostSchoolOutcome,
-        byRiskLevel,
-        bySkillTraining,
-        bySupportNeed,
-        byIEPRole,
-        byDisability,
-        byActivityGroupTypes,
+        primaryCriteria,
       } = ctx.request.query;
       const options = {
         startYearId: +startYearId,
         startTermId: +startTermId,
-        byPostSchoolOutcome: byPostSchoolOutcome === 'true',
-        byRiskLevel: byRiskLevel === 'true',
-        bySkillTraining: bySkillTraining === 'true',
-        bySupportNeed: bySupportNeed === 'true',
-        byIEPRole: byIEPRole === 'true',
-        byDisability: byDisability === 'true',
-        byActivityGroupTypes: byActivityGroupTypes === 'true',
+        byPostSchoolOutcome: primaryCriteria === 'postSchoolOutcome',
+        byRiskLevel: primaryCriteria === 'riskLevel',
+        bySkillTraining: primaryCriteria === 'skillTraining',
+        bySupportNeed: primaryCriteria === 'supportNeed',
+        byIEPRole: primaryCriteria === 'iepRole',
+        byDisability: primaryCriteria === 'disability',
+        byActivityGroupTypes: primaryCriteria === 'activityGroupTypes',
       };
       const data = await controllers.reportController.runReport(reportName, options);
       const html = template(data);
@@ -93,26 +87,20 @@ module.exports = context => {
         startTermId,
         endYearId,
         endTermId,
-        byPostSchoolOutcome,
-        byRiskLevel,
-        bySkillTraining,
-        bySupportNeed,
-        byIEPRole,
-        byDisability,
-        byActivityGroupTypes,
+        primaryCriteria,
       } = ctx.request.query;
       const options = {
         startYearId: +startYearId,
         startTermId: +startTermId,
         endYearId: +endYearId,
         endTermId: +endTermId,
-        byPostSchoolOutcome: byPostSchoolOutcome === 'true',
-        byRiskLevel: byRiskLevel === 'true',
-        bySkillTraining: bySkillTraining === 'true',
-        bySupportNeed: bySupportNeed === 'true',
-        byIEPRole: byIEPRole === 'true',
-        byDisability: byDisability === 'true',
-        byActivityGroupTypes: byActivityGroupTypes === 'true',
+        byPostSchoolOutcome: primaryCriteria === 'postSchoolOutcome',
+        byRiskLevel: primaryCriteria === 'riskLevel',
+        bySkillTraining: primaryCriteria === 'skillTraining',
+        bySupportNeed: primaryCriteria === 'supportNeed',
+        byIEPRole: primaryCriteria === 'iepRole',
+        byDisability: primaryCriteria === 'disability',
+        byActivityGroupTypes: primaryCriteria === 'activityGroupTypes',
       };
       const data = await controllers.reportController.runReport(reportName, options);
       const html = template(data);
@@ -127,24 +115,14 @@ module.exports = context => {
       const {
         startYearId,
         startTermId,
-        byPostSchoolOutcome,
-        byRiskLevel,
-        bySkillTraining,
-        bySupportNeed,
-        byIEPRole,
-        byDisability,
-        byActivityGroupTypes,
+        primaryCriteria,
+        secondaryCriteria,
       } = ctx.request.query;
       const options = {
         startYearId: +startYearId,
         startTermId: +startTermId,
-        byPostSchoolOutcome: byPostSchoolOutcome === 'true',
-        byRiskLevel: byRiskLevel === 'true',
-        bySkillTraining: bySkillTraining === 'true',
-        bySupportNeed: bySupportNeed === 'true',
-        byIEPRole: byIEPRole === 'true',
-        byDisability: byDisability === 'true',
-        byActivityGroupTypes: byActivityGroupTypes === 'true',
+        criteria1: primaryCriteria,
+        criteria2: secondaryCriteria,
       };
       const data = await controllers.reportController.runReport(reportName, options);
       const html = template(data);

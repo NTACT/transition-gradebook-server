@@ -14,18 +14,27 @@ function getBarWidth(barCount) {
 module.exports = context => {
   const { reportUtils } = context;
 
+  const validCriteria = [
+    'postSchoolOutcome',
+    'skillTraining',
+    'supportNeed',
+    'riskLevel',
+    'disability',
+    'iepRole',
+    'activityGroupTypes',
+  ];
+
   return async function createNumberOfStudentsCrossReport(options) {
     const {
       startYearId,
       startTermId,
-      byPostSchoolOutcome,
-      byRiskLevel,
-      bySkillTraining,
-      bySupportNeed,
-      byIEPRole,
-      byDisability,
-      byActivityGroupTypes,
+      criteria1,
+      criteria2,
     } = options;
+
+    if(!criteria1 || !criteria2) throw new Error('You must select 2 categories to graph');
+    if(!validCriteria.includes(criteria1)) throw new Error(`Invalid criteria "${criteria1}"`);
+    if(!validCriteria.includes(criteria2)) throw new Error(`Invalid criteria "${criteria2}"`);
 
     const reportData = await reportUtils.getSingleTermReportData({startYearId, startTermId});
     const {
@@ -38,17 +47,6 @@ module.exports = context => {
       activityTypeGroups,
     } = reportData;
 
-    const [ criteria1, criteria2 ] = [
-      byPostSchoolOutcome && 'postSchoolOutcome',
-      bySkillTraining && 'skillTraining',
-      bySupportNeed && 'supportNeed',
-      byRiskLevel && 'riskLevel',
-      byDisability && 'disability',
-      byIEPRole && 'iepRole',
-      byActivityGroupTypes && 'activityGroupTypes',
-    ].filter(v => !!v);
-    
-    if(!criteria1 || !criteria2) throw new Error('You must select 2 categories to graph');
     const students = criteria1 === 'postSchoolOutcome' || criteria2 === 'postSchoolOutcome'
       ? postSchoolStudents
       : inSchoolStudents;
@@ -97,15 +95,19 @@ const criteriaLabels = {
   postSchoolOutcome() {
     return [
       {
-        key: 'postSecondaryEducation',
+        key: 'Post-Secondary Education',
         label: 'Post-Secondary Education',
       },
       {
-        key: 'postSchoolEmployment',
+        key: 'Post-School Employment',
         label: 'Post-School Employment',
       },
       {
-        key: 'both',
+        key: 'Other',
+        label: 'Other',
+      },
+      {
+        key: 'Both',
         label: 'Both',
       },
     ];
