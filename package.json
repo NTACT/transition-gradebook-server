@@ -9,7 +9,8 @@
     "seed": "npx rapid seed",
     "clear": "npx rapid clear",
     "refresh": "npx rapid refresh",
-    "compileReportTemplates": "npx babel reportTemplatesSrc --out-dir reportTemplates"
+    "compileReportTemplates": "npx babel reportTemplatesSrc --out-dir reportTemplates",
+    "watchReportTemplates": "npx babel reportTemplatesSrc --watch --out-dir reportTemplates"
   },
   "dependencies": {
     "@simplej/rapid": "0.0.86",
