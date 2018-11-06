@@ -5,6 +5,7 @@ module.exports = context => {
 
   class ReportController {
     runReport(name, options) {
+      console.log(`Running report ${name}`);
       if(!reportNames.includes(name)) throw new Error(`Invalid report name "${name}"`);
       return reports[name](options);
     }

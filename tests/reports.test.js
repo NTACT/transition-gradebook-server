@@ -3,6 +3,8 @@ const testUtils = require('./testUtils');
 const { rapidTest, shouldSucceed } = testUtils;
 const last = require('lodash/last');
 const first = require('lodash/first');
+const sample = require('lodash/sample');
+const sampleSize = require('lodash/sampleSize');
 const enums = require('../enums');
 
 async function getLongitudinalReportOptions(rapid, options) {
@@ -1423,4 +1425,205 @@ describe('reports', () => {
     );
   });
 
+  test('Number of students cross report should correctly group by postSchoolOutcome', () => {
+    const { groupStudentsByCriteria } = require('../controllers/reports/numberOfStudentsCross').forTesting;
+
+    const criteria = 'postSchoolOutcome';
+    const reportData = {};
+    const students = [
+      { postSchoolOutcome: 'Post-Secondary Education' },
+      { postSchoolOutcome: 'Post-Secondary Education' },
+      { postSchoolOutcome: 'Post-School Employment' },
+      { postSchoolOutcome: 'Post-School Employment' },
+      { postSchoolOutcome: 'Both' },
+      { postSchoolOutcome: 'some other thing' },
+      { postSchoolOutcome: 'Other' },
+    ];
+    const result = groupStudentsByCriteria(students, criteria, reportData);
+
+    expect(result).toEqual({
+      'Post-Secondary Education': [students[0], students[1]],
+      'Post-School Employment': [students[2], students[3]],
+      'Both': [students[4]],
+      'Other': [students[5], students[6]],
+    });
+  });
+
+  test('Number of students cross report should correctly group by riskLevel', () => {
+    const { groupStudentsByCriteria } = require('../controllers/reports/numberOfStudentsCross').forTesting;
+
+    const criteria = 'riskLevel';
+    const reportData = {};
+    const students = [
+      { risk: 'low' },
+      { risk: 'medium' },
+      { risk: 'high' },
+      { risk: 'low' },
+      { risk: 'medium' },
+      { risk: null },
+      { risk: 'ultra' },
+    ];
+    const result = groupStudentsByCriteria(students, criteria, reportData);
+
+    expect(result).toEqual({
+      'No Data': [students[5]],
+      'low': [students[0], students[3]],
+      'medium': [students[1], students[4]],
+      'high': [students[2]],
+      'ultra': [students[6]],
+    });
+  });
+
+  test('Number of students cross report should correctly group by skillTraining', () => {
+    const { groupStudentsByCriteria } = require('../controllers/reports/numberOfStudentsCross').forTesting;
+
+    const criteria = 'skillTraining';
+    const reportData = {};
+    const students = [
+      { hasSelfDeterminationSkills: true },
+      { hasIndependentLivingSkills: true },
+      { hasTravelSkills: true },
+      { hasSelfDeterminationSkills: true, hasSocialSkills: true },
+      { hasSocialSkills: true },
+      { hasSelfDeterminationSkills: true, hasIndependentLivingSkills: true },
+      { hasSocialSkills: true },
+    ];
+    const result = groupStudentsByCriteria(students, criteria, reportData);
+    expect(result).toEqual({
+      'hasSelfDeterminationSkills': [students[0], students[3], students[5]],
+      'hasIndependentLivingSkills': [students[1], students[5]],
+      'hasTravelSkills': [students[2]],
+      'hasSocialSkills': [students[3], students[4], students[6]],
+    });
+  });
+
+  test('Number of students cross report should correctly group by supportNeed', () => {
+    const { groupStudentsByCriteria } = require('../controllers/reports/numberOfStudentsCross').forTesting;
+
+    const criteria = 'supportNeed';
+    const reportData = {};
+    const students = [
+      { attendance: true, math: true },
+      { english: true, behavior: true },
+      { english: true, attendance: true},
+      { engagement: true, math: true },
+      { english: true, math: true, attendance: true },
+      { },
+      { math: true, behavior: true },
+    ].map(interventions => ({ interventions }));
+
+    const result = groupStudentsByCriteria(students, criteria, reportData);
+
+    expect(result).toEqual({
+      attendance: students.filter(s => s.interventions.attendance),
+      behavior: students.filter(s => s.interventions.behavior),
+      engagement: students.filter(s => s.interventions.engagement),
+      english: students.filter(s => s.interventions.english),
+      math: students.filter(s => s.interventions.math),
+    });
+  });
+
+  test('Number of students cross report should correctly group by iepRole', () => {
+    const { groupStudentsByCriteria } = require('../controllers/reports/numberOfStudentsCross').forTesting;
+
+    const criteria = 'iepRole';
+    const reportData = {};
+    
+    const students = [
+      { iepRole: sample(enums.iepRoles) },
+      { iepRole: sample(enums.iepRoles) },
+      { iepRole: sample(enums.iepRoles) },
+      { iepRole: sample(enums.iepRoles) },
+      { iepRole: sample(enums.iepRoles) },
+      { iepRole: sample(enums.iepRoles) },
+      { iepRole: sample(enums.iepRoles) },
+    ];
+
+    const result = groupStudentsByCriteria(students, criteria, reportData);
+
+    for(let role of enums.iepRoles) {
+      expect(result[role]).toEqual(students.filter(s => s.iepRole === role));
+    }
+  });
+
+  rapidTest('Number of students cross report should correctly group by disability', async rapid => {
+    const disabilities = await rapid.models.Disability.query();
+
+    const { groupStudentsByCriteria } = require('../controllers/reports/numberOfStudentsCross').forTesting;
+
+    const criteria = 'disability';
+    const reportData = { disabilities };
+    const getCount = () => Math.floor(Math.random() * 10);
+    const students = [
+      { disabilities: sampleSize(disabilities, getCount()) },
+      { disabilities: sampleSize(disabilities, getCount()) },
+      { disabilities: sampleSize(disabilities, getCount()) },
+      { disabilities: sampleSize(disabilities, getCount()) },
+      { disabilities: sampleSize(disabilities, getCount()) },
+      { disabilities: sampleSize(disabilities, getCount()) },
+      { disabilities: sampleSize(disabilities, getCount()) },
+    ];
+
+    const result = groupStudentsByCriteria(students, criteria, reportData);
+
+    for(let disability of disabilities) {
+      expect(result[disability.name]).toEqual(students.filter(s => s.disabilities.includes(disability)));
+    }
+  });
+
+  rapidTest('Number of students cross report should correctly group by activityGroupTypes', async rapid => {
+    const { groupStudentsByCriteria } = require('../controllers/reports/numberOfStudentsCross').forTesting;
+    const activityTypeGroups = await rapid.models.ActivityTypeGroup.query();
+    const createStudent = () => ({
+      activities: [
+        { activityType: { activityTypeGroup: sample(activityTypeGroups) } },
+        { activityType: { activityTypeGroup: sample(activityTypeGroups) } },
+        { activityType: { activityTypeGroup: sample(activityTypeGroups) } },
+      ],
+    });
+    
+    const criteria = 'activityGroupTypes';
+    const reportData = { activityTypeGroups };
+    const students = [
+      createStudent(),
+      createStudent(),
+      createStudent(),
+      createStudent(),
+      createStudent(),
+      createStudent(),
+      createStudent(),
+    ];
+    const result = groupStudentsByCriteria(students, criteria, reportData);
+
+    for(let activityTypeGroup of activityTypeGroups) {
+      expect(result[activityTypeGroup.name].length).toEqual(
+        students.filter(student =>
+          student.activities.some(a => a.activityType.activityTypeGroup.name === activityTypeGroup.name)
+        ).length
+      );
+    }
+  });
+
+  test('Number of students cross report should correctly count students by two categories', () => {
+    const { countStudentsByTwoCategories } = require('../controllers/reports/numberOfStudentsCross').forTesting;
+    const criteria1 = 'riskLevel';
+    const criteria2 = 'iepRole';
+    const students = [
+      { iepRole: sample(enums.iepRoles), risk: sample(enums.riskLevels) },
+      { iepRole: sample(enums.iepRoles), risk: sample(enums.riskLevels) },
+      { iepRole: sample(enums.iepRoles), risk: sample(enums.riskLevels) },
+      { iepRole: sample(enums.iepRoles), risk: sample(enums.riskLevels) },
+      { iepRole: sample(enums.iepRoles), risk: sample(enums.riskLevels) },
+      { iepRole: sample(enums.iepRoles), risk: sample(enums.riskLevels) },
+    ];
+    const result = countStudentsByTwoCategories(students, criteria1, criteria2, {});
+    expect(Object.keys(result)).toEqual(enums.riskLevels);
+    for(let [risk, value] of Object.entries(result)) {
+      expect(Object.keys(value)).toEqual(enums.iepRoles);
+      for(let [iepRole, count] of Object.entries(value)) {
+        expect(count).toEqual(students.filter(s => s.iepRole === iepRole && s.risk === risk).length);
+      }
+    }
+  });
 });
+
