@@ -68,12 +68,12 @@ module.exports = context => {
       return SchoolYear.query().where('id', schoolYear.id).eager('terms.studentTermInfos.student').first();
     }
 
-    async getCurrentSchoolYear(studentIds) {
+    async getCurrentSchoolYear() {
       return SchoolYear.query()
         .where('year', '<=', new Date().getFullYear())
         .orderBy('year', 'DESC')
         .first()
-        .eager('[terms]');
+        .eager('[terms, students]');
     }
 
     async getCurrentTerm(schoolYear=this.getCurrentSchoolYear()) {
