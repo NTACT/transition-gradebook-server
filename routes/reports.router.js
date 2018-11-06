@@ -216,6 +216,32 @@ module.exports = context => {
       const html = template(data);
       const stream = await createPDF(siteUrl, html);
       ctx.response.body = stream;
+    })
+
+    .get('/reports/studentActivities', middleware.auth(), async ctx => {
+      ctx.request.socket.setTimeout(timeout);
+      const {
+        startYearId,
+        startTermId,
+        endYearId,
+        endTermId,
+        studentId,
+      } = ctx.request.query;
+
+      const template = require('../reportTemplates/studentActivitiesReport');
+      const reportName = 'studentActivities';
+      const options = {
+        startYearId: +startYearId,
+        startTermId: +startTermId,
+        endYearId: +endYearId,
+        endTermId: +endTermId,
+        studentIds: studentId ? [+studentId] : null,
+        studentId,
+      };
+      const data = await controllers.reportController.runReport(reportName, options);
+      const html = template(data);
+      const stream = await createPDF(siteUrl, html);
+      ctx.response.body = stream;
     });
 
 };

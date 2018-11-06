@@ -1412,6 +1412,22 @@ describe('reports', () => {
     );
   });
 
+  rapidTest('Should be able to generate a student activities over time report PDF by sending a GET request to /api/reports/studentActivities', async rapid => {
+    const {
+      startYearId,
+      startTermId,
+      endYearId,
+      endTermId,
+    } = await getLongitudinalReportOptions(rapid);
+
+    const student = await rapid.models.StudentTermInfo.query().where('termId', startTermId).first();
+    const { studentId } = student;
+
+    await shouldSucceed(
+      rapid.axios.get(`/api/reports/studentActivities?startYearId=${startYearId}&startTermId=${startTermId}&endYearId=${endYearId}&endTermId=${endTermId}&studentId=${studentId}`, await rapid.auth())
+    );
+  });
+
   test('Number of students cross report should correctly group by postSchoolOutcome', () => {
     const { groupStudentsByCriteria } = require('../controllers/reports/numberOfStudentsCross').forTesting;
 
