@@ -22,3 +22,5 @@ module.exports = function createSchoolSettings({ models }) {
     ],
   });
 };
+
+module.exports.runOrder = 1;

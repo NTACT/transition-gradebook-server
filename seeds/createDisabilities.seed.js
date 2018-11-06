@@ -15,4 +15,4 @@ module.exports = function createDisabilities({ models }) {
   ]);
 };
 
-module.exports.runOrder = 2;
+module.exports.runOrder = 1;

@@ -17,4 +17,4 @@ module.exports = async function createUsers({ models, helpers }) {
   ]);
 };
 
-module.exports.runOrder = 3;
+module.exports.runOrder = 2;

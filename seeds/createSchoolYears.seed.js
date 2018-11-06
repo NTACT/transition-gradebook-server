@@ -181,3 +181,5 @@ function generateGradeInfo(fields={}) {
     : null;
   return {gradeLevel, exitCategory, postSchoolOutcome};
 }
+
+module.exports.runOrder = 3;

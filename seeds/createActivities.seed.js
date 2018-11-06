@@ -3,7 +3,7 @@ const range = require('lodash/range');
 const faker = require('faker');
 
 module.exports = async function createActivities({ models }) {
-  if(process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'test') return;
+  // if(process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'test') return;
   const { SchoolYear, Activity, ActivityType } = models;
 
   const activityTypes = await ActivityType.query();
