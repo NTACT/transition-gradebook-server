@@ -876,19 +876,6 @@ describe('reports', () => {
     expect(result.activities.length).toEqual(activityTypeGroups.length);
   });
 
-  rapidTest('Number of students standard report should be able to be run with all sub-reports enabled', async rapid => {
-    const options = await getLongitudinalReportOptions(rapid, {
-      byActivityGroupTypes: true,
-      byPostSchoolOutcome: true,
-      bySkillTraining: true,
-      bySupportNeed: true,
-      byIEPRole: true,
-      byRiskLevel: true,
-      byDisability: true,
-    });
-    await rapid.controllers.reportController.runReport('numberOfStudentsStandard', options);
-  });
-
   rapidTest('Number of students longitudinal report should run successfully', async rapid => {
     const options = await getLongitudinalReportOptions(rapid);
     await rapid.controllers.reportController.runReport('numberOfStudentsLongitudinal', options);
