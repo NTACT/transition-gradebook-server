@@ -14,7 +14,8 @@ module.exports = ({ student }) => {
     ell,
     risk,
   } = student;
-  let riskColor = null
+  let riskColor = null;
+
   if (risk) {
     riskColor = riskIndicatorKeys[risk].value;
   }
@@ -46,7 +47,12 @@ module.exports = ({ student }) => {
       <div className="student-status-bar-row">
         <div className='student-status-bar-info'>
           <div className='student-status-bar-label'>Category</div>
-          <div>{disabilities && disabilities.map(disability => <span key={disability} className='student-status-bar-disability'>{disability}</span>)}</div>
+          <div>{disabilities && disabilities.map(disability => {
+            if(typeof disability === 'object') disability = disability.name;
+            return (
+              <span key={disability} className='student-status-bar-disability'>{disability}</span>
+            );
+          })}</div>
         </div>
       </div>
       <style>{studentStatusBarStyle}</style>

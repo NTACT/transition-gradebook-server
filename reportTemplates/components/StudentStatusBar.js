@@ -15,6 +15,7 @@ module.exports = ({ student }) => {
     risk
   } = student;
   let riskColor = null;
+
   if (risk) {
     riskColor = riskIndicatorKeys[risk].value;
   }
@@ -112,11 +113,14 @@ module.exports = ({ student }) => {
         React.createElement(
           'div',
           null,
-          disabilities && disabilities.map(disability => React.createElement(
-            'span',
-            { key: disability, className: 'student-status-bar-disability' },
-            disability
-          ))
+          disabilities && disabilities.map(disability => {
+            if (typeof disability === 'object') disability = disability.name;
+            return React.createElement(
+              'span',
+              { key: disability, className: 'student-status-bar-disability' },
+              disability
+            );
+          })
         )
       )
     ),

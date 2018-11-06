@@ -258,6 +258,7 @@ module.exports = context => {
         endYearId: +endYearId,
         endTermId: +endTermId,
         studentIds: studentId ? [+studentId] : null,
+        studentId,
       };
       const data = await controllers.reportController.runReport(reportName, options);
       const html = template(data);
