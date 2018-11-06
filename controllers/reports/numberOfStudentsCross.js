@@ -80,8 +80,6 @@ module.exports = context => {
       studentGroups,
     };
 
-    require('fs').writeFileSync('../student-groups.json', JSON.stringify({studentGroups, criteria1Labels, criteria2Labels}, null, 2));
-
     return resultData;
   };
 };
