@@ -40,11 +40,11 @@ module.exports = context => {
 
     const [ criteria1, criteria2 ] = [
       byPostSchoolOutcome && 'postSchoolOutcome',
-      byRiskLevel && 'riskLevel',
       bySkillTraining && 'skillTraining',
       bySupportNeed && 'supportNeed',
-      byIEPRole && 'iepRole',
+      byRiskLevel && 'riskLevel',
       byDisability && 'disability',
+      byIEPRole && 'iepRole',
       byActivityGroupTypes && 'activityGroupTypes',
     ].filter(v => !!v);
     
@@ -55,11 +55,12 @@ module.exports = context => {
 
     const reportName = getTitleFromCriteria(criteria1, criteria2);
     const studentGroups = countStudentsByTwoCategories(students, criteria1, criteria2, reportData);
-    const labels = getCriteriaLabels(criteria2, reportData);
+    const criteria1Labels = getCriteriaLabels(criteria1, reportData);
+    const criteria2Labels = getCriteriaLabels(criteria2, reportData);
     const values = Object.entries(studentGroups).map(([label, counts]) => ({ label, ...counts }));
     const barCount = Object.values(studentGroups).reduce((count, value) => count + Object.values(value).length, 0);
     const barSize = getBarWidth(barCount);
-    const data = { labels, values };
+    const data = { labels: criteria2Labels, values };
 
     const resultData = {
       reportName,
@@ -72,6 +73,10 @@ module.exports = context => {
       activityTypeGroups,
       data,
       barSize,
+      studentGroups,
+
+      criteria1Labels,
+      criteria2Labels,
     };
 
     return resultData;
@@ -180,26 +185,26 @@ const criteriaLabels = {
   iepRole() {
     return [
       {
-        key: 'attended',
+        key: 'Attended',
         label: 'Attended',
       },
       {
-        key: 'introduced',
+        key: 'Introduced',
         label: 'Introduced',
         value: 3,
       },
       {
-        key: 'reviewedProgress',
-        label: 'Reviewed Progress',
+        key: 'Reviewed progress',
+        label: 'Reviewed progress',
         value: 1,
       },
       {
-        key: 'madeSuggestions',
-        label: 'Made Suggestions',
+        key: 'Made suggestions',
+        label: 'Made suggestions',
       },
       {
-        key: 'ledMostOfMeeting',
-        label: 'Led Most of the Meeting',
+        key: 'Led most of the meeting',
+        label: 'Led most of the meeting',
       },
     ];
   },
@@ -355,7 +360,7 @@ function countStudentsByTwoCategories(students, criteria1, criteria2, reportData
 function getTitleFromCriteria(criteria1, criteria2) {
   const name1 = criteriaNames[criteria1];
   const name2 = criteriaNames[criteria2];
-  return `${name1} by ${name2}`;
+  return `Number of Students - ${name1} by ${name2}`;
 }
 
 function groupMultipleWith(array, fn) {
