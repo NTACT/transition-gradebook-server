@@ -20,6 +20,11 @@ class NumberOfStudentsCross extends Component {
       columnWidth,
     } = this.props.data;
 
+    const columnTotals = criteria1Labels.map(({ key }) => {
+      return Object.values(studentGroups[key]).reduce((a, b) => a + b, 0);
+    });
+    const overallTotal = columnTotals.reduce((a, b) => a + b, 0);
+
     return (
       <React.Fragment>
         <style>{crossTableStyle}</style>
@@ -84,12 +89,14 @@ class NumberOfStudentsCross extends Component {
           <CrossTableFooter>
             <tr>
               <CrossTableTotalCell>TOTALS</CrossTableTotalCell>
-              {criteria1Labels.map(({ key }) =>
-                <CrossTableTotalCell key={key}>
-                  {Object.values(studentGroups[key]).reduce((a, b) => a + b, 0)}
+              {columnTotals.map((total, i) =>
+                <CrossTableTotalCell key={i}>
+                  {total}
                 </CrossTableTotalCell>
               )}
-              <CrossTableTotalCell/>
+              <CrossTableTotalCell>
+                {overallTotal}
+              </CrossTableTotalCell>
             </tr>
           </CrossTableFooter>
         </CrossTable>
