@@ -18,7 +18,8 @@ let NumberOfStudentsCross = class NumberOfStudentsCross extends Component {
       barSize,
       criteria1Labels,
       criteria2Labels,
-      studentGroups
+      studentGroups,
+      columnWidth
     } = this.props.data;
 
     return React.createElement(
@@ -54,7 +55,10 @@ let NumberOfStudentsCross = class NumberOfStudentsCross extends Component {
             React.createElement('th', null),
             criteria1Labels.map(({ key, label }) => React.createElement(
               'th',
-              { key: key },
+              { key: key, style: {
+                  position: 'relative',
+                  width: columnWidth
+                } },
               label
             )),
             React.createElement('th', null)
