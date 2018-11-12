@@ -17,6 +17,7 @@ class NumberOfStudentsCross extends Component {
       criteria1Labels,
       criteria2Labels,
       studentGroups,
+      columnWidth,
     } = this.props.data;
 
     return (
@@ -42,7 +43,13 @@ class NumberOfStudentsCross extends Component {
             <tr>
               <th/>
                 {criteria1Labels.map(({ key, label }) =>
-                  <th key={key}>{label}</th>
+                  <th key={key} style={{
+                    position: 'relative',
+                    width: columnWidth,
+                  }}>
+
+                    {label}
+                  </th>
                 )}
               <th/>
             </tr>

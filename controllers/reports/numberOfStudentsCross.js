@@ -58,6 +58,7 @@ module.exports = context => {
     const values = Object.entries(studentGroups).map(([label, counts]) => ({ label, ...counts }));
     const barCount = Object.values(studentGroups).reduce((count, value) => count + Object.values(value).length, 0);
     const barSize = getBarWidth(barCount);
+    const columnWidth = columnWidths[criteria1];
     const data = { labels: criteria2Labels, values };
 
     const resultData = {
@@ -71,6 +72,7 @@ module.exports = context => {
       activityTypeGroups,
       data,
       barSize,
+      columnWidth,
       studentGroups,
 
       criteria1Labels,
@@ -89,6 +91,16 @@ const criteriaNames = {
   iepRole: 'IEP Role',
   disability: 'Disabilities',
   activityGroupTypes: 'Activity Group',
+};
+
+const columnWidths = {
+  postSchoolOutcome: 100,
+  riskLevel: 75,
+  skillTraining: 100,
+  supportNeed: 75,
+  iepRole: 100,
+  disability: 25,
+  activityGroupTypes: 75,
 };
 
 const criteriaLabels = {
