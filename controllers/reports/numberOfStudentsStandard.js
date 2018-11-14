@@ -16,6 +16,8 @@ module.exports = context => {
       byIEPRole,
       byDisability,
       byActivityGroupTypes,
+      byRaces,
+      byGenders,
     } = options;
 
     const {
@@ -36,6 +38,27 @@ module.exports = context => {
           value: counts[postSchoolOutcome] || 0
         };
       });
+    }
+
+    function calcGenders() {
+      const genderCounts = countBy(inSchoolStudents, 'gender');
+
+      return enums.genders.map(gender => ({
+        label: gender,
+        value: genderCounts[gender] || 0,
+      }));
+    }
+
+    function calcRaces() {
+      const raceCounts = countBy(inSchoolStudents, student => student.race || 'N/A');
+
+      return [
+        ...enums.races.map(race => ({
+          label: race,
+          value: raceCounts[race] || 0,
+        })),
+        {label: 'N/A', value: raceCounts['N/A'] || 0},
+      ];
     }
 
     function calcRisks() {
@@ -181,6 +204,8 @@ module.exports = context => {
       roleInIEPMeeting: byIEPRole && calcRoleInIEPMeeting(),
       disabilities: byDisability && calcDisabilities(),
       activities: byActivityGroupTypes && calcActivities(),
+      genders: byGenders && calcGenders(),
+      races: byRaces && calcRaces(),
     };
 
     return data;

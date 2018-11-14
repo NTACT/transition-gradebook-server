@@ -71,6 +71,8 @@ module.exports = context => {
         byIEPRole: primaryCriteria === 'iepRole',
         byDisability: primaryCriteria === 'disability',
         byActivityGroupTypes: primaryCriteria === 'activityGroupTypes',
+        byRaces: primaryCriteria === 'race',
+        byGenders: primaryCriteria === 'gender',
       };
       const data = await controllers.reportController.runReport(reportName, options);
       const html = template(data);
@@ -101,6 +103,8 @@ module.exports = context => {
         byIEPRole: primaryCriteria === 'iepRole',
         byDisability: primaryCriteria === 'disability',
         byActivityGroupTypes: primaryCriteria === 'activityGroupTypes',
+        byRaces: primaryCriteria === 'race',
+        byGenders: primaryCriteria === 'gender',
       };
       const data = await controllers.reportController.runReport(reportName, options);
       const html = template(data);

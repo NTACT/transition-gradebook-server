@@ -21,6 +21,8 @@ module.exports = context => {
     'riskLevel',
     'disability',
     'iepRole',
+    'race',
+    'gender',
     'activityGroupTypes',
   ];
 
@@ -91,6 +93,8 @@ const criteriaNames = {
   iepRole: 'IEP Role',
   disability: 'Disabilities',
   activityGroupTypes: 'Activity Group',
+  race: 'Race',
+  gender: 'Gender',
 };
 
 const columnWidths = {
@@ -99,6 +103,8 @@ const columnWidths = {
   skillTraining: 100,
   supportNeed: 75,
   iepRole: 100,
+  race: 50,
+  gender: 100,
   disability: 25,
   activityGroupTypes: 75,
 };
@@ -241,6 +247,14 @@ const criteriaLabels = {
       label: activityTypeGroup.name,
     }));
   },
+
+  race() {
+    return Object.entries(enums.raceLabels).map(([ key, label ]) => ({ key, label }));
+  },
+
+  gender() {
+    return enums.genders.map(gender => ({ key: gender, label: gender }));
+  },
 };
 
 const criteriaGroupers = {
@@ -341,6 +355,28 @@ const criteriaGroupers = {
       groups[activityTypeGroup.name] = [];
       return groups;
     }, {});
+    return {...defaultGroups, ...groups};
+  },
+
+  race(students) {
+    const groups = groupBy(students, 'race');
+
+    const defaultGroups = enums.races.reduce((groups, key) => {
+      groups[key] = [];
+      return groups;
+    }, {});
+
+    return {...defaultGroups, ...groups};
+  },
+
+  gender(students) {
+    const groups = groupBy(students, 'gender');
+
+    const defaultGroups = enums.genders.reduce((groups, key) => {
+      groups[key] = [];
+      return groups;
+    }, {});
+
     return {...defaultGroups, ...groups};
   },
 };

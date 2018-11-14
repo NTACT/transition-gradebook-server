@@ -41,6 +41,7 @@ module.exports = context => {
             firstName: student.firstName,
             lastName: student.lastName,
             gender: student.gender,
+            race: student.race,
             grade: student.gradeLevel,
             risk: maxRisk,
             ell: student.ell,

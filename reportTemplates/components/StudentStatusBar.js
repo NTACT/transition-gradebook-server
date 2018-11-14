@@ -9,6 +9,7 @@ module.exports = ({ student }) => {
     firstName,
     lastName,
     gender,
+    race,
     grade,
     disabilities,
     ell,
@@ -67,6 +68,20 @@ module.exports = ({ student }) => {
           'div',
           null,
           capitalize(first(gender))
+        )
+      ),
+      React.createElement(
+        'div',
+        { className: 'student-status-bar-info' },
+        React.createElement(
+          'div',
+          { className: 'student-status-bar-label' },
+          'Race'
+        ),
+        React.createElement(
+          'div',
+          null,
+          race || 'N/A'
         )
       ),
       React.createElement(
