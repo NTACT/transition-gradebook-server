@@ -38,6 +38,7 @@ module.exports = context => {
       lastName,
       birthday,
       gender,
+      race,
       ell,
       disabilities,
       gradeLevel,
@@ -54,6 +55,7 @@ module.exports = context => {
         lastName,
         birthday,
         gender,
+        race,
         ell,
       });
 
@@ -86,6 +88,7 @@ module.exports = context => {
       lastName,
       birthday,
       gender,
+      race,
       ell,
       disabilities,
       gradeLevel,
@@ -104,6 +107,7 @@ module.exports = context => {
         birthday,
         ell,
         gender,
+        race,
       });
 
       await Student.query().where('id', id).first().patch(fields);
@@ -192,6 +196,7 @@ module.exports = context => {
           {label: 'Student Id',   value: 'student.studentId'},
           {label: 'Gender',       value: 'student.gender'},
           {label: 'Grade Level',  value: 'gradeLevel'},
+          {label: 'Race',         value: s => s.student.race || 'N/A'},
           {label: 'Disabilities', value: s => s.student.disabilities.map(d => d.name).join(' ')},
         ]
       })

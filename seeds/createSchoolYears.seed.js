@@ -1,4 +1,4 @@
-const { gradeTypes, gradeLetters, exitCategories, postSchoolOutcomes, grades, genders, termTypes, iepRoles } = require('../enums');
+const { gradeTypes, gradeLetters, exitCategories, postSchoolOutcomes, grades, genders, races, termTypes, iepRoles } = require('../enums');
 const sample = require('lodash/sample');
 const sampleSize = require('lodash/sampleSize');
 const range = require('lodash/range');
@@ -167,6 +167,7 @@ function generateStudent(fields={}) {
     birthday: JSON.stringify(new Date(randomInt(1980, 2010), randomInt(0, 11), randomInt(1, 26), 1, 1, 1, 1)).slice(1, -1),
     ell: randomBool(),
     gender: sample(genders),
+    race: sample(races),
     ...fields,
   };
 }

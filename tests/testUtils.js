@@ -43,6 +43,7 @@ async function createStudent(rapid, fields={}, credentials=userCredentials) {
     gender: 'female',
     birthday: '1995-03-12T01:00:00.000Z',
     gradeLevel: '9',
+    race: 'AM7',
     disabilities: [1, 2],
     ell: false,
     ...rest,
