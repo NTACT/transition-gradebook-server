@@ -32,6 +32,11 @@ const RiskRosterHeader = () => React.createElement(
   React.createElement(
     'div',
     { className: 'risk-roster-header-student' },
+    'Race'
+  ),
+  React.createElement(
+    'div',
+    { className: 'risk-roster-header-student' },
     'Grade/Age'
   ),
   React.createElement(
@@ -77,6 +82,7 @@ const RiskRosterRow = ({ studentTermInfo }) => {
     firstName,
     lastName,
     gender,
+    race,
     gradeLevel,
     disabilities,
     ell,
@@ -143,6 +149,11 @@ const RiskRosterRow = ({ studentTermInfo }) => {
       'div',
       { className: 'risk-roster-student' },
       capitalize(first(gender))
+    ),
+    React.createElement(
+      'div',
+      { className: 'risk-roster-student' },
+      race
     ),
     React.createElement(
       'div',

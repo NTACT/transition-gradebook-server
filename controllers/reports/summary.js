@@ -27,6 +27,7 @@ module.exports = context => {
       roleInIEPMeeting: reportUtils.getIEPMeetingRoleCount(inSchoolStudents),
       receivedSkillsTraining: reportUtils.getStudentSkillCount(inSchoolStudents),
       gender: reportUtils.getGenderCount(inSchoolStudents),
+      race: reportUtils.getRaceCount(inSchoolStudents),
       cdgp: reportUtils.getCareerDevelopmentOrGraduationPlanCount(inSchoolStudents),
       attendedIEPMeeting: reportUtils.getIEPMeetingAttendance(inSchoolStudents),
       studentNeeds: reportUtils.getStudentNeeds(inSchoolStudents),

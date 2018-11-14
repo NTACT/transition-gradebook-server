@@ -1,5 +1,6 @@
 module.exports = context => {
   const { models, controllers } = context;
+  const { enums } = require('tgb-shared');
   const {
     property,
     flatMap,
@@ -247,6 +248,13 @@ module.exports = context => {
       countFilteredData(data, 'student.gender', 'male', 'Male'),
       countFilteredData(data, 'student.gender', 'female', 'Female'),
       countFilteredData(data, 'student.gender', 'trans', 'Trans'),
+    ],
+
+    getRaceCount: data => [
+      ...enums.races.map(race =>
+        countFilteredData(data, 'student.race', race, enums.raceLabels[race] || race)
+      ),
+      countFilteredData(data, null, 'N/A'),
     ],
 
     getCareerDevelopmentOrGraduationPlanCount: data => [
