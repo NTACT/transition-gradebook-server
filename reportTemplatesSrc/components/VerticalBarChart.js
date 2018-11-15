@@ -13,36 +13,7 @@ const pickRepeatedColor = (index, barColors) => {
 // displays up to 20 stripes
 const DiagonalStripes = ({ x, y, height, width, stroke}) => (
   <svg x={x} y={y-0.75} width={width} height={height}>
-    <rect x={0} y={0} height={height} width={width} stroke={stroke} fill='white' />
-    <line stroke={stroke} strokeWidth={0.88} x1='397.12' y1='-454.68' x2='-426.58' y2='481.35'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='409.6' y1='-442.41' x2='-414.1' y2='493.62'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='422.08' y1='-430.14' x2='-401.62' y2='505.89'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='434.56' y1='-417.87' x2='-389.14' y2='518.16'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='447.04' y1='-405.6' x2='-376.66' y2='530.43'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='459.52' y1='-393.33' x2='-364.18' y2='542.7'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='472' y1='-381.06' x2='-351.7' y2='554.97'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='484.48' y1='-368.79' x2='-339.22' y2='567.24'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='496.96' y1='-356.52' x2='-326.74' y2='579.51'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='509.44' y1='-344.25' x2='-314.26' y2='591.78'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='521.92' y1='-331.98' x2='-301.78' y2='604.05'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='534.4' y1='-319.71' x2='-289.3' y2='616.32'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='546.88' y1='-307.44' x2='-276.82' y2='628.59'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='559.36' y1='-295.17' x2='-264.34' y2='640.86'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='571.84' y1='-282.9' x2='-251.86' y2='653.13'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='584.32' y1='-270.63' x2='-239.38' y2='665.4'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='596.8' y1='-258.36' x2='-226.9' y2='677.67'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='609.28' y1='-246.09' x2='-214.42' y2='689.94'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='621.76' y1='-233.82' x2='-201.94' y2='702.21'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='634.24' y1='-221.55' x2='-189.45' y2='714.48'/>
-  </svg>
-);
-
-const CaptionDiagonalStripes = ({stroke}) => (
-  <svg height={5} style={{marginBottom: 20}}>
-    <rect x={0} y={0} height={5} width={45} stroke={stroke} fill='white' />
-    <line stroke={stroke} strokeWidth={0.88} x1='397.12' y1='-454.68' x2='-426.58' y2='481.35'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='409.6' y1='-442.41' x2='-414.1' y2='493.62'/>
-    <line stroke={stroke} strokeWidth={0.88} x1='422.08' y1='-430.14' x2='-401.62' y2='505.89'/>
+    <rect x={0} y={0} height={height} width={width} stroke={stroke} fill={stroke} />
   </svg>
 );
 
@@ -96,9 +67,10 @@ const generateCaptions = (data, {multipleBars, riskChart, barColors}) => {
               color = pickRepeatedColor(index, barColors);
               return (
                 <div key={entry.key} className='vertical-bar-chart-caption-item'>
-                  <div className='vertical-bar-chart-caption-color' style={{background: index % 2 !== 0 ? color : null}}>
-                    {index % 2 === 0 && <CaptionDiagonalStripes stroke={color} />}
-                  </div>
+                  <div className='vertical-bar-chart-caption-color' style={{
+                    background: index % 2 === 0 ? color : null,
+                    border: `1px solid ${color}`
+                  }}/>
                   <div className='vertical-bar-chart-caption-label'>{entry.label}</div>
                 </div>
               )
