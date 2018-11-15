@@ -26,6 +26,9 @@ const RiskRosterHeader = () =>
       Gender
     </div>
     <div className='risk-roster-header-student'>
+      Race
+    </div>
+    <div className='risk-roster-header-student'>
       Grade/Age
     </div>
     <div className='risk-roster-header-student'>
@@ -57,6 +60,7 @@ const RiskRosterRow = ({ studentTermInfo }) => {
     firstName,
     lastName,
     gender,
+    race,
     gradeLevel,
     disabilities,
     ell,
@@ -94,6 +98,9 @@ const RiskRosterRow = ({ studentTermInfo }) => {
       </div>
       <div className='risk-roster-student'>
         {capitalize(first(gender))}
+      </div>
+      <div className="risk-roster-student">
+        {race}
       </div>
       <div className='risk-roster-student'>
         {gradeLevel}

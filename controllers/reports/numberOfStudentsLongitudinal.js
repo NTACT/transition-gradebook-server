@@ -1,6 +1,7 @@
 
 module.exports = context => {
   const { reportUtils } = context;
+  const { enums } = require('tgb-shared');
   const map = require('lodash/map');
   const flatMap = require('lodash/flatMap');
   const countBy = require('lodash/countBy');
@@ -18,6 +19,8 @@ module.exports = context => {
       byIEPRole,
       byDisability,
       byActivityGroupTypes,
+      byGenders,
+      byRaces,
     } = options;
 
     const {
@@ -295,11 +298,55 @@ module.exports = context => {
               ...activityTypeGroups.reduce((defaults, group) => {
                 defaults[group.id] = 0;
                 return defaults;
-              }),
+              }, {}),
               ...counts,
             };
           })
         ),
+      },
+
+      genders: byGenders && {
+        labels: enums.genders.map(gender => ({
+          key: gender,
+          label: gender,
+        })),
+        values: flatMap(schoolYears, year =>
+          map(year.terms, term => {
+            const { inSchoolStudents } = term;
+            const counts = countBy(inSchoolStudents, 'gender');
+            return {
+              termId: term.id,
+              label: term.name,
+              ...enums.genders.reduce((defaults, gender) => {
+                defaults[gender] = 0;
+                return defaults;
+              }, {}),
+              ...counts,
+            };
+          })  
+        )
+      },
+
+      races: byRaces && {
+        labels: enums.races.map(race => ({
+          key: race,
+          label: race,
+        })),
+        values: flatMap(schoolYears, year =>
+          map(year.terms, term => {
+            const { inSchoolStudents } = term;
+            const counts = countBy(inSchoolStudents, student => student.race || 'N/A');
+            return {
+              termId: term.id,
+              label: term.name,
+              ...enums.races.reduce((defaults, race) => {
+                defaults[race] = 0;
+                return defaults;
+              }, { 'N/A': 0 }),
+              ...counts,
+            };
+          })  
+        )
       },
     };
 

@@ -83,6 +83,21 @@ module.exports = context => {
         students: map(students, 'id')
       }));
 
+      const raceGroupMap = {
+        ...enums.races.reduce((defaults, race) => {
+          defaults[race] = [];
+          return defaults;
+        }, {}),
+        ...groupBy(students, student => student.race || 'N/A'),
+      };
+
+      const raceGroups = Object.entries(raceGroupMap).map(([ race, students ]) => {
+        return {
+          race,
+          students: map(students, 'id'),
+        };
+      });
+
       for(let student of students) {
         delete student.riskData; // let client handle this
         delete student.risk;
@@ -104,6 +119,9 @@ module.exports = context => {
 
         // For: "Students who need intervention / supports in"
         interventionGroups,
+
+        // For: "Total number of students by race"
+        raceGroups,
       };
     }
   }

@@ -15,6 +15,8 @@ class NumberOfStudentsLongitudinal extends Component {
       roleInIEPMeeting,
       disabilities,
       activities,
+      genders,
+      races,
       startYear,
       startTerm,
       endYear,
@@ -23,6 +25,32 @@ class NumberOfStudentsLongitudinal extends Component {
 
     return (
       <React.Fragment>
+        {races && 
+          <React.Fragment>
+            <MultiTermReportTitle
+              reportName={`Number of Students - by Race, over time`}
+              schoolSettings={schoolSettings}
+              startYear={startYear}
+              startTerm={startTerm}
+              endYear={endYear}
+              endTerm={endTerm}
+            />
+            <VerticalBarChart title='Number of Students' data={races} barSize={15} multipleBars />
+          </React.Fragment>
+        }
+        {genders && 
+          <React.Fragment>
+            <MultiTermReportTitle
+              reportName={`Number of Students - by Gender, over time`}
+              schoolSettings={schoolSettings}
+              startYear={startYear}
+              startTerm={startTerm}
+              endYear={endYear}
+              endTerm={endTerm}
+            />
+            <VerticalBarChart title='Number of Students' data={genders} barSize={25} multipleBars />
+          </React.Fragment>
+        }
         {postSchool && 
           <React.Fragment>
             <MultiTermReportTitle

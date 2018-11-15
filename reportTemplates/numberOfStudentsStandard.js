@@ -15,12 +15,26 @@ let NumberOfStudentsStandard = class NumberOfStudentsStandard extends Component 
       supportNeeded,
       roleInIEPMeeting,
       disabilities,
-      activities
+      activities,
+      genders,
+      races
     } = this.props.data;
 
     return React.createElement(
       React.Fragment,
       null,
+      genders && React.createElement(
+        React.Fragment,
+        null,
+        React.createElement(SingleTermReportTitle, { reportName: `Number of Students - by Gender`, schoolSettings: schoolSettings, schoolYear: schoolYear, term: term }),
+        React.createElement(VerticalBarChart, { title: 'Number of Students', data: genders })
+      ),
+      races && React.createElement(
+        React.Fragment,
+        null,
+        React.createElement(SingleTermReportTitle, { reportName: `Number of Students - by Race`, schoolSettings: schoolSettings, schoolYear: schoolYear, term: term }),
+        React.createElement(VerticalBarChart, { title: 'Number of Students', data: races })
+      ),
       postSchool && React.createElement(
         React.Fragment,
         null,

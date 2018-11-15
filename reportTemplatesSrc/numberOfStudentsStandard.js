@@ -16,10 +16,27 @@ class NumberOfStudentsStandard extends Component {
       roleInIEPMeeting,
       disabilities,
       activities,
+      genders,
+      races,
     } = this.props.data;
 
     return (
       <React.Fragment>
+
+        {genders &&
+          <React.Fragment>
+            <SingleTermReportTitle reportName={`Number of Students - by Gender`} schoolSettings={schoolSettings} schoolYear={schoolYear} term={term}/>
+            <VerticalBarChart title='Number of Students' data={genders} />
+          </React.Fragment>
+        }
+
+        {races &&
+          <React.Fragment>
+            <SingleTermReportTitle reportName={`Number of Students - by Race`} schoolSettings={schoolSettings} schoolYear={schoolYear} term={term}/>
+            <VerticalBarChart title='Number of Students' data={races} />
+          </React.Fragment>
+        }
+
         {postSchool &&
           <React.Fragment>
             <SingleTermReportTitle reportName={`Number of Students - by Post-school Outcomes`} schoolSettings={schoolSettings} schoolYear={schoolYear} term={term}/>

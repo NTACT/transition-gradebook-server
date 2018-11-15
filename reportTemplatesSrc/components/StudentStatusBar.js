@@ -9,6 +9,7 @@ module.exports = ({ student }) => {
     firstName,
     lastName,
     gender,
+    race,
     grade,
     disabilities,
     ell,
@@ -33,6 +34,10 @@ module.exports = ({ student }) => {
         <div className='student-status-bar-info'>
           <div className='student-status-bar-label'>Gender</div>
           <div>{capitalize(first(gender))}</div>
+        </div>
+        <div className='student-status-bar-info'>
+          <div className='student-status-bar-label'>Race</div>
+          <div>{race || 'N/A'}</div>
         </div>
         <div className='student-status-bar-info'>
           <div className='student-status-bar-label'>Grade/Age</div>

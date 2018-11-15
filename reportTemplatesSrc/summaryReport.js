@@ -22,6 +22,7 @@ class SummaryReport extends Component {
       roleInIEPMeeting,
       receivedSkillsTraining,
       gender,
+      race,
       cdgp,
       attendedIEPMeeting,
       studentNeeds,

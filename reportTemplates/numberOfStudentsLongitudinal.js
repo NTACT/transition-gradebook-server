@@ -15,6 +15,8 @@ let NumberOfStudentsLongitudinal = class NumberOfStudentsLongitudinal extends Co
       roleInIEPMeeting,
       disabilities,
       activities,
+      genders,
+      races,
       startYear,
       startTerm,
       endYear,
@@ -24,6 +26,32 @@ let NumberOfStudentsLongitudinal = class NumberOfStudentsLongitudinal extends Co
     return React.createElement(
       React.Fragment,
       null,
+      races && React.createElement(
+        React.Fragment,
+        null,
+        React.createElement(MultiTermReportTitle, {
+          reportName: `Number of Students - by Race, over time`,
+          schoolSettings: schoolSettings,
+          startYear: startYear,
+          startTerm: startTerm,
+          endYear: endYear,
+          endTerm: endTerm
+        }),
+        React.createElement(VerticalBarChart, { title: 'Number of Students', data: races, barSize: 15, multipleBars: true })
+      ),
+      genders && React.createElement(
+        React.Fragment,
+        null,
+        React.createElement(MultiTermReportTitle, {
+          reportName: `Number of Students - by Gender, over time`,
+          schoolSettings: schoolSettings,
+          startYear: startYear,
+          startTerm: startTerm,
+          endYear: endYear,
+          endTerm: endTerm
+        }),
+        React.createElement(VerticalBarChart, { title: 'Number of Students', data: genders, barSize: 25, multipleBars: true })
+      ),
       postSchool && React.createElement(
         React.Fragment,
         null,
