@@ -13,8 +13,8 @@
     "watchReportTemplates": "npx babel reportTemplatesSrc --watch --out-dir reportTemplates"
   },
   "dependencies": {
-    "@simplej/rapid": "0.0.86",
-    "@simplej/rapid-cli": "0.0.47",
+    "@simplej/rapid": "0.0.94",
+    "@simplej/rapid-cli": "0.0.57",
     "array-promise-filter": "^1.0.1",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",

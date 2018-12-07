@@ -11,10 +11,10 @@ module.exports = `
 }
 
 .cross-table .stripe-bar {
-  margin: 0 auto;
-}
-
-.cross-table-header {
+  position: relative;
+  left: 50%;
+  margin-left: -30px;
+  outline: 1px solid blue;
 }
 
 .cross-table-footer {
@@ -26,8 +26,12 @@ module.exports = `
   border: 1px solid ${red};
 }
 
+.corss-table-content tr {
+  max-height: 40px;
+}
+
 .cross-table-content td {
-  height: 75px;
+  height: 40px;
 }
 
 .cross-table-content .cross-table-total-cell {
