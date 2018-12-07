@@ -160,6 +160,7 @@ function CrossTableTotalCell(props) {
 function RowTitle(props) {
   return React.createElement('div', _extends({}, props, { className: 'cross-table-row-title', style: {
       maxWidth: 150,
+      width: '100%',
       whiteSpace: 'normal',
       marginTop: 5,
       textAlign: 'center'
