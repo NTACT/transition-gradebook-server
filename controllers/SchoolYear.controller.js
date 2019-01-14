@@ -1,5 +1,6 @@
 module.exports = context => {
   const { flatten } = require('lodash');
+  const validationError = require('../utils/validationError');
   const { models } = context;
   const { SchoolYear, StudentTermInfo } = models;
 
@@ -38,8 +39,8 @@ module.exports = context => {
       terms,
       students,
     }) {
-      if(!termTypeCounts.hasOwnProperty(termType)) throw new Error(`Invalid term type "${termType}".`);
-      if(termTypeCounts[termType] !== terms.length) throw new Error(`Invalid number of terms. Term type "${termType}" requires ${termTypeCounts[termType]} term${termTypeCounts[termType] !== 1 ? 's' : ''} (${terms.length} provided).`);
+      if(!termTypeCounts.hasOwnProperty(termType)) throw validationError(`Invalid term type "${termType}".`);
+      if(termTypeCounts[termType] !== terms.length) throw validationError(`Invalid number of terms. Term type "${termType}" requires ${termTypeCounts[termType]} term${termTypeCounts[termType] !== 1 ? 's' : ''} (${terms.length} provided).`);
       
       // Create school year and terms
       const schoolYear = await SchoolYear.query().insertGraphAndFetch({

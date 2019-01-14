@@ -1,7 +1,9 @@
 const groupBy = require('lodash/groupBy');
 const map = require('lodash/map');
 const uniq = require('lodash/uniq');
+const validationError = require('../../utils/validationError');
 const enums = require('../../enums');
+
 
 function getBarWidth(barCount) {
   if(barCount <= 10) return 30;
@@ -34,9 +36,9 @@ module.exports = context => {
       criteria2,
     } = options;
 
-    if(!criteria1 || !criteria2) throw new Error('You must select 2 categories to graph');
-    if(!validCriteria.includes(criteria1)) throw new Error(`Invalid criteria "${criteria1}"`);
-    if(!validCriteria.includes(criteria2)) throw new Error(`Invalid criteria "${criteria2}"`);
+    if(!criteria1 || !criteria2) throw validationError('You must select 2 categories to graph');
+    if(!validCriteria.includes(criteria1)) throw validationError(`Invalid criteria "${criteria1}"`);
+    if(!validCriteria.includes(criteria2)) throw validationError(`Invalid criteria "${criteria2}"`);
 
     const reportData = await reportUtils.getSingleTermReportData({startYearId, startTermId});
     const {
@@ -382,12 +384,12 @@ const criteriaGroupers = {
 };
 
 function getCriteriaLabels(criteria, reportData) {
-  if(!criteriaLabels.hasOwnProperty(criteria)) throw new Error(`Invalid criteria: "${criteria}"`);
+  if(!criteriaLabels.hasOwnProperty(criteria)) throw validationError(`Invalid criteria: "${criteria}"`);
   return criteriaLabels[criteria](reportData);
 }
 
 function groupStudentsByCriteria(students, criteria, reportData) {
-  if(!criteriaGroupers.hasOwnProperty(criteria)) throw new Error(`Invalid criteria: "${criteria}"`);
+  if(!criteriaGroupers.hasOwnProperty(criteria)) throw validationError(`Invalid criteria: "${criteria}"`);
   return criteriaGroupers[criteria](students, reportData);
 }
 

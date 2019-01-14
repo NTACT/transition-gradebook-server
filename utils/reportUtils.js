@@ -1,6 +1,7 @@
 module.exports = context => {
   const { models, controllers } = context;
   const { enums } = require('tgb-shared');
+  const validationError = require('./validationError');
   const {
     property,
     flatMap,
@@ -51,10 +52,10 @@ module.exports = context => {
       getActivityTypeGroups(),
     ]);
 
-    if(!startYear) throw new Error('Invalid start year.');
-    if(!startTerm) throw new Error('Invalid start term.');
-    if(!endYear) throw new Error('Invalid end year.');
-    if(!endTerm) throw new Error('Invalid end term.');
+    if(!startYear) throw validationError('Invalid start year.');
+    if(!startTerm) throw validationError('Invalid start term.');
+    if(!endYear) throw validationError('Invalid end year.');
+    if(!endTerm) throw validationError('Invalid end term.');
 
     // Make sure startYear is before endYear and startTerm is before endTerm
     if(startYear.year > endYear.year) [startYear, endYear] = [endYear, startYear];

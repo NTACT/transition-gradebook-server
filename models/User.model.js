@@ -1,4 +1,5 @@
 module.exports = context => {
+  const validationError = require('../utils/validationError');
   const { Model, models, decorators } = context;
 
   class User extends Model {
@@ -27,7 +28,7 @@ module.exports = context => {
 
     async validateEmail(email) {
       if(email && (await this.isEmailInUse(email))) {
-        throw new Error('A user with that email already exists.');
+        throw validationError('A user with that email already exists.');
       }
     }
 
