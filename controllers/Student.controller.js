@@ -1,5 +1,6 @@
 module.exports = context => {
   const removeNullValues = require('../utils/removeNullValues');
+  const validationError = require('../utils/validationError');
   const Json2csvParser = require('json2csv').Parser;
   const { models } = context;
   const { Student, SchoolYear, StudentDisability, StudentTermInfo, Term } = models;
@@ -47,7 +48,7 @@ module.exports = context => {
     }) {
       const existingStudent = await Student.query().where('studentId', studentId).first();
       if(existingStudent) {
-        throw new Error(`A student already exists with the id "${studentId}"`);
+        throw validationError(`A student already exists with the id "${studentId}"`);
       }
       const student = await Student.query().insert({
         studentId,
@@ -97,7 +98,7 @@ module.exports = context => {
     }) {
       const existingStudent = studentId && await Student.query().where('studentId', studentId).first();
       if(existingStudent && existingStudent.id !== id) {
-        throw new Error(`A student already exists with the id "${studentId}"`);
+        throw validationError(`A student already exists with the id "${studentId}"`);
       }
 
       const fields = removeNullValues({

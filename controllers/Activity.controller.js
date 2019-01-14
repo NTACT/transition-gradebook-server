@@ -1,5 +1,6 @@
 module.exports = context => {
   const removeNullValues = require('../utils/removeNullValues');
+  const validationError = require('../utils/validationError');
   const { models } = context;
   const { Activity, ActivityTypeGroup, ActivityEvent } = models;
 
@@ -26,11 +27,7 @@ module.exports = context => {
 
     async createActivity(fields) {
       const { events, ...rest } = fields;
-      if(!events || !events.length) {
-        const error = new Error('You must add at least one event.');
-        error.status = 400;
-        throw error;
-      }
+      if(!events || !events.length) throw validationError('You must add at least one event.')
       const activity = await Activity.query().insert(rest).returning('*').eager('[activityType]');
       activity.events = await this.createActivityEvents(activity.id, events);
       return activity;
@@ -39,7 +36,7 @@ module.exports = context => {
     async editActivity(activityId, fields) {
       const { events, ...rest } = fields;
       
-      if(!events || !events.length) throw new Error('You must add at least one event.');
+      if(!events || !events.length) throw validationError('You must add at least one event.');
       await this.deleteActivityEvents(activityId);
       await this.createActivityEvents(activityId, events);
 
