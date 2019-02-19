@@ -1,7 +1,7 @@
 {
   "main.css": "/static/css/main.65391637.chunk.css",
-  "main.js": "/static/js/main.79f8b685.chunk.js",
-  "main.js.map": "/static/js/main.79f8b685.chunk.js.map",
+  "main.js": "/static/js/main.20ff5c42.chunk.js",
+  "main.js.map": "/static/js/main.20ff5c42.chunk.js.map",
   "static/js/1.a76d87d2.chunk.js": "/static/js/1.a76d87d2.chunk.js",
   "static/js/1.a76d87d2.chunk.js.map": "/static/js/1.a76d87d2.chunk.js.map",
   "runtime~main.js": "/static/js/runtime~main.229c360f.js",
@@ -16,6 +16,6 @@
   "static/media/ntact_logo.png": "/static/media/ntact_logo.dea7c31d.png",
   "static/css/main.65391637.chunk.css.map": "/static/css/main.65391637.chunk.css.map",
   "index.html": "/index.html",
-  "precache-manifest.43d6fe8af3220b3c0111e2d905657458.js": "/precache-manifest.43d6fe8af3220b3c0111e2d905657458.js",
+  "precache-manifest.c06f1964e48af22d93d8e7377259aff7.js": "/precache-manifest.c06f1964e48af22d93d8e7377259aff7.js",
   "service-worker.js": "/service-worker.js"
 }
