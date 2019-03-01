@@ -9,10 +9,15 @@ module.exports = context => {
       ctx.request.socket.setTimeout(timeout);
       const reportName = 'summary';
       const template = require('../reportTemplates/summaryReport');
-      const { startYearId, startTermId } = ctx.request.query;
+      const { startYearId, startTermId, grades, disabilities, riskLevels, supportNeeded, races, } = ctx.request.query;
       const options = {
         startYearId: +startYearId,
         startTermId: +startTermId,
+        gradesFilter: grades, 
+        disabilitiesFilter: disabilities,
+        riskLevelsFilter: riskLevels,
+        supportNeededFilter: supportNeeded,
+        racesFilter: races,
       };
       const data = await controllers.reportController.runReport(reportName, options);
       const html = template(data);
@@ -24,10 +29,15 @@ module.exports = context => {
       ctx.request.socket.setTimeout(timeout);
       const reportName = 'riskRoster';
       const template = require('../reportTemplates/riskRosterReport');
-      const { startYearId, startTermId } = ctx.request.query;
+      const { startYearId, startTermId, grades, disabilities, riskLevels, supportNeeded, races, } = ctx.request.query;
       const options = {
         startYearId: +startYearId,
         startTermId: +startTermId,
+        gradesFilter: grades, 
+        disabilitiesFilter: disabilities,
+        riskLevelsFilters: riskLevels,
+        supportNeededFilters: supportNeeded,
+        racesFilter: races,
       };
       const data = await controllers.reportController.runReport(reportName, options);
       const html = template(data);
@@ -39,12 +49,17 @@ module.exports = context => {
       ctx.request.socket.setTimeout(timeout);
       const reportName = 'riskSummary';
       const template = require('../reportTemplates/riskSummaryReport');
-      const { startYearId, startTermId, endYearId, endTermId } = ctx.request.query;
+      const { startYearId, startTermId, endYearId, endTermId, grades, disabilities, riskLevels, supportNeeded, races, } = ctx.request.query;
       const options = {
         startYearId: +startYearId,
         startTermId: +startTermId,
         endYearId: +endYearId,
         endTermId: +endTermId,
+        gradesFilter: grades, 
+        disabilitiesFilter: disabilities,
+        riskLevelsFilters: riskLevels,
+        supportNeededFilters: supportNeeded,
+        racesFilter: races,
       };
       const data = await controllers.reportController.runReport(reportName, options);
       const html = template(data);
