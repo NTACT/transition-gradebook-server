@@ -401,19 +401,19 @@ module.exports = context => {
       countFilteredData(data, 'interventions.math', true, 'Math'),
     ],
     
-    getCareerAwarenessActivities: async (yearId) => 
-      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Career Awareness', yearId)),
+    getCareerAwarenessActivities: async (yearId, students) => 
+      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Career Awareness', yearId, students)),
     
-    getWorkExperienceActivities: async (yearId) => 
-      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Work Experience', yearId)),
+    getWorkExperienceActivities: async (yearId, students) => 
+      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Work Experience', yearId, students)),
     
-    getInclusionActivities: async (yearId) => 
-      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Inclusion', yearId)),
+    getInclusionActivities: async (yearId, students) => 
+      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Inclusion', yearId, students)),
     
-    getStudentSupportsActivities: async (yearId) => 
-      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Student Supports', yearId)),
+    getStudentSupportsActivities: async (yearId, students) => 
+      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Student Supports', yearId, students)),
     
-    getCollaborationActivities: async (yearId) => 
-      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Collaboration', yearId)),
+    getCollaborationActivities: async (yearId, students) => 
+      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Collaboration', yearId, students)),
   };
 };

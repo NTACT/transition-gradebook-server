@@ -9,10 +9,15 @@ module.exports = context => {
       return ActivityTypeGroup.query().eager('[activityTypes]');
     }
 
-    getSchoolYearActivitiesForGroup(typeGroup, yearId) {
+    getSchoolYearActivitiesForGroup(typeGroup, yearId, students) {
+      let studentIds;
+      if(students) {
+        studentIds = students.map(student => student.id);
+      } 
       return ActivityTypeGroup.query()
-        .eager('[activityTypes.activities(inSchoolYear).events]', {
-          inSchoolYear: query => query.where('schoolYearId', yearId)
+        .eager('[activityTypes.activities(inSchoolYear, inStudentIds).events]', {
+          inSchoolYear: query => query.where('schoolYearId', yearId),
+          inStudentIds: query => studentIds ?  query.whereIn('studentId', studentIds) : query
         })
         .where('name', typeGroup)
         .first();
