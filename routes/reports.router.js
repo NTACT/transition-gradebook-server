@@ -35,8 +35,8 @@ module.exports = context => {
         startTermId: +startTermId,
         gradesFilter: grades, 
         disabilitiesFilter: disabilities,
-        riskLevelsFilters: riskLevels,
-        supportNeededFilters: supportNeeded,
+        riskLevelsFilter: riskLevels,
+        supportNeededFilter: supportNeeded,
         racesFilter: races,
       };
       const data = await controllers.reportController.runReport(reportName, options);
@@ -57,8 +57,8 @@ module.exports = context => {
         endTermId: +endTermId,
         gradesFilter: grades, 
         disabilitiesFilter: disabilities,
-        riskLevelsFilters: riskLevels,
-        supportNeededFilters: supportNeeded,
+        riskLevelsFilter: riskLevels,
+        supportNeededFilter: supportNeeded,
         racesFilter: races,
       };
       const data = await controllers.reportController.runReport(reportName, options);
