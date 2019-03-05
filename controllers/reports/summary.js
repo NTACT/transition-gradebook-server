@@ -12,6 +12,8 @@ module.exports = context => {
       schoolYear,
     } = await reportUtils.getSingleTermReportData(options);
 
+    const appliedFilters = reportUtils.getActiveFilters(options);
+
     const data = await resolveObject({
       schoolSettings,
       term,
@@ -31,6 +33,7 @@ module.exports = context => {
       cdgp: reportUtils.getCareerDevelopmentOrGraduationPlanCount(inSchoolStudents),
       attendedIEPMeeting: reportUtils.getIEPMeetingAttendance(inSchoolStudents),
       studentNeeds: reportUtils.getStudentNeeds(inSchoolStudents),
+      appliedFilters,
     });
 
     return data;

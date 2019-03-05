@@ -12,7 +12,8 @@ let RiskSummaryReport = class RiskSummaryReport extends Component {
       startYear,
       startTerm,
       endYear,
-      endTerm
+      endTerm,
+      appliedFilters
     } = this.props.data;
 
     return React.createElement(
@@ -24,7 +25,8 @@ let RiskSummaryReport = class RiskSummaryReport extends Component {
         startYear: startYear,
         startTerm: startTerm,
         endYear: endYear,
-        endTerm: endTerm
+        endTerm: endTerm,
+        appliedFilters: appliedFilters
       }),
       React.createElement(TermsTable, { title: 'Risk Factors', data: riskFactors }),
       React.createElement(TermsTable, { title: 'Areas where students might need support or intervention', data: studentNeeds })

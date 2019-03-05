@@ -31,6 +31,7 @@ class SummaryReport extends Component {
       inclusionActivities,
       studentSupportsActivities,
       collaborationActivities,
+      appliedFilters,
     } = this.props.data;
 
     return (
@@ -40,6 +41,7 @@ class SummaryReport extends Component {
           schoolSettings={schoolSettings}
           schoolYear={schoolYear}
           term={term}
+          appliedFilters={appliedFilters}
         />
         <GradeAndAgeTable data={gradeAndAgeRepartition}/>
     

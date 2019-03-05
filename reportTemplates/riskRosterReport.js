@@ -10,7 +10,8 @@ let RiskRosterReport = class RiskRosterReport extends Component {
       schoolSettings,
       inSchoolStudents,
       term,
-      schoolYear
+      schoolYear,
+      appliedFilters
     } = this.props.data;
     const firstChunk = inSchoolStudents.slice(0, 10);
     const remainingChunks = chunk(inSchoolStudents.slice(10), 12);
@@ -22,7 +23,8 @@ let RiskRosterReport = class RiskRosterReport extends Component {
         reportName: 'Risk Roster Report',
         schoolSettings: schoolSettings,
         schoolYear: schoolYear,
-        term: term
+        term: term,
+        appliedFilters: appliedFilters
       }),
       React.createElement(RiskRosterTable, { data: firstChunk, maxCount: 10 }),
       remainingChunks.map((studentGroup, index) => React.createElement(RiskRosterTable, { key: index, data: studentGroup, maxCount: 12 }))

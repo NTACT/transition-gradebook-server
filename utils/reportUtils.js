@@ -415,5 +415,32 @@ module.exports = context => {
     
     getCollaborationActivities: async (yearId, students) => 
       countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Collaboration', yearId, students)),
+    
+    getActiveFilters: data => {
+      const { gradesFilter,
+        disabilitiesFilter,
+        riskLevelsFilter,
+        supportNeededFilter,
+        racesFilter } = data;
+      
+      const appliedFilters = [];
+      if(gradesFilter && gradesFilter.length) { 
+        appliedFilters.push('grades');
+      }
+      if(disabilitiesFilter && disabilitiesFilter.length) {
+        appliedFilters.push('category');
+      }
+      if(riskLevelsFilter && riskLevelsFilter.length) {
+        appliedFilters.push('risk levels');
+      }
+      if(supportNeededFilter && supportNeededFilter.length) {
+        appliedFilters.push('intervention');
+      }
+      if(racesFilter && racesFilter.length) {
+        appliedFilters.push('races');
+      }
+
+      return appliedFilters;
+    }
   };
 };

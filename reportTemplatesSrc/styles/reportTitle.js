@@ -23,4 +23,17 @@ module.exports = `
         margin-left: 10px;
         margin-right: 10px;
     }
+    
+    .applied-filters {
+        display: -webkit-flex;
+        color: #4A4A4A;
+        font-size: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .filter-label {
+        font-weight: bold;
+        padding-right: 2px;
+        padding-left: 0;
+    }
 `;
