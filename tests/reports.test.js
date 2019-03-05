@@ -30,7 +30,7 @@ async function getLongitudinalReportOptions(rapid, options) {
   };
 }
 
-describe('reports', () => {
+ describe('reports', () => {
   rapidTest('Should be able to run the summary report', async rapid => {
     await rapid.controllers.reportController.runReport('summary', {startYearId: 1, startTermId: 1});
   });
@@ -1627,6 +1627,86 @@ describe('reports', () => {
         expect(count).toEqual(students.filter(s => s.iepRole === iepRole && s.risk === risk).length);
       }
     }
+  });
+
+  rapidTest('Summary report filtering grades', async rapid => {
+    const gradeFilter = ['6', '11', 'age 21'];
+    const unfiltered = await rapid.controllers.reportController.runReport('summary', {startYearId: 1, startTermId: 1,});
+    const data = await rapid.controllers.reportController.runReport('summary', {startYearId: 1, startTermId: 1, gradesFilter: gradeFilter});
+    //All else being equal, the actual data should be different
+    expect(JSON.stringify(data)).not.toEqual(JSON.stringify(unfiltered));
+    expect(data.term.students.length).toEqual(unfiltered.term.students.filter(student => gradeFilter.includes(student.gradeLevel)).length);
+  });
+
+
+  rapidTest('riskRoster report filtering disabilities', async rapid => {
+    const disabilitiesFilter = ['OI', 'SLD'];
+    const unfiltered = await rapid.controllers.reportController.runReport('riskRoster', {startYearId: 1, startTermId: 1,});
+    const data = await rapid.controllers.reportController.runReport('riskRoster', {startYearId: 1, startTermId: 1, disabilitiesFilter});
+    expect(JSON.stringify(data)).not.toEqual(JSON.stringify(unfiltered));
+    const expected = unfiltered.term.students.filter(student => {
+      if(!student.disabilities.length) return false;
+      const studentDisabilities = student.disabilities.map(disability => disability.name);
+      return studentDisabilities.includes('OI') || studentDisabilities.includes('SLD');
+    });
+    const actualStudents = data.term.students;
+    expect(actualStudents.length).toEqual(expected.length);
+    expect(actualStudents).toEqual(expect.arrayContaining(expected));
+  });
+
+  rapidTest('summary report filtering races', async rapid => {
+    const racesFilter = ['AS7', 'AS7'];
+    const unfiltered = await rapid.controllers.reportController.runReport('summary', {startYearId: 1, startTermId: 1,});
+    const data = await rapid.controllers.reportController.runReport('summary', {startYearId: 1, startTermId: 1, racesFilter});
+    expect(JSON.stringify(data)).not.toEqual(JSON.stringify(unfiltered));
+    const expected = unfiltered.term.students.filter(student => {
+      return racesFilter.includes(student.race);
+    });
+    const actualStudents = data.term.students;
+    expect(actualStudents.length).toEqual(expected.length);
+    expect(actualStudents).toEqual(expect.arrayContaining(expected));
+  });
+
+  rapidTest('riskRoster report filtering riskLevels', async rapid => {
+    const riskLevelsFilter = ['ultra', 'No Data'];
+    const unfiltered = await rapid.controllers.reportController.runReport('riskRoster', {startYearId: 1, startTermId: 1,});
+    const data = await rapid.controllers.reportController.runReport('riskRoster', {startYearId: 1, startTermId: 1, riskLevelsFilter});
+    expect(JSON.stringify(data)).not.toEqual(JSON.stringify(unfiltered));
+    const expected = unfiltered.term.students.filter(student => {
+      return riskLevelsFilter.includes(student.risk);
+    });
+    const actualStudents = data.term.students;
+    expect(actualStudents.length).toEqual(expected.length);
+    expect(actualStudents).toEqual(expect.arrayContaining(expected));
+  });
+
+  rapidTest('summary report filtering supportNeeded', async rapid => {
+    const supportNeededFilter = ['math', 'english'];
+    const unfiltered = await rapid.controllers.reportController.runReport('summary', {startYearId: 1, startTermId: 1,});
+    const data = await rapid.controllers.reportController.runReport('summary', {startYearId: 1, startTermId: 1, supportNeededFilter});
+    expect(JSON.stringify(data)).not.toEqual(JSON.stringify(unfiltered));
+    const expected = unfiltered.term.students.filter(student => {
+      const { interventions } = student;
+      return interventions.english || interventions.math;
+    });
+    const actualStudents = data.term.students;
+    expect(actualStudents.length).toEqual(expected.length);
+    expect(actualStudents).toEqual(expect.arrayContaining(expected));
+  });
+
+  rapidTest('riskRoster report filtering multiple', async rapid => {
+    const riskLevelsFilter = ['ultra', 'No Data'];
+    const supportNeededFilter = ['math', 'english'];
+    const unfiltered = await rapid.controllers.reportController.runReport('riskRoster', {startYearId: 1, startTermId: 1,});
+    const data = await rapid.controllers.reportController.runReport('riskRoster', {startYearId: 1, startTermId: 1, riskLevelsFilter, supportNeededFilter});
+    expect(JSON.stringify(data)).not.toEqual(JSON.stringify(unfiltered));
+    const expected = unfiltered.term.students.filter(student => {
+      const { interventions } = student;
+      return riskLevelsFilter.includes(student.risk) && (interventions.english || interventions.math);
+    });
+    const actualStudents = data.term.students;
+    expect(actualStudents.length).toEqual(expected.length);
+    expect(actualStudents).toEqual(expect.arrayContaining(expected));
   });
 });
 

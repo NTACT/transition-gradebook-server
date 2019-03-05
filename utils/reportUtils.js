@@ -20,6 +20,11 @@ module.exports = context => {
     endYearId,
     endTermId,
     studentIds,
+    gradesFilter, 
+    disabilitiesFilter,
+    riskLevelsFilter,
+    supportNeededFilter,
+    racesFilter,
   }) {
     endYearId = endYearId || startYearId;
     endTermId = endTermId || startTermId;
@@ -112,6 +117,8 @@ module.exports = context => {
             ...studentTermInfo,
             ...studentTermInfo.student,
           };
+        }).filter(student => {
+          return applyFiltersToStudent(student, gradesFilter, disabilitiesFilter, riskLevelsFilter, supportNeededFilter, racesFilter);
         })
         .sort((a, b) => {
           if(a.sortName === b.sortName) return 0;
@@ -147,8 +154,18 @@ module.exports = context => {
   }
 
   // Same as getLongitudinalReportData except it only retreives data for a single year/term
-  async function getSingleTermReportData({startYearId, startTermId, studentIds}) {
-    const data = await getLongitudinalReportData({startYearId, startTermId, studentIds});
+  async function getSingleTermReportData({ startYearId, startTermId, studentIds, gradesFilter,
+    disabilitiesFilter,
+    riskLevelsFilter,
+    supportNeededFilter,
+    racesFilter, }) {
+    const data = await getLongitudinalReportData({
+      startYearId, startTermId, studentIds, gradesFilter,
+      disabilitiesFilter,
+      riskLevelsFilter,
+      supportNeededFilter,
+      racesFilter,
+    });
     data.term = data.terms[0];
     data.schoolYear = data.schoolYears[0];
     data.students = data.term.students;
@@ -230,6 +247,58 @@ module.exports = context => {
       everySemester: countFilteredActivityEvents(activityType.activities, 'Every semester'),
       annually: countFilteredActivityEvents(activityType.activities, 'Annually'),
     }));
+
+  const applyFiltersToStudent = (
+    student, 
+    gradesFilter,
+    disabilitiesFilter,
+    riskLevelsFilter,
+    supportNeededFilter,
+    racesFilter) => {
+    const { gradeLevel, risk, disabilities, race, interventions } = student;
+    if (gradesFilter && !gradesFilter.includes(gradeLevel)) {
+      return false;
+    }
+    if (disabilitiesFilter) {
+      //If we're filtering to disabilities and there are none, then filter students without disabilities out
+      if (!disabilities.length) {
+        return false;
+      }
+      let hasFilteredDisability = false;
+      for (let disability of disabilities) {
+        hasFilteredDisability = hasFilteredDisability || disabilitiesFilter.includes(disability.name);
+      }
+      if (!hasFilteredDisability) return false;
+    }
+
+    if (racesFilter) {
+      if (!racesFilter.includes(race)) {
+        return false;
+      }
+    }
+
+    if (riskLevelsFilter) {
+      if (!riskLevelsFilter.includes(risk)) {
+        return false;
+      }
+    }
+
+    if (supportNeededFilter) {
+      let hasFilteredSupportNeeded = false;;
+      for (let support of enums.supportNeeded) {
+        if (supportNeededFilter.includes(support) && interventions[support]) {
+          hasFilteredSupportNeeded = true;
+          break;
+        }
+      }
+      if (!hasFilteredSupportNeeded) {
+        return false;
+      }
+    }
+
+    //Passes all filters
+    return true;
+  }
 
   return {
     getLongitudinalReportData,
@@ -332,19 +401,19 @@ module.exports = context => {
       countFilteredData(data, 'interventions.math', true, 'Math'),
     ],
     
-    getCareerAwarenessActivities: async (yearId) => 
-      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Career Awareness', yearId)),
+    getCareerAwarenessActivities: async (yearId, students) => 
+      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Career Awareness', yearId, students)),
     
-    getWorkExperienceActivities: async (yearId) => 
-      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Work Experience', yearId)),
+    getWorkExperienceActivities: async (yearId, students) => 
+      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Work Experience', yearId, students)),
     
-    getInclusionActivities: async (yearId) => 
-      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Inclusion', yearId)),
+    getInclusionActivities: async (yearId, students) => 
+      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Inclusion', yearId, students)),
     
-    getStudentSupportsActivities: async (yearId) => 
-      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Student Supports', yearId)),
+    getStudentSupportsActivities: async (yearId, students) => 
+      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Student Supports', yearId, students)),
     
-    getCollaborationActivities: async (yearId) => 
-      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Collaboration', yearId)),
+    getCollaborationActivities: async (yearId, students) => 
+      countActivityEvents(await controllers.activityController.getSchoolYearActivitiesForGroup('Collaboration', yearId, students)),
   };
 };
