@@ -6,6 +6,7 @@ module.exports = context => {
   return async function createRiskSummaryReport(options) {
     const data = await reportUtils.getLongitudinalReportData(options);
     const { terms } = data;
+    const appliedFilters = reportUtils.getActiveFilters(options);
 
     const riskFactors = {
       header: map(terms, term => ({
@@ -50,6 +51,7 @@ module.exports = context => {
       ...data,
       riskFactors,
       studentNeeds,
+      appliedFilters,
     };
   };
 };

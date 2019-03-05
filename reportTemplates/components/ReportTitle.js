@@ -1,5 +1,4 @@
 const React = require('react');
-const { first, capitalize } = require('lodash');
 const reportTitleStyle = require('../styles/reportTitle');
 const LogoImage = require('./LogoImage');
 
@@ -9,8 +8,29 @@ const Separator = () => React.createElement(
     '|'
 );
 
+const AppliedFilters = props => {
+    const { appliedFilters } = props;
+    if (!appliedFilters || !appliedFilters.length) {
+        return null;
+    }
+    return React.createElement(
+        'div',
+        { className: 'applied-filters' },
+        React.createElement(
+            'div',
+            { className: 'filter-label' },
+            'filters:'
+        ),
+        React.createElement(
+            'div',
+            { className: 'filter-items' },
+            appliedFilters.join(', ')
+        )
+    );
+};
+
 module.exports = props => {
-    const { reportName, schoolSettings, timeLabel } = props;
+    const { reportName, schoolSettings, timeLabel, appliedFilters } = props;
     const { name } = schoolSettings;
 
     return React.createElement(
@@ -44,7 +64,9 @@ module.exports = props => {
                 'div',
                 null,
                 timeLabel
-            )
+            ),
+            appliedFilters && appliedFilters.length && React.createElement(Separator, null),
+            React.createElement(AppliedFilters, { appliedFilters: appliedFilters })
         ),
         React.createElement(
             'style',

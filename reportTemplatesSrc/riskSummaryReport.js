@@ -13,6 +13,7 @@ class RiskSummaryReport extends Component {
       startTerm,
       endYear,
       endTerm,
+      appliedFilters
     } = this.props.data;
 
     return (
@@ -24,6 +25,7 @@ class RiskSummaryReport extends Component {
           startTerm={startTerm}
           endYear={endYear}
           endTerm={endTerm}
+          appliedFilters={appliedFilters}
         />
         <TermsTable title='Risk Factors' data={riskFactors} />
         <TermsTable title='Areas where students might need support or intervention' data={studentNeeds} />

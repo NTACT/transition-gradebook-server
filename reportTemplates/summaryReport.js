@@ -30,7 +30,8 @@ let SummaryReport = class SummaryReport extends Component {
       workExperienceActivities,
       inclusionActivities,
       studentSupportsActivities,
-      collaborationActivities
+      collaborationActivities,
+      appliedFilters
     } = this.props.data;
 
     return React.createElement(
@@ -40,7 +41,8 @@ let SummaryReport = class SummaryReport extends Component {
         reportName: 'Summary Report',
         schoolSettings: schoolSettings,
         schoolYear: schoolYear,
-        term: term
+        term: term,
+        appliedFilters: appliedFilters
       }),
       React.createElement(GradeAndAgeTable, { data: gradeAndAgeRepartition }),
       React.createElement(DisabilityTable, { data: disabilityRepartition }),

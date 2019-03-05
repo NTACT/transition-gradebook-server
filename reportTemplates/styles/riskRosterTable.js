@@ -3,7 +3,6 @@ const riskIndicatorStyle = require('./riskIndicator');
 module.exports = `
   .risk-roster-table {
     page-break-inside: avoid;
-    width: 100%;
   }
 
   .risk-roster-spacer {
@@ -13,7 +12,6 @@ module.exports = `
   .risk-roster-row,
   .risk-roster-placeholder {
     width: 100%;
-    max-width: 100%;
     height: 40px;
     display: -webkit-flex;
     font-size: 10px;
@@ -47,12 +45,12 @@ module.exports = `
 
   .risk-roster-header-student,
   .risk-roster-student {
-    width: 7.25%;
+    width: 8%;
   }
 
   .risk-roster-header-risk,
   .risk-roster-risk {
-    width: 9.25%;
+    width: 10%;
   }
 
   .risk-roster-indicator .risk-indicator-container, .risk-roster-name div {

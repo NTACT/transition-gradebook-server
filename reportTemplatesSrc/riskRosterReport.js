@@ -11,6 +11,7 @@ class RiskRosterReport extends Component {
       inSchoolStudents,
       term,
       schoolYear,
+      appliedFilters,
     } = this.props.data;
     const firstChunk = inSchoolStudents.slice(0, 10);
     const remainingChunks = chunk(inSchoolStudents.slice(10), 12);
@@ -22,6 +23,7 @@ class RiskRosterReport extends Component {
           schoolSettings={schoolSettings}
           schoolYear={schoolYear}
           term={term}
+          appliedFilters={appliedFilters}
         />
         <RiskRosterTable data={firstChunk} maxCount={10}/>
         {remainingChunks.map((studentGroup, index) =>
