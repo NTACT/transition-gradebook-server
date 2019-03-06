@@ -1,6 +1,5 @@
 module.exports = context => {
   const { success, fail } = require('../utils/envelope');
-  const nodemailer = require('nodemailer');
   const uuid = require('uuid/v1');
   const bcrypt = require('bcryptjs');
   const filter = require('array-promise-filter');
@@ -102,7 +101,7 @@ module.exports = context => {
       }
 
       const { siteUrl, emailService } = context.config;
-      if (!emailService) {
+      if (!context.sendMailEnabled) {
         console.error(`Error: Email service is not defined in your configuration file. Could not send reset password email to ${username}.`)
         console.error(context.config);
         return fail(ctx, 'Email configuration error. Please contact your system administrator.', 500);
@@ -114,7 +113,6 @@ module.exports = context => {
       }
 
       const { fromEmail, ...transporterOptions } = emailService;
-      const transporter = nodemailer.createTransport(transporterOptions);
 
       const uid = uuid();
       await hashAndInsertPasswordRequestIdentifier(user, uid)
@@ -139,15 +137,7 @@ module.exports = context => {
       };
 
       try {
-        await new Promise((resolve, reject) => {
-          transporter.sendMail(mailOptions, error => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve();
-            }
-          });
-        });
+        await context.sendMail(mailOptions)
         success(ctx, { message: `An email was sent to ${username}.`, uid: uid});
       } catch(error) {
         fail(ctx, 'The email service was unable to send an email.', 500);
