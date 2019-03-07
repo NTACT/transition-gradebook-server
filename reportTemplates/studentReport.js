@@ -1,19 +1,34 @@
 const React = require('react');
-const { Component } = React;
+
+const {
+  Component
+} = React;
+
 const SingleTermReportTitle = require('./components/SingleTermReportTitle');
+
 const StudentStatusBar = require('./components/StudentStatusBar');
+
 const StudentStatusBarExtraInfo = require('./components/StudentStatusBarExtraInfo');
+
 const ActivitiesTable = require('./components/ActivitiesTable');
+
 const StudentRiskFactorsList = require('./components/StudentRiskFactorsList');
+
 const Checkboxes = require('./components/Checkboxes');
 
-const getTotalEvents = ({ careerAwareness, paidWork, inclusion, support, collaboration }) => {
+const getTotalEvents = ({
+  careerAwareness,
+  paidWork,
+  inclusion,
+  support,
+  collaboration
+}) => {
   return getEvents(careerAwareness) + getEvents(paidWork) + getEvents(inclusion) + getEvents(support) + getEvents(collaboration);
 };
 
 const getEvents = activities => (activities || []).reduce((sum, value) => sum + value.events, 0);
 
-let StudentReport = class StudentReport extends Component {
+class StudentReport extends Component {
   render() {
     const {
       schoolSettings,
@@ -22,73 +37,64 @@ let StudentReport = class StudentReport extends Component {
       schoolYear,
       term
     } = this.props.data;
-
-    return React.createElement(
-      React.Fragment,
-      null,
-      students.map((student, index) => {
-        const {
-          studentInfo,
-          careerAwareness,
-          paidWork,
-          inclusion,
-          support,
-          collaboration,
-          riskFactors,
-          skills
-        } = student;
-        const {
-          firstName,
-          lastName
-        } = studentInfo;
-        const totalEventCount = getTotalEvents(student);
-
-        return React.createElement(
-          React.Fragment,
-          { key: index },
-          React.createElement(SingleTermReportTitle, {
-            reportName: `Student Report: ${firstName} ${lastName}`,
-            schoolSettings: schoolSettings,
-            schoolYear: schoolYear,
-            term: term
-          }),
-          React.createElement(StudentStatusBar, { student: studentInfo }),
-          React.createElement(StudentStatusBarExtraInfo, { student: studentInfo }),
-          React.createElement(
-            'div',
-            { className: 'activities-title' },
-            'Activities (',
-            totalEventCount,
-            ' total events)'
-          ),
-          React.createElement(ActivitiesTable, {
-            title: 'Career Awareness Activities',
-            data: careerAwareness,
-            activitiesHeaders: activitiesHeaders
-          }),
-          React.createElement(ActivitiesTable, {
-            title: 'Paid Work Activities',
-            data: paidWork
-          }),
-          React.createElement(ActivitiesTable, {
-            title: 'Inclusion Activities',
-            data: inclusion
-          }),
-          React.createElement(ActivitiesTable, {
-            title: 'Student Support Activities',
-            data: support
-          }),
-          React.createElement(ActivitiesTable, {
-            title: 'Collaboration Activities',
-            data: collaboration
-          }),
-          React.createElement(StudentRiskFactorsList, { title: 'Risk Factors', risk: studentInfo.risk, data: riskFactors }),
-          React.createElement(Checkboxes, { title: 'Student Skills', data: skills })
-        );
-      })
-    );
+    return React.createElement(React.Fragment, null, students.map((student, index) => {
+      const {
+        studentInfo,
+        careerAwareness,
+        paidWork,
+        inclusion,
+        support,
+        collaboration,
+        riskFactors,
+        skills
+      } = student;
+      const {
+        firstName,
+        lastName
+      } = studentInfo;
+      const totalEventCount = getTotalEvents(student);
+      return React.createElement(React.Fragment, {
+        key: index
+      }, React.createElement(SingleTermReportTitle, {
+        reportName: `Student Report: ${firstName} ${lastName}`,
+        schoolSettings: schoolSettings,
+        schoolYear: schoolYear,
+        term: term
+      }), React.createElement(StudentStatusBar, {
+        student: studentInfo
+      }), React.createElement(StudentStatusBarExtraInfo, {
+        student: studentInfo
+      }), React.createElement("div", {
+        className: "activities-title"
+      }, "Activities (", totalEventCount, " total events)"), React.createElement(ActivitiesTable, {
+        title: "Career Awareness Activities",
+        data: careerAwareness,
+        activitiesHeaders: activitiesHeaders
+      }), React.createElement(ActivitiesTable, {
+        title: "Paid Work Activities",
+        data: paidWork
+      }), React.createElement(ActivitiesTable, {
+        title: "Inclusion Activities",
+        data: inclusion
+      }), React.createElement(ActivitiesTable, {
+        title: "Student Support Activities",
+        data: support
+      }), React.createElement(ActivitiesTable, {
+        title: "Collaboration Activities",
+        data: collaboration
+      }), React.createElement(StudentRiskFactorsList, {
+        title: "Risk Factors",
+        risk: studentInfo.risk,
+        data: riskFactors
+      }), React.createElement(Checkboxes, {
+        title: "Student Skills",
+        data: skills
+      }));
+    }));
   }
-};
 
+}
 
-module.exports = data => React.createElement(StudentReport, { data: data });
+module.exports = data => React.createElement(StudentReport, {
+  data: data
+});

@@ -1,9 +1,14 @@
 const React = require('react');
-const { Component } = React;
+
+const {
+  Component
+} = React;
+
 const SingleTermReportTitle = require('./components/SingleTermReportTitle');
+
 const VerticalBarChart = require('./components/VerticalBarChart');
 
-let NumberOfStudentsStandard = class NumberOfStudentsStandard extends Component {
+class NumberOfStudentsStandard extends Component {
   render() {
     const {
       schoolSettings,
@@ -19,67 +24,84 @@ let NumberOfStudentsStandard = class NumberOfStudentsStandard extends Component 
       genders,
       races
     } = this.props.data;
-
-    return React.createElement(
-      React.Fragment,
-      null,
-      genders && React.createElement(
-        React.Fragment,
-        null,
-        React.createElement(SingleTermReportTitle, { reportName: `Number of Students - by Gender`, schoolSettings: schoolSettings, schoolYear: schoolYear, term: term }),
-        React.createElement(VerticalBarChart, { title: 'Number of Students', data: genders })
-      ),
-      races && React.createElement(
-        React.Fragment,
-        null,
-        React.createElement(SingleTermReportTitle, { reportName: `Number of Students - by Race`, schoolSettings: schoolSettings, schoolYear: schoolYear, term: term }),
-        React.createElement(VerticalBarChart, { title: 'Number of Students', data: races })
-      ),
-      postSchool && React.createElement(
-        React.Fragment,
-        null,
-        React.createElement(SingleTermReportTitle, { reportName: `Number of Students - by Post-school Outcomes`, schoolSettings: schoolSettings, schoolYear: schoolYear, term: term }),
-        React.createElement(VerticalBarChart, { title: 'Number of Students', data: postSchool })
-      ),
-      risks && React.createElement(
-        React.Fragment,
-        null,
-        React.createElement(SingleTermReportTitle, { reportName: `Number of Students - by Risk Level`, schoolSettings: schoolSettings, schoolYear: schoolYear, term: term }),
-        React.createElement(VerticalBarChart, { title: 'Number of Students', data: risks })
-      ),
-      skills && React.createElement(
-        React.Fragment,
-        null,
-        React.createElement(SingleTermReportTitle, { reportName: `Number of Students - by Skills Training`, schoolSettings: schoolSettings, schoolYear: schoolYear, term: term }),
-        React.createElement(VerticalBarChart, { title: 'Number of Students', data: skills })
-      ),
-      supportNeeded && React.createElement(
-        React.Fragment,
-        null,
-        React.createElement(SingleTermReportTitle, { reportName: `Number of Students - by Support Needs`, schoolSettings: schoolSettings, schoolYear: schoolYear, term: term }),
-        React.createElement(VerticalBarChart, { title: 'Number of Students', data: supportNeeded })
-      ),
-      roleInIEPMeeting && React.createElement(
-        React.Fragment,
-        null,
-        React.createElement(SingleTermReportTitle, { reportName: `Number of Students - by Role in IEP Meeting`, schoolSettings: schoolSettings, schoolYear: schoolYear, term: term }),
-        React.createElement(VerticalBarChart, { title: 'Number of Students', data: roleInIEPMeeting })
-      ),
-      disabilities && React.createElement(
-        React.Fragment,
-        null,
-        React.createElement(SingleTermReportTitle, { reportName: `Number of Students - by Disability`, schoolSettings: schoolSettings, schoolYear: schoolYear, term: term }),
-        React.createElement(VerticalBarChart, { title: 'Number of Students', data: disabilities, barSize: 20 })
-      ),
-      activities && React.createElement(
-        React.Fragment,
-        null,
-        React.createElement(SingleTermReportTitle, { reportName: `Number of Students - by Activities`, schoolSettings: schoolSettings, schoolYear: schoolYear, term: term }),
-        React.createElement(VerticalBarChart, { title: 'Number of Students', data: activities })
-      )
-    );
+    return React.createElement(React.Fragment, null, genders && React.createElement(React.Fragment, null, React.createElement(SingleTermReportTitle, {
+      reportName: `Number of Students - by Gender`,
+      schoolSettings: schoolSettings,
+      schoolYear: schoolYear,
+      term: term
+    }), React.createElement(VerticalBarChart, {
+      title: "Number of Students",
+      data: genders
+    })), races && React.createElement(React.Fragment, null, React.createElement(SingleTermReportTitle, {
+      reportName: `Number of Students - by Race`,
+      schoolSettings: schoolSettings,
+      schoolYear: schoolYear,
+      term: term
+    }), React.createElement(VerticalBarChart, {
+      title: "Number of Students",
+      data: races
+    })), postSchool && React.createElement(React.Fragment, null, React.createElement(SingleTermReportTitle, {
+      reportName: `Number of Students - by Post-school Outcomes`,
+      schoolSettings: schoolSettings,
+      schoolYear: schoolYear,
+      term: term
+    }), React.createElement(VerticalBarChart, {
+      title: "Number of Students",
+      data: postSchool
+    })), risks && React.createElement(React.Fragment, null, React.createElement(SingleTermReportTitle, {
+      reportName: `Number of Students - by Risk Level`,
+      schoolSettings: schoolSettings,
+      schoolYear: schoolYear,
+      term: term
+    }), React.createElement(VerticalBarChart, {
+      title: "Number of Students",
+      data: risks
+    })), skills && React.createElement(React.Fragment, null, React.createElement(SingleTermReportTitle, {
+      reportName: `Number of Students - by Skills Training`,
+      schoolSettings: schoolSettings,
+      schoolYear: schoolYear,
+      term: term
+    }), React.createElement(VerticalBarChart, {
+      title: "Number of Students",
+      data: skills
+    })), supportNeeded && React.createElement(React.Fragment, null, React.createElement(SingleTermReportTitle, {
+      reportName: `Number of Students - by Support Needs`,
+      schoolSettings: schoolSettings,
+      schoolYear: schoolYear,
+      term: term
+    }), React.createElement(VerticalBarChart, {
+      title: "Number of Students",
+      data: supportNeeded
+    })), roleInIEPMeeting && React.createElement(React.Fragment, null, React.createElement(SingleTermReportTitle, {
+      reportName: `Number of Students - by Role in IEP Meeting`,
+      schoolSettings: schoolSettings,
+      schoolYear: schoolYear,
+      term: term
+    }), React.createElement(VerticalBarChart, {
+      title: "Number of Students",
+      data: roleInIEPMeeting
+    })), disabilities && React.createElement(React.Fragment, null, React.createElement(SingleTermReportTitle, {
+      reportName: `Number of Students - by Disability`,
+      schoolSettings: schoolSettings,
+      schoolYear: schoolYear,
+      term: term
+    }), React.createElement(VerticalBarChart, {
+      title: "Number of Students",
+      data: disabilities,
+      barSize: 20
+    })), activities && React.createElement(React.Fragment, null, React.createElement(SingleTermReportTitle, {
+      reportName: `Number of Students - by Activities`,
+      schoolSettings: schoolSettings,
+      schoolYear: schoolYear,
+      term: term
+    }), React.createElement(VerticalBarChart, {
+      title: "Number of Students",
+      data: activities
+    })));
   }
-};
 
+}
 
-module.exports = data => React.createElement(NumberOfStudentsStandard, { data: data });
+module.exports = data => React.createElement(NumberOfStudentsStandard, {
+  data: data
+});
