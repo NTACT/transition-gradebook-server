@@ -1,4 +1,3 @@
-
 module.exports = `
   .activities-title {
     text-transform: uppercase;

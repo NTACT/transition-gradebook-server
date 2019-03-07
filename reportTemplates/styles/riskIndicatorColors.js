@@ -1,5 +1,4 @@
 module.exports = ['#A5DA68', '#FAE745', '#FCB32F', '#D43425'];
-
 module.exports.riskIndicatorKeys = {
   'No Data': {
     key: 'No Data',
@@ -28,7 +27,6 @@ module.exports.riskIndicatorKeys = {
     label2: 'Ultra'
   }
 };
-
 module.exports.riskIndicatorArray = Object.values(module.exports.riskIndicatorKeys).map(v => {
   return {
     key: v.key || v.label1,

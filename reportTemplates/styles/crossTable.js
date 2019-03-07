@@ -1,7 +1,5 @@
-
 const red = '#D43425';
 const gray = '#D8D8D8';
-
 module.exports = `
 .cross-table {
   text-align: center;
