@@ -19,4 +19,15 @@ module.exports = {
       password: '',
     },
   },
+
+  emailService: {
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    fromEmail: '',
+    auth: {
+      user: '',
+      pass: ''
+    }
+  },
 };
