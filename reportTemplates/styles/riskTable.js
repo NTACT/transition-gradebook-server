@@ -4,7 +4,7 @@ module.exports = `
     .risk-table {
         display: -webkit-flex;
         width: 100%;
-        background: #F4F4F4;
+        background: #d3d3d3;
         font-size: 14px;
         -webkit-justify-content: space-between;
     }
@@ -15,7 +15,7 @@ module.exports = `
         display: -webkit-flex;
         -webkit-justify-content: space-between;
         -webkit-align-items: center;
-        border-right: 2px solid white;
+        border-right: 4px solid white;
     }
 
     .risk-table-cell:last-child {

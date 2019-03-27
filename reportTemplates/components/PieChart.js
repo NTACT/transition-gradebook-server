@@ -55,7 +55,7 @@ module.exports = function PieChartWrapper(props) {
     }
   }), entry.label), React.createElement("span", {
     className: "piechart-value"
-  }, isRatio && Math.round(entry.value * 100) || isPercentage && Math.round(entry.value) || isAbsolute && total > 0 && Math.round(entry.value / total * 100) || 0, "%")))), React.createElement(PieChart, {
+  }, isPercentage ? '' : React.createElement("span", null, entry.value, "\xA0"), "(", isRatio && Math.round(entry.value * 100) || isPercentage && Math.round(entry.value) || isAbsolute && total > 0 && Math.round(entry.value / total * 100) || 0, "%)")))), React.createElement(PieChart, {
     data: addColorScheme(data),
     style: {
       width: diameter,

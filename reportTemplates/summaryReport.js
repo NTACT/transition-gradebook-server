@@ -45,6 +45,9 @@ class SummaryReport extends Component {
       collaborationActivities,
       appliedFilters
     } = this.props.data;
+    console.log({
+      cdgp
+    });
     return React.createElement(React.Fragment, null, React.createElement(SingleTermReportTitle, {
       reportName: "Summary Report",
       schoolSettings: schoolSettings,
@@ -64,16 +67,16 @@ class SummaryReport extends Component {
       title: "Received Skills Training",
       data: receivedSkillsTraining
     })), React.createElement(ChartContainer, null, React.createElement(PieChart, {
+      title: "Attended IEP Meeting",
+      data: attendedIEPMeeting,
+      diameter: 100
+    }), React.createElement(PieChart, {
       title: "Gender",
       data: gender,
       diameter: 100
     }), React.createElement(PieChart, {
-      title: "Career Development or Graduation Plan",
+      title: "Grad. Plan or ILP",
       data: cdgp,
-      diameter: 100
-    }), React.createElement(PieChart, {
-      title: "Attended IEP Meeting",
-      data: attendedIEPMeeting,
       diameter: 100
     })), React.createElement(StudentNeedsList, {
       title: "Number of Students",

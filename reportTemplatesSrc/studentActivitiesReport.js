@@ -3,6 +3,7 @@ const { Component } = React;
 const MultiTermReportTitle = require('./components/MultiTermReportTitle');
 const TermsTable = require('./components/TermsTable');
 const StudentStatusBar = require('./components/StudentStatusBar');
+const studentRiskReportStyle = require('./styles/studentRiskReport');
 
 class StudentActivitiesReport extends Component {
   render() {
@@ -14,6 +15,7 @@ class StudentActivitiesReport extends Component {
       endTerm,
       terms,
       studentInfo,
+      students,
       activityTypeGroups,
     } = this.props.data;
 
@@ -48,6 +50,17 @@ class StudentActivitiesReport extends Component {
             </tbody>
           </ActivityTable>
         )}
+        {students.map((student, i) => {
+          const { riskFactors, studentNeeds } = student;
+          return (
+            <React.Fragment key={i}>
+              <div style={{pageBreakBefore: 'always'}}/>
+              <TermsTable title='Risk Factors' data={riskFactors} rowHeight={23}/>
+              <TermsTable title='Areas where student might need support or intervention' data={studentNeeds} rowHeight={20} useIcons />
+            </React.Fragment>
+          );
+        })}
+        <style>{studentRiskReportStyle}</style>
       </React.Fragment>
     );
   }
