@@ -149,6 +149,29 @@ module.exports = context => {
               value: student.hasSocialSkills,
             },
           ],
+
+          studentNeeds: [
+            {
+              label: 'Attendance',
+              value: student.interventions.attendance,
+            },
+            {
+              label: 'Behavior',
+              value: student.interventions.behavior,
+            },
+            {
+              label: 'Engagement',
+              value: student.interventions.engagement,
+            },
+            {
+              label: 'English / LEA',
+              value: student.interventions.english,
+            },
+            {
+              label: 'Math',
+              value: student.interventions.math,
+            },
+          ]
         };
       })
     };

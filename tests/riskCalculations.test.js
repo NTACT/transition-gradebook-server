@@ -482,26 +482,26 @@ describe('Risk Calculations', () => {
     }
   });
 
-  rapidTest('calculateRiskLevelsForKey gpa should return low the gpa is in range 2.6-2.99 for any grade', rapid => {
-    for(let gpa = 2.6; gpa <= 2.99; gpa += 0.01) {
-      for(let grade of grades) {
-        expect(rapid.controllers.riskDataController.calculateRiskLevelsForKey('gpa', gpa, grade)).toEqual('low');
-      }
-    }
-  });
-
-  rapidTest('calculateRiskLevelsForKey gpa should return medium the gpa is in range 2-2.59 for any grade', rapid => {
-    for(let gpa = 2; gpa <= 2.59; gpa += 0.01) {
+  rapidTest('calculateRiskLevelsForKey gpa should return medium the gpa is in range 2.5-3 for any grade', rapid => {
+    for(let gpa = 2.5; gpa <= 2.99; gpa += 0.01) {
       for(let grade of grades) {
         expect(rapid.controllers.riskDataController.calculateRiskLevelsForKey('gpa', gpa, grade)).toEqual('medium');
       }
     }
   });
 
-  rapidTest('calculateRiskLevelsForKey gpa should return high the gpa is in range 0-1.99 for any grade', rapid => {
-    for(let gpa = 0; gpa <= 1.99; gpa += 0.01) {
+  rapidTest('calculateRiskLevelsForKey gpa should return high if the gpa is in range 2-2.5 for any grade', rapid => {
+    for(let gpa = 2; gpa <= 2.49; gpa += 0.01) {
       for(let grade of grades) {
         expect(rapid.controllers.riskDataController.calculateRiskLevelsForKey('gpa', gpa, grade)).toEqual('high');
+      }
+    }
+  });
+
+  rapidTest('calculateRiskLevelsForKey gpa should return ultra if the gpa is in range 0-1.99 for any grade', rapid => {
+    for(let gpa = 0; gpa <= 1.99; gpa += 0.01) {
+      for(let grade of grades) {
+        expect(rapid.controllers.riskDataController.calculateRiskLevelsForKey('gpa', gpa, grade)).toEqual('ultra');
       }
     }
   });

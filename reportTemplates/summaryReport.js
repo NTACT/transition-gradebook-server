@@ -34,7 +34,6 @@ class SummaryReport extends Component {
       roleInIEPMeeting,
       receivedSkillsTraining,
       gender,
-      race,
       cdgp,
       attendedIEPMeeting,
       studentNeeds,
@@ -45,9 +44,6 @@ class SummaryReport extends Component {
       collaborationActivities,
       appliedFilters
     } = this.props.data;
-    console.log({
-      cdgp
-    });
     return React.createElement(React.Fragment, null, React.createElement(SingleTermReportTitle, {
       reportName: "Summary Report",
       schoolSettings: schoolSettings,
