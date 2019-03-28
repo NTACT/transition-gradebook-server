@@ -46,7 +46,8 @@ class StudentReport extends Component {
         support,
         collaboration,
         riskFactors,
-        skills
+        skills,
+        studentNeeds
       } = student;
       const {
         firstName,
@@ -89,6 +90,12 @@ class StudentReport extends Component {
       }), React.createElement(Checkboxes, {
         title: "Student Skills",
         data: skills
+      }), React.createElement(Checkboxes, {
+        title: "Areas where student might need support or intervention",
+        data: studentNeeds,
+        style: {
+          marginTop: 50
+        }
       }));
     }));
   }

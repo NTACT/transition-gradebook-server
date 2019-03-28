@@ -36,11 +36,12 @@ module.exports = function PieChartWrapper(props) {
                       {entry.label}
                     </span>
                     <span className='piechart-value'>
-                        {
+                        {isPercentage ? '' : <span>{entry.value}&nbsp;</span>}
+                        ({
                             (isRatio && Math.round(entry.value * 100)) 
                             || (isPercentage && Math.round(entry.value))
                             || ((isAbsolute && total > 0 && Math.round(entry.value / total * 100)) || 0)
-                        }%
+                        }%)
                     </span>
                 </div>
               )}

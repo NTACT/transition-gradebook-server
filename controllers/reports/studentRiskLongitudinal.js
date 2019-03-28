@@ -10,6 +10,7 @@ module.exports = context => {
   }
 
   return async function runStudentRiskLongitudinalReport(options) {
+    const reportData = await reportUtils.getLongitudinalReportData(options);
     const {
       schoolSettings,
       terms,
@@ -17,10 +18,16 @@ module.exports = context => {
       startTerm,
       endYear,
       endTerm,
-    } = await reportUtils.getLongitudinalReportData(options);
+    } = reportData;
     const students = uniqBy(flatMap(terms, term => term.students), 'id');
 
+    reportData.studentInfo = reportData.terms.map(term => {
+      term.student = term.students[0];
+      return term.student;
+    })[0];
+
     return {
+      ...reportData,
       schoolSettings,
       startYear,
       startTerm,

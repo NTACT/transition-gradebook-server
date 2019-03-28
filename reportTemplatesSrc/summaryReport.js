@@ -22,7 +22,6 @@ class SummaryReport extends Component {
       roleInIEPMeeting,
       receivedSkillsTraining,
       gender,
-      race,
       cdgp,
       attendedIEPMeeting,
       studentNeeds,
@@ -53,9 +52,9 @@ class SummaryReport extends Component {
           <HorizontalBarChart title='Received Skills Training' data={receivedSkillsTraining} />
         </ChartContainer>
         <ChartContainer>
-          <PieChart title='Gender' data={gender} diameter={100} />
-          <PieChart title='Career Development or Graduation Plan' data={cdgp} diameter={100} />
           <PieChart title='Attended IEP Meeting' data={attendedIEPMeeting} diameter={100} />
+          <PieChart title='Gender' data={gender} diameter={100} />
+          <PieChart title='Grad. Plan or ILP' data={cdgp} diameter={100} />
         </ChartContainer>
 
         <StudentNeedsList title='Number of Students' data={studentNeeds} />

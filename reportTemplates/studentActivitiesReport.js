@@ -12,6 +12,8 @@ const TermsTable = require('./components/TermsTable');
 
 const StudentStatusBar = require('./components/StudentStatusBar');
 
+const studentRiskReportStyle = require('./styles/studentRiskReport');
+
 class StudentActivitiesReport extends Component {
   render() {
     const {
@@ -22,6 +24,7 @@ class StudentActivitiesReport extends Component {
       endTerm,
       terms,
       studentInfo,
+      students,
       activityTypeGroups
     } = this.props.data;
     return React.createElement(React.Fragment, null, React.createElement(MultiTermReportTitle, {
@@ -60,7 +63,28 @@ class StudentActivitiesReport extends Component {
         fontSize: 8,
         borderLeft: '1px solid #D43425'
       }
-    }, term.student ? term.student.activities.filter(a => a.activityTypeId === type.id).length : 'N/A'))))))));
+    }, term.student ? term.student.activities.filter(a => a.activityTypeId === type.id).length : 'N/A'))))))), students.map((student, i) => {
+      const {
+        riskFactors,
+        studentNeeds
+      } = student;
+      return React.createElement(React.Fragment, {
+        key: i
+      }, React.createElement("div", {
+        style: {
+          pageBreakBefore: 'always'
+        }
+      }), React.createElement(TermsTable, {
+        title: "Risk Factors",
+        data: riskFactors,
+        rowHeight: 23
+      }), React.createElement(TermsTable, {
+        title: "Areas where student might need support or intervention",
+        data: studentNeeds,
+        rowHeight: 20,
+        useIcons: true
+      }));
+    }), React.createElement("style", null, studentRiskReportStyle));
   }
 
 }

@@ -10,9 +10,9 @@ const Checkbox = ({value, label}) =>
     <div className='checkbox-label'>{label}</div>
   </div>
 
-module.exports = ({ data, title}) => {
+module.exports = ({ data, title, ...rest }) => {
   return (
-    <div className='checkboxes-container'>
+    <div className='checkboxes-container' {...rest}>
       <div className='checkboxes-title'>
         {title}
       </div>

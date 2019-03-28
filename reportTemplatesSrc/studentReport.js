@@ -35,13 +35,14 @@ class StudentReport extends Component {
             collaboration,
             riskFactors,
             skills,
+            studentNeeds,
           } = student;
           const {
             firstName,
             lastName,
           } = studentInfo;
           const totalEventCount = getTotalEvents(student);
-          
+
           return (
             <React.Fragment key={index}>
               <SingleTermReportTitle
@@ -76,6 +77,7 @@ class StudentReport extends Component {
               />
               <StudentRiskFactorsList title='Risk Factors' risk={studentInfo.risk} data={riskFactors} />
               <Checkboxes title='Student Skills' data={skills} />
+              <Checkboxes title='Areas where student might need support or intervention' data={studentNeeds} style={{marginTop: 50}}/>
             </React.Fragment>
           );
         })}

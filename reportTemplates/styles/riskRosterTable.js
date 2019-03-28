@@ -50,7 +50,7 @@ module.exports = `
 
   .risk-roster-header-risk,
   .risk-roster-risk {
-    width: 10%;
+    width: 9%;
   }
 
   .risk-roster-indicator .risk-indicator-container, .risk-roster-name div {
@@ -77,7 +77,7 @@ module.exports = `
   }
 
   .risk-roster-name {
-    width: 13%;
+    width: 11%;
     -webkit-justify-content: flex-start !important;
   }
 
