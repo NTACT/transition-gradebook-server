@@ -45,5 +45,5 @@ module.exports = props => {
     }
   })), React.createElement("div", {
     className: "barchart-value"
-  }, entry.value)))), React.createElement("style", null, horizontalBarChartStyle));
+  }, entry.value, " (", Math.round(entry.value / maxValue * 100), "%)")))), React.createElement("style", null, horizontalBarChartStyle));
 };
