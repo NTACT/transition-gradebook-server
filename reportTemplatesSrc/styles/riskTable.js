@@ -6,25 +6,23 @@ module.exports = `
         width: 100%;
         background: #d3d3d3;
         font-size: 14px;
-        -webkit-justify-content: space-between;
     }
 
     .risk-table-cell {
+        position: relative;
         width: 25%;
         height: 40px;
-        display: -webkit-flex;
-        -webkit-justify-content: space-between;
-        -webkit-align-items: center;
         border-right: 4px solid white;
     }
 
     .risk-table-cell:last-child {
-        -webkit-align-self: none;
         border-right: none;
     }
 
     .risk-indicator {
-        -webkit-align-self: flex-start;
+        position: absolute;
+        left: 0;
+        top: 0;
         width: 0; 
         height: 0; 
         border-left: 16px solid transparent;
@@ -34,14 +32,16 @@ module.exports = `
 
     .risk-table-label-and-value {
         display: -webkit-flex;
-        -webkit-align-items: flex-end;
+        -webkit-align-items: center;
+        -webkit-justify-content: center;
         margin-top: 7px;
+        width: 100%;
+        text-align: center;
     }
 
     .risk-table-label {
         font-weight: bold;
         margin-right: 10px;
-        margin-bottom: 2px;
         font-size: 12px;
     }
 

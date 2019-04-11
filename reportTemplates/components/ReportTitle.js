@@ -40,7 +40,7 @@ module.exports = props => {
     className: "logo"
   }, React.createElement(LogoImage, null)), React.createElement("div", {
     className: "titling"
-  }, React.createElement("div", null, React.createElement("b", null, reportName)), React.createElement(Separator, null), React.createElement("div", null, name), timeLabel && React.createElement(Separator, null), timeLabel && React.createElement("div", null, timeLabel), appliedFilters && appliedFilters.length && React.createElement(Separator, null), React.createElement(AppliedFilters, {
+  }, React.createElement("div", null, React.createElement("b", null, reportName)), React.createElement(Separator, null), React.createElement("div", null, name), timeLabel && React.createElement(Separator, null), timeLabel && React.createElement("div", null, timeLabel), appliedFilters && appliedFilters.length ? React.createElement(Separator, null) : '', React.createElement(AppliedFilters, {
     appliedFilters: appliedFilters
   })), React.createElement("style", null, reportTitleStyle));
 };

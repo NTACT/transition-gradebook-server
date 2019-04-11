@@ -7,11 +7,24 @@ const ActivitiesTable = require('./components/ActivitiesTable');
 const StudentRiskFactorsList = require('./components/StudentRiskFactorsList');
 const Checkboxes = require('./components/Checkboxes');
 
-const getTotalEvents = ({careerAwareness, paidWork, inclusion, support, collaboration}) => {
-  return getEvents(careerAwareness) + getEvents(paidWork) + getEvents(inclusion) + getEvents(support) + getEvents(collaboration); 
-}
+const getTotalEvents = ({
+  careerAwareness,
+  paidWork,
+  inclusion,
+  support,
+  collaboration
+}) => {
+  return (
+    getEvents(careerAwareness) +
+    getEvents(paidWork) +
+    getEvents(inclusion) +
+    getEvents(support) +
+    getEvents(collaboration)
+  );
+};
 
-const getEvents = (activities) => (activities || []).reduce((sum, value) => sum + value.events, 0);
+const getEvents = activities =>
+  (activities || []).reduce((sum, value) => sum + value.events, 0);
 
 class StudentReport extends Component {
   render() {
@@ -20,7 +33,7 @@ class StudentReport extends Component {
       students,
       activitiesHeaders,
       schoolYear,
-      term,
+      term
     } = this.props.data;
 
     return (
@@ -35,12 +48,9 @@ class StudentReport extends Component {
             collaboration,
             riskFactors,
             skills,
-            studentNeeds,
+            studentNeeds
           } = student;
-          const {
-            firstName,
-            lastName,
-          } = studentInfo;
+          const { firstName, lastName } = studentInfo;
           const totalEventCount = getTotalEvents(student);
 
           return (
@@ -53,31 +63,35 @@ class StudentReport extends Component {
               />
               <StudentStatusBar student={studentInfo} />
               <StudentStatusBarExtraInfo student={studentInfo} />
-              <div className='activities-title'>Activities ({totalEventCount} total events)</div>
+              <div className="activities-title">
+                Activities ({totalEventCount} total events)
+              </div>
               <ActivitiesTable
-                title='Career Awareness Activities'
+                title="Career Awareness Activities"
                 data={careerAwareness}
                 activitiesHeaders={activitiesHeaders}
               />
+              <ActivitiesTable title="Paid Work Activities" data={paidWork} />
+              <ActivitiesTable title="Inclusion Activities" data={inclusion} />
               <ActivitiesTable
-                title='Paid Work Activities'
-                data={paidWork}
-              />
-              <ActivitiesTable
-                title='Inclusion Activities'
-                data={inclusion}
-              />
-              <ActivitiesTable
-                title='Student Support Activities'
+                title="Student Support Activities"
                 data={support}
               />
               <ActivitiesTable
-                title='Collaboration Activities'
+                title="Collaboration Activities"
                 data={collaboration}
               />
-              <StudentRiskFactorsList title='Risk Factors' risk={studentInfo.risk} data={riskFactors} />
-              <Checkboxes title='Student Skills' data={skills} />
-              <Checkboxes title='Areas where student might need support or intervention' data={studentNeeds} style={{marginTop: 50}}/>
+              <StudentRiskFactorsList
+                title="Risk Factors"
+                risk={studentInfo.risk}
+                data={riskFactors}
+              />
+              <Checkboxes
+                title="Areas where student might need support or intervention"
+                data={studentNeeds}
+                style={{ marginBottom: 50 }}
+              />
+              <Checkboxes title="Student Skills" data={skills} />
             </React.Fragment>
           );
         })}
@@ -86,4 +100,4 @@ class StudentReport extends Component {
   }
 }
 
-module.exports = (data) => <StudentReport data={data} />;
+module.exports = data => <StudentReport data={data} />;
