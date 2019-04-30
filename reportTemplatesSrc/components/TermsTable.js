@@ -1,10 +1,11 @@
 const React = require('react');
 const termsTableStyle = require('../styles/termsTable');
 const { riskIndicatorKeys } = require('../styles/riskIndicatorColors');
-const AtRisk = require('./AtRisk');
+const Icons = require('./icons');
 
-function displayValueWithIcon(value) {
-  return value === true ? <AtRisk/> : value;
+
+function displayValueWithIcon(value, icon) {
+  return value === true ? icon : value;
 }
 
 function displayValue(value) {
@@ -28,7 +29,7 @@ const TermsHeader = ({ title, header }) => (
   </div>
 );
 
-const TermsRow = ({ entry, useIcons, height }) => {
+const TermsRow = ({ entry, useIcons, height, icon }) => {
   const {
     risk,
     label,
@@ -48,14 +49,14 @@ const TermsRow = ({ entry, useIcons, height }) => {
       </div>
       {values.map((value, i) => 
         <div className='terms-table-value' key={i}>
-          {useIcons ? displayValueWithIcon(value) : displayValue(value)}
+          {useIcons ? displayValueWithIcon(value, icon) : displayValue(value)}
         </div>
       )}
     </div>
   );
 };
 
-module.exports = function TermsTable({ data, title, rowHeight, useIcons }) {
+module.exports = function TermsTable({ data, title, rowHeight, useIcons, icon=Icons.atRisk }) {
   const { header, rows } = data;
 
   return (
@@ -63,7 +64,7 @@ module.exports = function TermsTable({ data, title, rowHeight, useIcons }) {
       <div className='terms-table'>
         <TermsHeader title={title} header={header} />
         {rows.map((entry, i) =>
-          <TermsRow key={i} entry={entry} useIcons={useIcons} height={rowHeight} />
+          <TermsRow key={i} entry={entry} useIcons={useIcons} height={rowHeight} icon={icon} />
         )}
       </div>
       <style>{termsTableStyle}</style>

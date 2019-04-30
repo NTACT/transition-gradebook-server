@@ -6,10 +6,10 @@ const {
   riskIndicatorKeys
 } = require('../styles/riskIndicatorColors');
 
-const AtRisk = require('./AtRisk');
+const Icons = require('./icons');
 
-function displayValueWithIcon(value) {
-  return value === true ? React.createElement(AtRisk, null) : value;
+function displayValueWithIcon(value, icon) {
+  return value === true ? icon : value;
 }
 
 function displayValue(value) {
@@ -34,7 +34,8 @@ const TermsHeader = ({
 const TermsRow = ({
   entry,
   useIcons,
-  height
+  height,
+  icon
 }) => {
   const {
     risk,
@@ -64,14 +65,15 @@ const TermsRow = ({
   })), values.map((value, i) => React.createElement("div", {
     className: "terms-table-value",
     key: i
-  }, useIcons ? displayValueWithIcon(value) : displayValue(value))));
+  }, useIcons ? displayValueWithIcon(value, icon) : displayValue(value))));
 };
 
 module.exports = function TermsTable({
   data,
   title,
   rowHeight,
-  useIcons
+  useIcons,
+  icon = Icons.atRisk
 }) {
   const {
     header,
@@ -86,6 +88,7 @@ module.exports = function TermsTable({
     key: i,
     entry: entry,
     useIcons: useIcons,
-    height: rowHeight
+    height: rowHeight,
+    icon: icon
   }))), React.createElement("style", null, termsTableStyle));
 };
