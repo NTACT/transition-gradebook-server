@@ -32,6 +32,9 @@ class StudentActivitiesReport extends Component {
         />
         <StudentStatusBar student={studentInfo}/>
 
+        <IEPActivityTable terms={terms} students={students} />
+        <GraduationPlanActivitiesTable terms={terms} students={students} />
+
         {activityTypeGroups.map((group, i) =>
           <ActivityTable key={group.id} break={i === 1 || i === 3}>
             <ActivityTableHeader title={group.name} terms={terms}></ActivityTableHeader>
@@ -97,10 +100,81 @@ const ActivityTableHeader = props => (
   </thead>
 );
 
-const ActivityTableRow = props => (
-  <tr>
 
-  </tr>
-);
+const IEPData = props => {
+  const { role } = props;
+  const attended = !!role ? 'YES' : ' ';
+  const roleDisplay = role || ' ';
+  return (
+    <td style={{ 
+        fontSize: 8, 
+        borderLeft: '1px solid #D43425',
+        
+      }}>
+        <div>{attended}</div>
+        <span>{roleDisplay}</span>
+    </td>
+  );
+}
+
+const IEPActivityTable = props => {
+  const {terms, students} = props;
+
+  return (
+    <ActivityTable>
+      <ActivityTableHeader title={'ATTENDED IEP MEETING'} terms={terms} />
+      <tbody style={{ borderTop: '10px solid white' }}>
+        <tr style={{ 
+            backgroundColor: '#F4F4F4',
+        }}>
+          <td>{/* placeholder for layout */}</td>
+          {students.map((student, i) => {
+            const { iepRoles } = student;
+            return (
+              <React.Fragment key={i}>
+                {iepRoles.map((role, idx) => {
+                  return (
+                    <IEPData key={`role_${idx}`} role={role} />
+                  );
+                })
+                }
+              </React.Fragment>
+            );
+          })}
+        </tr>
+      </tbody>
+    </ActivityTable>
+  );
+}
+
+const GraduationPlanActivitiesTable = props => {
+  const {terms, students} = props;
+
+  return (
+    <ActivityTable>
+      <ActivityTableHeader title='CAREER DEVELOPMENT/GRADUATION PLAN' terms={terms} />
+      <tbody style={{ borderTop: '10px solid white' }}>
+        <tr style={{ backgroundColor: '#F4F4F4' }}>
+          <td style={{width: 510}}>{/* placeholder for layout */}</td>
+          {students.map((student, i) => {
+            const { graduationPlans } = student;
+            return (
+              <React.Fragment key={i}>
+                {graduationPlans.map((graduationPlan, idx) => {
+                  return (
+                    <td key={`plan_${idx}`} style={{ fontSize: 8, borderLeft: '1px solid #D43425', width: 200 }}>
+                      <div>{graduationPlan ? `YES` : ' '}</div>
+                    </td>
+                  );
+                })
+                }
+              </React.Fragment>
+            );
+          })}
+        </tr>
+      </tbody>
+    </ActivityTable>
+  );
+}
 
 module.exports = (data) => <StudentActivitiesReport data={data} />;

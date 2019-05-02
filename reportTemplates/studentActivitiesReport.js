@@ -38,6 +38,12 @@ class StudentActivitiesReport extends Component {
       endTerm: endTerm
     }), React.createElement(StudentStatusBar, {
       student: studentInfo
+    }), React.createElement(IEPActivityTable, {
+      terms: terms,
+      students: students
+    }), React.createElement(GraduationPlanActivitiesTable, {
+      terms: terms,
+      students: students
     }), activityTypeGroups.map((group, i) => React.createElement(ActivityTable, {
       key: group.id,
       break: i === 1 || i === 3
@@ -128,7 +134,89 @@ const ActivityTableHeader = props => React.createElement("thead", {
   key: i
 }, term.name))));
 
-const ActivityTableRow = props => React.createElement("tr", null);
+const IEPData = props => {
+  const {
+    role
+  } = props;
+  const attended = !!role ? 'YES' : ' ';
+  const roleDisplay = role || ' ';
+  return React.createElement("td", {
+    style: {
+      fontSize: 8,
+      borderLeft: '1px solid #D43425'
+    }
+  }, React.createElement("div", null, attended), React.createElement("span", null, roleDisplay));
+};
+
+const IEPActivityTable = props => {
+  const {
+    terms,
+    students
+  } = props;
+  return React.createElement(ActivityTable, null, React.createElement(ActivityTableHeader, {
+    title: 'ATTENDED IEP MEETING',
+    terms: terms
+  }), React.createElement("tbody", {
+    style: {
+      borderTop: '10px solid white'
+    }
+  }, React.createElement("tr", {
+    style: {
+      backgroundColor: '#F4F4F4'
+    }
+  }, React.createElement("td", null), students.map((student, i) => {
+    const {
+      iepRoles
+    } = student;
+    return React.createElement(React.Fragment, {
+      key: i
+    }, iepRoles.map((role, idx) => {
+      return React.createElement(IEPData, {
+        key: `role_${idx}`,
+        role: role
+      });
+    }));
+  }))));
+};
+
+const GraduationPlanActivitiesTable = props => {
+  const {
+    terms,
+    students
+  } = props;
+  return React.createElement(ActivityTable, null, React.createElement(ActivityTableHeader, {
+    title: "CAREER DEVELOPMENT/GRADUATION PLAN",
+    terms: terms
+  }), React.createElement("tbody", {
+    style: {
+      borderTop: '10px solid white'
+    }
+  }, React.createElement("tr", {
+    style: {
+      backgroundColor: '#F4F4F4'
+    }
+  }, React.createElement("td", {
+    style: {
+      width: 510
+    }
+  }), students.map((student, i) => {
+    const {
+      graduationPlans
+    } = student;
+    return React.createElement(React.Fragment, {
+      key: i
+    }, graduationPlans.map((graduationPlan, idx) => {
+      return React.createElement("td", {
+        key: `plan_${idx}`,
+        style: {
+          fontSize: 8,
+          borderLeft: '1px solid #D43425',
+          width: 200
+        }
+      }, React.createElement("div", null, graduationPlan ? `YES` : ' '));
+    }));
+  }))));
+};
 
 module.exports = data => React.createElement(StudentActivitiesReport, {
   data: data
