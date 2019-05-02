@@ -4,6 +4,7 @@ const MultiTermReportTitle = require('./components/MultiTermReportTitle');
 const TermsTable = require('./components/TermsTable');
 const StudentStatusBar = require('./components/StudentStatusBar');
 const studentRiskReportStyle = require('./styles/studentRiskReport');
+const Icons = require('./components/icons');
 
 class StudentActivitiesReport extends Component {
   render() {
@@ -54,12 +55,13 @@ class StudentActivitiesReport extends Component {
           </ActivityTable>
         )}
         {students.map((student, i) => {
-          const { riskFactors, studentNeeds } = student;
+          const { riskFactors, studentNeeds, skills } = student;
           return (
             <React.Fragment key={i}>
               <div style={{pageBreakBefore: 'always'}}/>
               <TermsTable title='Risk Factors' data={riskFactors} rowHeight={23}/>
               <TermsTable title='Areas where student might need support or intervention' data={studentNeeds} rowHeight={20} useIcons />
+              <TermsTable title='Skills Trainings Received' data={skills} rowHeight={20} useIcons icon={Icons.xCheckMark} />
             </React.Fragment>
           );
         })}

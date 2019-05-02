@@ -14,6 +14,8 @@ const StudentStatusBar = require('./components/StudentStatusBar');
 
 const studentRiskReportStyle = require('./styles/studentRiskReport');
 
+const Icons = require('./components/icons');
+
 class StudentActivitiesReport extends Component {
   render() {
     const {
@@ -72,7 +74,8 @@ class StudentActivitiesReport extends Component {
     }, term.student ? term.student.activities.filter(a => a.activityTypeId === type.id).length : 'N/A'))))))), students.map((student, i) => {
       const {
         riskFactors,
-        studentNeeds
+        studentNeeds,
+        skills
       } = student;
       return React.createElement(React.Fragment, {
         key: i
@@ -89,6 +92,12 @@ class StudentActivitiesReport extends Component {
         data: studentNeeds,
         rowHeight: 20,
         useIcons: true
+      }), React.createElement(TermsTable, {
+        title: "Skills Trainings Received",
+        data: skills,
+        rowHeight: 20,
+        useIcons: true,
+        icon: Icons.xCheckMark
       }));
     }), React.createElement("style", null, studentRiskReportStyle));
   }

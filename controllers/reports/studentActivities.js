@@ -42,7 +42,6 @@ module.exports = context => {
         const students = map(termStudents, 'student');
         const termInfos = map(termStudents, 'studentTermInfo')
         const maxRisk = findMaxRisk(map(compact(students), 'risk'));
-
         return {
           id: student.id,
           studentInfo: {
@@ -139,6 +138,27 @@ module.exports = context => {
           },
           iepRoles: termInfos.map(info => info.iepRole),
           graduationPlans: termInfos.map(info => info.hasGraduationPlan),
+          skills: {
+            header: [],
+            rows: [
+              {
+                label: 'Self-Determination Skills',
+                values: map(students, maybeKey('hasSelfDeterminationSkills'))
+              },
+              {
+                label: 'Independent-Living Skills',
+                values: map(students, maybeKey('hasIndependentLivingSkills'))
+              },
+              {
+                label: 'Travel Skills',
+                values: map(students, maybeKey('hasTravelSkills'))
+              },
+              {
+                label: 'Social Skills',
+                values: map(students, maybeKey('hasSocialSkills'))
+              },
+            ],
+          }
         };
       }),
     };
