@@ -37,8 +37,10 @@ module.exports = context => {
         const termStudents = map(terms, term => ({
           term,
           student: term.students.find(s => s.id === student.id) || null,
+          studentTermInfo: term.studentTermInfos.find(info => info.studentId === student.id) || {}
         }));
         const students = map(termStudents, 'student');
+        const termInfos = map(termStudents, 'studentTermInfo')
         const maxRisk = findMaxRisk(map(compact(students), 'risk'));
 
         return {
@@ -135,6 +137,8 @@ module.exports = context => {
               },
             ],
           },
+          iepRoles: termInfos.map(info => info.iepRole),
+          graduationPlans: termInfos.map(info => info.hasGraduationPlan),
         };
       }),
     };
