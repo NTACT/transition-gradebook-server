@@ -26,6 +26,14 @@ const getTotalEvents = ({
 const getEvents = activities =>
   (activities || []).reduce((sum, value) => sum + value.events, 0);
 
+const getFormattedTermType = term => {
+  const { termType } = term;
+  if(termType === 'annual') {
+    return 'SCHOOL YEAR';
+  }
+  return termType && termType.toUpperCase();
+}
+
 class StudentReport extends Component {
   render() {
     const {
@@ -91,7 +99,7 @@ class StudentReport extends Component {
                 data={studentNeeds}
                 style={{ marginBottom: 50 }}
               />
-              <Checkboxes title="Student Skills" data={skills} />
+              <Checkboxes title={`SKILLS TRAININGS RECEIVED THIS ${getFormattedTermType(term)}`} data={skills} />
             </React.Fragment>
           );
         })}
