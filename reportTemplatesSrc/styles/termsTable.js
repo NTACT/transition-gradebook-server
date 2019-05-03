@@ -68,6 +68,7 @@ module.exports = `
     display: -webkit-flex;
     -webkit-justify-content: center;
     -webkit-align-items: center;
+    font-size: 8px;
   }
 
   ${riskIndicatorStyle}
