@@ -48,7 +48,7 @@ module.exports = function ActivityOverTimeTable({
   rowHeight,
   terms
 }) {
-  return React.createElement(React.Fragment, null, React.createElement("div", {
+  return React.createElement(React.Fragment, null, React.createElement("style", null, activityOverTimeTable), React.createElement("div", {
     className: "activity-over-time-table"
   }, React.createElement(TermsHeader, {
     title: title,
@@ -56,6 +56,6 @@ module.exports = function ActivityOverTimeTable({
   }), rows.map((entry, i) => React.createElement(TermsRow, {
     key: i,
     entry: entry,
-    eight: rowHeight
-  }))), React.createElement("style", null, activityOverTimeTable));
+    height: rowHeight
+  }))));
 };

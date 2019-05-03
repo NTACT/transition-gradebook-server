@@ -21,4 +21,8 @@ module.exports =`
   .terms-table-label-container {
     width: 190px;
   }
+
+  .iep-role:last-child {
+    margin-right: 5px;
+  }
 `;

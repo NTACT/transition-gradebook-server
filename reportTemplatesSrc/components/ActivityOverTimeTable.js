@@ -44,13 +44,13 @@ module.exports = function ActivityOverTimeTable({ rows, title, rowHeight, terms}
 
   return (
     <React.Fragment>
+      <style>{activityOverTimeTable}</style>
       <div className='activity-over-time-table'>
         <TermsHeader title={title} terms={terms} />
         {rows.map((entry, i) =>
-          <TermsRow key={i} entry={entry}  eight={rowHeight} />
+          <TermsRow key={i} entry={entry}  height={rowHeight} />
         )}
       </div>
-      <style>{activityOverTimeTable}</style>
     </React.Fragment>
   );
 };

@@ -26,7 +26,7 @@ class StudentActivitiesReport extends Component {
         const attended = !!role ? 'YES' : ' ';
         const roleDisplay = role || ' ';
         return (
-          <div key={`student_role_${i}`}>
+          <div key={`student_role_${i}`} className='iep-role'>
             <div>{attended}</div>
             <div>{roleDisplay}</div>
           </div>
@@ -59,7 +59,7 @@ class StudentActivitiesReport extends Component {
         />
         <StudentStatusBar student={studentInfo}/>
 
-        <ActivityOverTimeTable title='ATTENDED IEP MEETING' terms={terms} rows={iepRows } />
+        <ActivityOverTimeTable title='ATTENDED IEP MEETING' terms={terms} rows={ iepRows } rowHeight={45} />
         <ActivityOverTimeTable title='CAREER DEVELOPMENT / GRADUATION PLAN' terms={terms} rows={gradPlanRows } />
 
         {activityTypeGroups.map((group, i) => {
@@ -73,7 +73,7 @@ class StudentActivitiesReport extends Component {
           });
           return (
             <React.Fragment key={group.id}>
-              {[0, 1, 3].includes(i) && <div style={{ pageBreakBefore: 'always' }} />}
+              {[0, 1, 2, 4].includes(i) && <div style={{ pageBreakBefore: 'always' }} />}
               <ActivityOverTimeTable title={group.name} terms={terms} rows={activityGroupRows} />
             </React.Fragment>
           );

@@ -34,12 +34,12 @@ module.exports = `
 
   .activity-over-time-table-title {
     padding-left: 7px;
-    min-width: 510px;
+    min-width: 280px;
     box-sizing: border-box;
   }
 
   .activity-over-time-table-label-container {
-    width: 510px;
+    width: 280px;
   }
 
   .activity-over-time-table-label-container {
