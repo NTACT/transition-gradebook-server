@@ -45,7 +45,7 @@ module.exports = `
 
   .terms-table-label-container {
     display: -webkit-flex;
-    font-size: 9px;
+    font-size: 8px;
     font-weight: bold;
     padding-left: 7px;
     padding-right: 7px;

@@ -1,18 +1,16 @@
-const riskIndicatorStyle = require('./riskIndicator');
-
 module.exports = `
-  .terms-table-row {
+ .activity-over-time-table-row {
     display: -webkit-flex;
     font-size: 11px;
     -webkit-justify-content: space-between;
     -webkit-align-items: center;
   }
 
-  .terms-table-row:nth-child(2n) {
+  .activity-over-time-table-row:nth-child(2n) {
     background: #F4F4F4;
   }
 
-  .terms-table-header {
+  .activity-over-time-table-header {
     min-height: 34px;
     background: #D43425;
     color: white;
@@ -20,30 +18,31 @@ module.exports = `
     font-family: Oswald;
   }
 
-  .terms-table-body {
+  .activity-over-time-table-body {
     height: 34px;
   }
 
-  .terms-table-header-label {
+  .activity-over-time-table-header-label {
     -webkit-flex: 1;
     text-align: center;
+    font-size: 8px;
   }
 
-  .terms-table-title {
+  .activity-over-time-table-title {
     text-transform: uppercase;
   }
 
-  .terms-table-title {
+  .activity-over-time-table-title {
     padding-left: 7px;
-    min-width: 130px;
+    min-width: 510px;
     box-sizing: border-box;
   }
 
-  .terms-table-label-container {
-    width: 130px;
+  .activity-over-time-table-label-container {
+    width: 510px;
   }
 
-  .terms-table-label-container {
+  .activity-over-time-table-label-container {
     display: -webkit-flex;
     font-size: 8px;
     font-weight: bold;
@@ -52,16 +51,7 @@ module.exports = `
     box-sizing: border-box;
   }
 
-  .terms-table-risk-label-container .terms-table-label {
-    min-width: 70%;
-  }
-
-  .terms-table-risk-label-container {
-    height: 100%;
-    -webkit-align-items: center;
-  }
-
-  .terms-table-value {
+  .activity-over-time-table-value {
     -webkit-flex: 1;
     border-left: 1px solid #D43425;
     height: 100%;
@@ -69,6 +59,4 @@ module.exports = `
     -webkit-justify-content: center;
     -webkit-align-items: center;
   }
-
-  ${riskIndicatorStyle}
 `;
