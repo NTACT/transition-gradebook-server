@@ -35,7 +35,8 @@ class StudentActivitiesReport extends Component {
         const attended = !!role ? 'YES' : ' ';
         const roleDisplay = role || ' ';
         return React.createElement("div", {
-          key: `student_role_${i}`
+          key: `student_role_${i}`,
+          className: "iep-role"
         }, React.createElement("div", null, attended), React.createElement("div", null, roleDisplay));
       });
       return {
@@ -65,7 +66,8 @@ class StudentActivitiesReport extends Component {
     }), React.createElement(ActivityOverTimeTable, {
       title: "ATTENDED IEP MEETING",
       terms: terms,
-      rows: iepRows
+      rows: iepRows,
+      rowHeight: 45
     }), React.createElement(ActivityOverTimeTable, {
       title: "CAREER DEVELOPMENT / GRADUATION PLAN",
       terms: terms,
@@ -81,7 +83,7 @@ class StudentActivitiesReport extends Component {
       });
       return React.createElement(React.Fragment, {
         key: group.id
-      }, [0, 1, 3].includes(i) && React.createElement("div", {
+      }, [0, 1, 2, 4].includes(i) && React.createElement("div", {
         style: {
           pageBreakBefore: 'always'
         }

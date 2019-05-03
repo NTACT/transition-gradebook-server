@@ -56,6 +56,6 @@ module.exports = function ActivityOverTimeTable({
   }), rows.map((entry, i) => React.createElement(TermsRow, {
     key: i,
     entry: entry,
-    eight: rowHeight
+    height: rowHeight
   }))));
 };
