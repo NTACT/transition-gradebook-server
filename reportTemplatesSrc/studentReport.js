@@ -42,7 +42,6 @@ class StudentReport extends Component {
       students,
       activitiesHeaders,
       schoolYear,
-      student, 
       term
     } = this.props.data;
 
