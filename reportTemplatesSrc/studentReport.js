@@ -6,6 +6,7 @@ const StudentStatusBarExtraInfo = require('./components/StudentStatusBarExtraInf
 const ActivitiesTable = require('./components/ActivitiesTable');
 const StudentRiskFactorsList = require('./components/StudentRiskFactorsList');
 const Checkboxes = require('./components/Checkboxes');
+const HeaderTextbox = require('./components/HeaderTextbox'); 
 
 const getTotalEvents = ({
   careerAwareness,
@@ -41,6 +42,7 @@ class StudentReport extends Component {
       students,
       activitiesHeaders,
       schoolYear,
+      student, 
       term
     } = this.props.data;
 
@@ -56,9 +58,9 @@ class StudentReport extends Component {
             collaboration,
             riskFactors,
             skills,
-            studentNeeds
+            studentNeeds,
           } = student;
-          const { firstName, lastName } = studentInfo;
+          const { firstName, lastName, postSchoolGoals} = studentInfo;
           const totalEventCount = getTotalEvents(student);
 
           return (
@@ -99,7 +101,8 @@ class StudentReport extends Component {
                 data={studentNeeds}
                 style={{ marginBottom: 50 }}
               />
-              <Checkboxes title={`SKILLS TRAININGS RECEIVED THIS ${getFormattedTermType(term)}`} data={skills} />
+              <Checkboxes title={`SKILLS TRAININGS RECEIVED THIS ${getFormattedTermType(term)}`} data={skills} style={{marginBottom: 50}} />
+              <HeaderTextbox title="POST-SCHOOL GOALS" data={postSchoolGoals} />
             </React.Fragment>
           );
         })}

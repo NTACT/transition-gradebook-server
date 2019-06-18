@@ -52,6 +52,7 @@ module.exports = context => {
               attended: student.attendedIepMeeting,
               roleDetails: student.iepRole,
             },
+            postSchoolGoals: student.postSchoolGoals,
           },
 
           careerAwareness: _

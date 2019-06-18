@@ -16,6 +16,8 @@ const StudentRiskFactorsList = require('./components/StudentRiskFactorsList');
 
 const Checkboxes = require('./components/Checkboxes');
 
+const HeaderTextbox = require('./components/HeaderTextbox');
+
 const getTotalEvents = ({
   careerAwareness,
   paidWork,
@@ -47,6 +49,7 @@ class StudentReport extends Component {
       students,
       activitiesHeaders,
       schoolYear,
+      student,
       term
     } = this.props.data;
     return React.createElement(React.Fragment, null, students.map((student, index) => {
@@ -63,7 +66,8 @@ class StudentReport extends Component {
       } = student;
       const {
         firstName,
-        lastName
+        lastName,
+        postSchoolGoals
       } = studentInfo;
       const totalEventCount = getTotalEvents(student);
       return React.createElement(React.Fragment, {
@@ -107,7 +111,13 @@ class StudentReport extends Component {
         }
       }), React.createElement(Checkboxes, {
         title: `SKILLS TRAININGS RECEIVED THIS ${getFormattedTermType(term)}`,
-        data: skills
+        data: skills,
+        style: {
+          marginBottom: 50
+        }
+      }), React.createElement(HeaderTextbox, {
+        title: "POST-SCHOOL GOALS",
+        data: postSchoolGoals
       }));
     }));
   }
