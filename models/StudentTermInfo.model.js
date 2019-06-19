@@ -42,7 +42,8 @@ module.exports = context => {
           // Career dev + IEP
           attendedIepMeeting: {type: ['boolean', 'null']},
           iepRole: {type: ['string', 'null']},
-          hasGraduationPlan: {type: ['boolean', 'null']},
+          postSchoolGoals: {type: ['string', 'null']},
+          hasGraduationPlan: {type: ['boolean', 'null']}
         },
       };
     }
