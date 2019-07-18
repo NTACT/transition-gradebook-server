@@ -20,7 +20,7 @@ module.exports = ({
     lastName,
     gender,
     race,
-    grade,
+    gradeLevel,
     disabilities,
     ell,
     risk
@@ -55,7 +55,7 @@ module.exports = ({
     className: "student-status-bar-info"
   }, React.createElement("div", {
     className: "student-status-bar-label"
-  }, "Grade/Age"), React.createElement("div", null, grade)), React.createElement("div", {
+  }, "Grade/Age"), React.createElement("div", null, gradeLevel)), React.createElement("div", {
     className: "student-status-bar-info"
   }, React.createElement("div", {
     className: "student-status-bar-label"
