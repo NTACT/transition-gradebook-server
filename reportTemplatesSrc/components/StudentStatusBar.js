@@ -10,7 +10,7 @@ module.exports = ({ student }) => {
     lastName,
     gender,
     race,
-    grade,
+    gradeLevel,
     disabilities,
     ell,
     risk,
@@ -41,7 +41,7 @@ module.exports = ({ student }) => {
         </div>
         <div className='student-status-bar-info'>
           <div className='student-status-bar-label'>Grade/Age</div>
-          <div>{grade}</div>
+          <div>{gradeLevel}</div>
         </div>
         <div className='student-status-bar-info'>
           <div className='student-status-bar-label'>ELL</div>
