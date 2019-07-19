@@ -49,7 +49,6 @@ class StudentReport extends Component {
       students,
       activitiesHeaders,
       schoolYear,
-      student,
       term
     } = this.props.data;
     return React.createElement(React.Fragment, null, students.map((student, index) => {
