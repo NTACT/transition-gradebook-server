@@ -57,5 +57,11 @@ module.exports = context => {
       success(ctx, {
         students: await schoolYearController.getStudentsByTerm(termId)
       });
+    }).post('/schoolYears/:schoolYearId/import', auth(), async ctx => {
+      const schoolYearId = +ctx.params.schoolYearId;
+      const csvData = ctx.request.body;
+      success(ctx, {
+        students: await studentController.importFromCSV(schoolYearId, csvData)
+      });
     });
 };

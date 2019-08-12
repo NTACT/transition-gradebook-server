@@ -2,6 +2,7 @@ module.exports = context => {
   const removeNullValues = require('../utils/removeNullValues');
   const validationError = require('../utils/validationError');
   const Json2csvParser = require('json2csv').Parser;
+  const { csvDataHelper } = require('tgb-shared');
   const { models } = context;
   const { Student, SchoolYear, StudentDisability, StudentTermInfo, Term } = models;
 
@@ -202,6 +203,51 @@ module.exports = context => {
         ]
       })
       .parse(studentTermInfos);
+    }
+
+    csvDataToObjects(csvData) {
+      return csvData.map(row => {
+        const realObject = {}; 
+        for(const [columnName, valueObject] of Object.entries(row)) {
+          const columnBeingMapped = csvDataHelper.columns.find(col => col.field === columnName);
+          // metadata, like row uuid from the client
+          if(!columnBeingMapped) {
+            continue;
+          }
+          let columnValue = valueObject.value;
+          switch(columnBeingMapped.type) {
+            case csvDataHelper.types.boolean: 
+              columnValue = columnValue ? csvDataHelper.toRealBooleanValue(columnValue) : '';
+              break;
+            case csvDataHelper.types.enum: 
+            case csvDataHelper.types.array:
+              columnValue = typeof columnBeingMapped.deserialize === 'function' ? columnBeingMapped.deserialize(columnValue) : columnValue;
+              break; 
+            case csvDataHelper.types.date:
+              columnValue = columnValue ? new Date(columnValue).toISOString() : null;
+              break;
+          }
+          if(columnValue === '' && !columnBeingMapped.required) {
+            columnValue = 'null';
+          }
+
+          realObject[columnName] = columnValue;
+        }
+        return realObject;
+      });
+    }
+
+    async importFromCSV(schoolYearId, csvData) {
+      const rows = this.csvDataToObjects(csvData);
+      return Promise.all(rows.map(async row => {
+        const existingStudent = await models.Student.query().where('studentId', row.studentId).first();
+        // Exists
+        if(existingStudent) {
+          await this.editStudent(existingStudent.id, schoolYearId, {...row});
+        } else {
+          await this.createStudent(schoolYearId, {...row});
+        }
+      }))
     }
   }
 
