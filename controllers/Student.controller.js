@@ -3,8 +3,8 @@ module.exports = context => {
   const validationError = require('../utils/validationError');
   const Json2csvParser = require('json2csv').Parser;
   const { csvDataHelper } = require('tgb-shared');
-  const { models } = context;
-  const { Student, SchoolYear, StudentDisability, StudentTermInfo, Term } = models;
+  const { models, controllers, } = context;
+  const { Student, SchoolYear, StudentDisability, StudentTermInfo, Term, Disability} = models;
 
   class StudentController {
     getStudents() {
@@ -205,7 +205,7 @@ module.exports = context => {
       .parse(studentTermInfos);
     }
 
-    csvDataToObjects(csvData) {
+    csvDataToObjects(csvData, disabilities) {
       return csvData.map(row => {
         const realObject = {}; 
         for(const [columnName, valueObject] of Object.entries(row)) {
@@ -217,7 +217,7 @@ module.exports = context => {
           let columnValue = valueObject.value;
           switch(columnBeingMapped.type) {
             case csvDataHelper.types.boolean: 
-              columnValue = columnValue ? csvDataHelper.toRealBooleanValue(columnValue) : '';
+              columnValue = columnValue.booleanValue;
               break;
             case csvDataHelper.types.enum: 
             case csvDataHelper.types.array:
@@ -227,6 +227,18 @@ module.exports = context => {
               columnValue = columnValue ? new Date(columnValue).toISOString() : null;
               break;
           }
+
+          
+          if(columnBeingMapped.field === 'disabilities' && columnValue) {
+            columnValue = columnValue.map(provided => {
+              const mappedValue = disabilities.find(dis => dis.name === provided.toUpperCase() || dis.fullName === provided);
+              if(mappedValue) {
+                return mappedValue.id;
+              }
+              return null;
+            }).filter(value => !!value);
+          }
+
           if(columnValue === '' && !columnBeingMapped.required) {
             columnValue = 'null';
           }
@@ -238,7 +250,8 @@ module.exports = context => {
     }
 
     async importFromCSV(schoolYearId, csvData) {
-      const rows = this.csvDataToObjects(csvData);
+      const disabilities = await Disability.query();
+      const rows = this.csvDataToObjects(csvData, disabilities);
       return Promise.all(rows.map(async row => {
         const existingStudent = await models.Student.query().where('studentId', row.studentId).first();
         // Exists
