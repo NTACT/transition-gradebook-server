@@ -2,8 +2,8 @@ module.exports = context => {
   const removeNullValues = require('../utils/removeNullValues');
   const validationError = require('../utils/validationError');
   const Json2csvParser = require('json2csv').Parser;
-  const { csvDataHelper } = require('tgb-shared');
-  const { models, controllers, } = context;
+  const { csvDataHelper, enums } = require('tgb-shared');
+  const { models, } = context;
   const { Student, SchoolYear, StudentDisability, StudentTermInfo, Term, Disability} = models;
 
   class StudentController {
@@ -226,6 +226,10 @@ module.exports = context => {
             case csvDataHelper.types.date:
               columnValue = columnValue ? new Date(columnValue).toISOString() : null;
               break;
+            case csvDataHelper.types.integer:
+            case csvDataHelper.types.float:
+              const numberValue = +columnValue;
+              columnValue = isNaN(numberValue) ? '' : numberValue;
           }
 
           
@@ -240,19 +244,88 @@ module.exports = context => {
           }
 
           if(columnValue === '' && !columnBeingMapped.required) {
-            columnValue = 'null';
+            columnValue = null;
           }
 
           realObject[columnName] = columnValue;
         }
+
+        const gradeValue = realObject.grade;
+        if(gradeValue) {
+          const gradeType = realObject.gradeType;
+          if(gradeType === 'percent' || gradeType === 'gpa' && isNaN(+gradeValue)) {
+            realObject.grade = null;
+          } else if(gradeType === 'letter') {
+            realObject.grade = enums.gradeLetters.find(letter => letter === gradeValue.toUpperCase()) || null;
+          }
+
+        }
         return realObject;
       });
+    }
+
+    async importAdditionalTermInfoFromCSV(studentId, schoolYearId, {
+      gradeType,
+      grade,
+      absentPercent,
+      behaviorMarks,
+      suspended,
+      failingEnglish,
+      failingMath,
+      failingOther,
+      onTrack,
+      retained,
+      schoolsAttended,
+      hasExtracurricular,
+      hasSelfDeterminationSkills,
+      hasIndependentLivingSkills,
+      hasTravelSkills,
+      hasSocialSkills,
+      attendedIepMeeting,
+      iepRole,
+      postSchoolGoals,
+      hasGraduationPlan,
+    }) {
+      const existingStudent = await models.Student.query().where('studentId', studentId).first();
+      if(!existingStudent) {
+        throw new validationError('Student does not exist', 404);
+      }
+
+      const termIds = await Term.query().where('schoolYearId', schoolYearId).map(term => term.id);
+      await StudentTermInfo
+        .query()
+        .whereIn('termId', termIds)
+        .andWhere({studentId: existingStudent.id})
+        .patch({
+          gradeType,
+          grade,
+          absentPercent,
+          behaviorMarks,
+          suspended,
+          failingEnglish,
+          failingMath,
+          failingOther,
+          onTrack,
+          retained,
+          schoolsAttended,
+          hasExtracurricular,
+          hasSelfDeterminationSkills,
+          hasIndependentLivingSkills,
+          hasTravelSkills,
+          hasSocialSkills,
+          attendedIepMeeting,
+          iepRole,
+          postSchoolGoals,
+          hasGraduationPlan,
+        });
+
     }
 
     async importFromCSV(schoolYearId, csvData) {
       const disabilities = await Disability.query();
       const rows = this.csvDataToObjects(csvData, disabilities);
       return Promise.all(rows.map(async row => {
+        console.log(row);
         const existingStudent = await models.Student.query().where('studentId', row.studentId).first();
         // Exists
         if(existingStudent) {
@@ -260,6 +333,7 @@ module.exports = context => {
         } else {
           await this.createStudent(schoolYearId, {...row});
         }
+        await this.importAdditionalTermInfoFromCSV(row.studentId, schoolYearId, {...row});
       }))
     }
   }
