@@ -264,7 +264,7 @@ module.exports = context => {
       });
     }
 
-    async importNewStudent(schoolYearId, termId, {
+    async importNewStudent(schoolYearId, {
       studentId,
       firstName,
       lastName,
@@ -301,11 +301,8 @@ module.exports = context => {
       if(existingStudent) {
         throw validationError(`A student already exists with the id "${studentId}"`);
       }
-      const term = await Term.query().where('schoolYearId', schoolYearId).andWhere('id', termId).first();
+      const terms = await Term.query().where('schoolYearId', schoolYearId);
 
-      if(!term) {
-        throw validationError('Term does not exist', 404);
-      }
 
       const student = await Student.query().insert({
         studentId,
@@ -354,11 +351,14 @@ module.exports = context => {
 
       const studentTermInfo = await StudentTermInfo
         .query()
-        .insert({
-            termId,
-            studentId: student.id,
-            ...otherFields,
-          });
+        .insert(terms.map(term => {
+            return {
+              termId: term.id,
+              studentId: student.id,
+              ...otherFields,
+            }
+          })
+        );
 
         return studentTermInfo;
     }
@@ -477,7 +477,8 @@ module.exports = context => {
         if(existingStudent) {
           await this.importExistingStudent(existingStudent.id, schoolYearId, termId, {...row});
         } else {
-          await this.importNewStudent(schoolYearId, termId, {...row});
+          // When they are a new student, populate all the terms of the year
+          await this.importNewStudent(schoolYearId, {...row});
         }
       }));
     }
