@@ -317,8 +317,9 @@ module.exports = context => {
         ell,
       });
 
-      const insertedDisabilities = await this.setStudentDisabilities(student.id, disabilities);
-      await StudentTermInfo
+      await this.setStudentDisabilities(student.id, disabilities);
+
+      const studentTermInfo = await StudentTermInfo
         .query()
         .insert({
             termId,
@@ -346,12 +347,9 @@ module.exports = context => {
             iepRole,
             postSchoolGoals,
             hasGraduationPlan,
-          })
-        .eager('student')
-        .map(termInfo => {
-          termInfo.student.disabilities = insertedDisabilities;
-          return termInfo;
-        });
+          });
+
+        return studentTermInfo;
     }
 
     async importExistingStudent(id, schoolYearId, termId, {
@@ -452,15 +450,15 @@ module.exports = context => {
     async importFromCSV(schoolYearId, termId, csvData) {
       const disabilities = await Disability.query();
       const rows = this.csvDataToObjects(csvData, disabilities);
-      return Promise.all(rows.map(async row => {
+      await Promise.all(rows.map(async row => {
         const existingStudent = await models.Student.query().where('studentId', row.studentId).first();
         // Exists
         if(existingStudent) {
-          return await this.importExistingStudent(existingStudent.id, schoolYearId, termId, {...row});
+          await this.importExistingStudent(existingStudent.id, schoolYearId, termId, {...row});
         } else {
-          return await this.importNewStudent(schoolYearId, termId, {...row});
+          await this.importNewStudent(schoolYearId, termId, {...row});
         }
-      }))
+      }));
     }
   }
 
