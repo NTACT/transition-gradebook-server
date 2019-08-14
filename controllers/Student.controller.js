@@ -319,34 +319,45 @@ module.exports = context => {
 
       await this.setStudentDisabilities(student.id, disabilities);
 
+      let checkedPostSchoolOutcome = null;
+      let checkedExitCategory = null;
+      if(gradeLevel === 'Post-school') {
+        checkedPostSchoolOutcome = postSchoolOutcome;
+        checkedExitCategory = exitCategory;
+      }
+
+      const otherFields = removeNullValues({
+          gradeLevel,
+          postSchoolOutcome: checkedPostSchoolOutcome,
+          exitCategory: checkedExitCategory,
+          gradeType,
+          grade,
+          absentPercent,
+          behaviorMarks,
+          suspended,
+          failingEnglish,
+          failingMath,
+          failingOther,
+          onTrack,
+          retained,
+          schoolsAttended,
+          hasExtracurricular,
+          hasSelfDeterminationSkills,
+          hasIndependentLivingSkills,
+          hasTravelSkills,
+          hasSocialSkills,
+          attendedIepMeeting,
+          iepRole,
+          postSchoolGoals,
+          hasGraduationPlan,
+      });
+
       const studentTermInfo = await StudentTermInfo
         .query()
         .insert({
             termId,
             studentId: student.id,
-            gradeLevel,
-            postSchoolOutcome: (gradeLevel === 'Post-school' && postSchoolOutcome) || null,
-            exitCategory: (gradeLevel === 'Post-school' && exitCategory) || null,
-            gradeType,
-            grade,
-            absentPercent,
-            behaviorMarks,
-            suspended,
-            failingEnglish,
-            failingMath,
-            failingOther,
-            onTrack,
-            retained,
-            schoolsAttended,
-            hasExtracurricular,
-            hasSelfDeterminationSkills,
-            hasIndependentLivingSkills,
-            hasTravelSkills,
-            hasSocialSkills,
-            attendedIepMeeting,
-            iepRole,
-            postSchoolGoals,
-            hasGraduationPlan,
+            ...otherFields,
           });
 
         return studentTermInfo;
@@ -412,34 +423,44 @@ module.exports = context => {
         studentId: id
       })));
 
+      let checkedPostSchoolOutcome = null;
+      let checkedExitCategory = null;
+      if(gradeLevel === 'Post-school') {
+        checkedPostSchoolOutcome = postSchoolOutcome;
+        checkedExitCategory = exitCategory;
+      }
+      
+      const otherFields = removeNullValues({
+        gradeType,
+        postSchoolOutcome: checkedPostSchoolOutcome,
+        exitCategory: checkedExitCategory,
+        grade,
+        absentPercent,
+        behaviorMarks,
+        suspended,
+        failingEnglish,
+        failingMath,
+        failingOther,
+        onTrack,
+        retained,
+        schoolsAttended,
+        hasExtracurricular,
+        hasSelfDeterminationSkills,
+        hasIndependentLivingSkills,
+        hasTravelSkills,
+        hasSocialSkills,
+        attendedIepMeeting,
+        iepRole,
+        postSchoolGoals,
+        hasGraduationPlan,
+    });
+
       const studentTermInfos = await StudentTermInfo
         .query()
         .where('termId', termId)
         .andWhere({studentId: id})
         .patch({
-          gradeLevel: gradeLevel,
-          postSchoolOutcome: (gradeLevel === 'Post-school' && postSchoolOutcome) || null,
-          exitCategory: (gradeLevel === 'Post-school' && exitCategory) || null,
-          gradeType,
-          grade,
-          absentPercent,
-          behaviorMarks,
-          suspended,
-          failingEnglish,
-          failingMath,
-          failingOther,
-          onTrack,
-          retained,
-          schoolsAttended,
-          hasExtracurricular,
-          hasSelfDeterminationSkills,
-          hasIndependentLivingSkills,
-          hasTravelSkills,
-          hasSocialSkills,
-          attendedIepMeeting,
-          iepRole,
-          postSchoolGoals,
-          hasGraduationPlan,
+          ...otherFields,
         })
         .eager('student.disabilities')
         .returning('*');
