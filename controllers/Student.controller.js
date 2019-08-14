@@ -264,7 +264,18 @@ module.exports = context => {
       });
     }
 
-    async importAdditionalTermInfoFromCSV(studentId, schoolYearId, {
+    async importNewStudent(schoolYearId, termId, {
+      studentId,
+      firstName,
+      lastName,
+      birthday,
+      gender,
+      race,
+      ell,
+      disabilities,
+      gradeLevel,
+      postSchoolOutcome,
+      exitCategory,
       gradeType,
       grade,
       absentPercent,
@@ -286,17 +297,131 @@ module.exports = context => {
       postSchoolGoals,
       hasGraduationPlan,
     }) {
-      const existingStudent = await models.Student.query().where('studentId', studentId).first();
-      if(!existingStudent) {
-        throw new validationError('Student does not exist', 404);
+      const existingStudent = await Student.query().where('studentId', studentId).first();
+      if(existingStudent) {
+        throw validationError(`A student already exists with the id "${studentId}"`);
+      }
+      const term = await Term.query().where('schoolYearId', schoolYearId).andWhere('id', termId).first();
+
+      if(!term) {
+        throw validationError('Term does not exist', 404);
       }
 
-      const termIds = await Term.query().where('schoolYearId', schoolYearId).map(term => term.id);
+      const student = await Student.query().insert({
+        studentId,
+        firstName,
+        lastName,
+        birthday,
+        gender,
+        race,
+        ell,
+      });
+
+      const insertedDisabilities = await this.setStudentDisabilities(student.id, disabilities);
       await StudentTermInfo
         .query()
-        .whereIn('termId', termIds)
-        .andWhere({studentId: existingStudent.id})
+        .insert({
+            termId,
+            studentId: student.id,
+            gradeLevel,
+            postSchoolOutcome: (gradeLevel === 'Post-school' && postSchoolOutcome) || null,
+            exitCategory: (gradeLevel === 'Post-school' && exitCategory) || null,
+            gradeType,
+            grade,
+            absentPercent,
+            behaviorMarks,
+            suspended,
+            failingEnglish,
+            failingMath,
+            failingOther,
+            onTrack,
+            retained,
+            schoolsAttended,
+            hasExtracurricular,
+            hasSelfDeterminationSkills,
+            hasIndependentLivingSkills,
+            hasTravelSkills,
+            hasSocialSkills,
+            attendedIepMeeting,
+            iepRole,
+            postSchoolGoals,
+            hasGraduationPlan,
+          })
+        .eager('student')
+        .map(termInfo => {
+          termInfo.student.disabilities = insertedDisabilities;
+          return termInfo;
+        });
+    }
+
+    async importExistingStudent(id, schoolYearId, termId, {
+      studentId,
+      firstName,
+      lastName,
+      birthday,
+      gender,
+      race,
+      ell,
+      disabilities,
+      gradeLevel,
+      postSchoolOutcome,
+      exitCategory,
+      gradeType,
+      grade,
+      absentPercent,
+      behaviorMarks,
+      suspended,
+      failingEnglish,
+      failingMath,
+      failingOther,
+      onTrack,
+      retained,
+      schoolsAttended,
+      hasExtracurricular,
+      hasSelfDeterminationSkills,
+      hasIndependentLivingSkills,
+      hasTravelSkills,
+      hasSocialSkills,
+      attendedIepMeeting,
+      iepRole,
+      postSchoolGoals,
+      hasGraduationPlan,
+    })  {
+      const existingStudent = studentId && await Student.query().where('studentId', studentId).first();
+      if(existingStudent && existingStudent.id !== id) {
+        throw validationError(`A student already exists with the id "${studentId}"`);
+      }
+      const term = await Term.query().where('schoolYearId', schoolYearId).andWhere('id', termId).first();
+
+      if(!term) {
+        throw validationError('Term does not exist', 404);
+      }
+
+      const fields = removeNullValues({
+        studentId,
+        firstName,
+        lastName,
+        birthday,
+        ell,
+        gender,
+        race,
+      });
+
+      await Student.query().where('id', id).first().patch(fields);
+      await StudentDisability.query().delete().where('studentId', id);
+      await StudentDisability.query().insert(disabilities.map(disabilityId => ({
+        disabilityId,
+        studentId: id
+      })));
+
+      const studentTermInfos = await StudentTermInfo
+        .query()
+        .where('termId', termId)
+        .andWhere({studentId: id})
         .patch({
+          gradeLevel: gradeLevel,
+          postSchoolOutcome: (gradeLevel === 'Post-school' && postSchoolOutcome) || null,
+          exitCategory: (gradeLevel === 'Post-school' && exitCategory) || null,
           gradeType,
           grade,
           absentPercent,
@@ -317,23 +442,24 @@ module.exports = context => {
           iepRole,
           postSchoolGoals,
           hasGraduationPlan,
-        });
+        })
+        .eager('student.disabilities')
+        .returning('*');
 
+      return studentTermInfos;
     }
 
-    async importFromCSV(schoolYearId, csvData) {
+    async importFromCSV(schoolYearId, termId, csvData) {
       const disabilities = await Disability.query();
       const rows = this.csvDataToObjects(csvData, disabilities);
       return Promise.all(rows.map(async row => {
-        console.log(row);
         const existingStudent = await models.Student.query().where('studentId', row.studentId).first();
         // Exists
         if(existingStudent) {
-          await this.editStudent(existingStudent.id, schoolYearId, {...row});
+          return await this.importExistingStudent(existingStudent.id, schoolYearId, termId, {...row});
         } else {
-          await this.createStudent(schoolYearId, {...row});
+          return await this.importNewStudent(schoolYearId, termId, {...row});
         }
-        await this.importAdditionalTermInfoFromCSV(row.studentId, schoolYearId, {...row});
       }))
     }
   }

@@ -57,11 +57,12 @@ module.exports = context => {
       success(ctx, {
         students: await schoolYearController.getStudentsByTerm(termId)
       });
-    }).post('/schoolYears/:schoolYearId/import', auth(), async ctx => {
+    }).post('/schoolYears/:schoolYearId/:termId/import', auth(), async ctx => {
       const schoolYearId = +ctx.params.schoolYearId;
+      const termId = +ctx.params.termId;
       const csvData = ctx.request.body;
-      success(ctx, {
-        students: await studentController.importFromCSV(schoolYearId, csvData)
-      });
+      await studentController.importFromCSV(schoolYearId, termId, csvData);
+      // Client should reload the list
+      success(ctx, {success: true});
     });
 };
