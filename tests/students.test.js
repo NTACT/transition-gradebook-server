@@ -1,5 +1,7 @@
 jest.setTimeout(60000);
 const testUtils = require('./testUtils');
+const { csvDataHelper } = require('tgb-shared');
+const uuid = require('uuid/v4');
 const { rapidTest, shouldSucceed } = testUtils;
 
 describe('students', () => {
@@ -57,4 +59,151 @@ describe('students', () => {
     await rapid.controllers.studentController.getExportData(1, [studentId]);
   });
 
+  rapidTest('Should be able to import a new student with CSV', async rapid => {
+    const { studentController} = rapid.controllers;
+    const { Student, SchoolYear, StudentTermInfo } = rapid.models;
+    const studentId = uuid();
+    const students = [generateCSVUploadModel(studentId)];
+    const schoolYear = await SchoolYear.query().where('id', 1).eager('terms').first();
+    const term = schoolYear.terms[0].id;
+    await studentController.importFromCSV(schoolYear.id, term, students);
+    const imported = await Student.query().where('studentId', studentId).first();
+    expect(imported).toBeDefined();
+    const { id } = imported;
+    const studentTermInfos = await StudentTermInfo.query().where('studentId', id);
+    // Backfilled the year
+    expect(studentTermInfos.length).toEqual(schoolYear.terms.length);
+  });
+
+  rapidTest('Should be able to import multiple new students with CSV', async rapid => {
+    const { studentController} = rapid.controllers;
+    const { Student, SchoolYear, StudentTermInfo } = rapid.models;
+    const students = generateCSVUploadModels(20);
+    const schoolYear = await SchoolYear.query().where('id', 1).eager('terms').first();
+    const studentsBefore = await Student.query();
+    await studentController.importFromCSV(schoolYear.id, schoolYear.terms[0].id, students);
+    const studentsAfter = await Student.query();
+    expect(studentsAfter.length - studentsBefore.length).toEqual(20);
+  });
+
+  rapidTest('Should be able to edit an existing student with CSV', async rapid => {
+    const { studentController} = rapid.controllers;
+    const { Student, SchoolYear, StudentTermInfo } = rapid.models;
+    const schoolYear = await SchoolYear.query().where('id', 1).eager('terms.studentTermInfos').first();
+    const oldTermInfos = schoolYear.terms[0].studentTermInfos[0];
+    const studentToEdit = await Student.query().findById(oldTermInfos.studentId);
+    const editedId = studentToEdit.studentId
+    const students = [generateCSVUploadModel(editedId)];
+    const term = schoolYear.terms[0].id;
+    await studentController.importFromCSV(schoolYear.id, term, students);
+    const imported = await Student.query().where('studentId', editedId).first();
+    expect(imported).toBeDefined();
+    // Simple check
+    expect(imported.firstName).not.toEqual(studentToEdit.firstName);
+    const studentTermInfos = await StudentTermInfo.query().where('studentId', studentToEdit.id).first();
+    // simple check
+    expect(oldTermInfos.grade).not.toEqual(studentTermInfos.grade);
+  });
+
+  rapidTest('Should be able to edit an existing students with CSV', async rapid => {
+    const { studentController} = rapid.controllers;
+    const { Student, SchoolYear } = rapid.models;
+    const schoolYear = await SchoolYear.query().where('id', 1).eager('terms.studentTermInfos').first();
+    const oldTermInfos = schoolYear.terms[0].studentTermInfos;
+    const studentsToEditId = oldTermInfos.map(info => info.studentId);
+    const students = await Student.query().whereIn('id', studentsToEditId);
+    const csv = students.map(student => generateCSVUploadModel(student.studentId));
+    const term = schoolYear.terms[0].id;
+    await studentController.importFromCSV(schoolYear.id, term, csv);
+    const imported = await Student.query().whereIn('id', studentsToEditId);
+    for(const changedStudent of imported) {
+      // poc check
+      expect(changedStudent.firstName).not.toEqual(students.find(stu => stu.id === changedStudent.id).firstName);
+    }
+  });
+
+  rapidTest('CSV import -> csvDataToObjects tests', async rapid => {
+    const { studentController} = rapid.controllers;
+    const { Student, SchoolYear, Disability } = rapid.models;
+    const disabilities = await Disability.query();
+
+    // Special case: grades
+    const testModel = generateCSVUploadModel();
+    testModel.grade.value = 'B+';
+    testModel.gradeType.value = 'percent';
+    const invalidGradeTest = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(invalidGradeTest.grade).toEqual(null);
+    testModel.gradeType.value = 'letter';
+    const validGradeTest = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(validGradeTest.grade).toEqual('B+');
+
+    // Special case: disabilities
+    const firstDisability = disabilities[0];
+    const secondDisability =  disabilities[1];
+    testModel.disabilities.value = `${firstDisability.name} ${secondDisability.name}`;
+    const validDisabilitiesTest = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(validDisabilitiesTest.disabilities).toEqual([firstDisability.id, secondDisability.id]);
+    testModel.disabilities.value = `${firstDisability.name} ${secondDisability.name} not a valid disability`;
+    const invalidDisabilitiesTest = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(invalidDisabilitiesTest.disabilities).toEqual([firstDisability.id, secondDisability.id]);
+
+    // Special case: number data
+    testModel.absentPercent.value = 'not a number';
+    const invalidNumberTest = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(invalidNumberTest.absentPercent).toEqual(null);
+    testModel.absentPercent.value = '9001';
+    const validNumberTest = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(validNumberTest.absentPercent).toEqual(9001);
+
+    // Custom deserialize
+    testModel.race.value = 'White or Caucasian';
+    const validFullRaceNameTest = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(validFullRaceNameTest.race).toEqual('WH7');
+    testModel.race.value = 'WH7';
+    const validRaceLabelTest = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(validRaceLabelTest.race).toEqual('WH7');
+    testModel.race.value = '404';
+    const invalidRaceLabelTest = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(invalidRaceLabelTest.race).toEqual(null);
+
+  });
 });
+
+function generateCSVUploadModel(studentId = uuid()) {
+  const csvUpload = {};
+  for(const column of csvDataHelper.columns) {
+    let value = '';
+    switch(column.type) {
+      case csvDataHelper.types.array:
+        // will need to fix if other array fields are included. Currently only disabilities supported
+        value = 'AU ID';
+        break;
+      case csvDataHelper.types.boolean: 
+        value = csvDataHelper.Yes;
+        break;
+      case csvDataHelper.types.date: 
+        value = '08/12/2019';
+        break;
+      case csvDataHelper.types.enum:
+        value = column.enumValues ? column.enumValues[0] : column.validValues[0];
+        break;
+      case csvDataHelper.types.float:
+      case csvDataHelper.types.integer:
+        value = 42;
+        break;
+      default: 
+        value = 'String value';
+    }
+    csvUpload[column.field] = {value};
+  }
+  csvUpload.studentId.value = studentId || csvUpload.studentId.value;
+  return csvUpload;
+}
+
+function generateCSVUploadModels(count = 1) {
+  const csvUpload = [];
+  for(let i = 0; i < count; i += 1) {
+    csvUpload.push(generateCSVUploadModel());
+  }
+  return csvUpload;
+}

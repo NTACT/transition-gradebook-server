@@ -215,12 +215,15 @@ module.exports = context => {
             continue;
           }
           let columnValue = valueObject.value;
+          // try to convert to its real value
           switch(columnBeingMapped.type) {
             case csvDataHelper.types.boolean: 
+              // This will be a YesNoBoolean (used to have null/undefined treated differently than false)
               columnValue = columnValue.booleanValue;
               break;
             case csvDataHelper.types.enum: 
             case csvDataHelper.types.array:
+              // some of these have custom ways to remap to their values
               columnValue = typeof columnBeingMapped.deserialize === 'function' ? columnBeingMapped.deserialize(columnValue) : columnValue;
               break; 
             case csvDataHelper.types.date:
@@ -228,11 +231,12 @@ module.exports = context => {
               break;
             case csvDataHelper.types.integer:
             case csvDataHelper.types.float:
+              // convert to number, treat NaN as blank
               const numberValue = +columnValue;
               columnValue = isNaN(numberValue) ? '' : numberValue;
           }
 
-          
+          // If the column is disabilities, remap the string value to the id of the disability
           if(columnBeingMapped.field === 'disabilities' && columnValue) {
             columnValue = columnValue.map(provided => {
               const mappedValue = disabilities.find(dis => dis.name === provided.toUpperCase() || dis.fullName === provided);
@@ -243,6 +247,7 @@ module.exports = context => {
             }).filter(value => !!value);
           }
 
+          // Null out blank values
           if(columnValue === '' && !columnBeingMapped.required) {
             columnValue = null;
           }
@@ -251,6 +256,7 @@ module.exports = context => {
         }
 
         const gradeValue = realObject.grade;
+        // If a grade is specified, make sure its a number for percent or gpa, or valid letter grade for letter
         if(gradeValue) {
           const gradeType = realObject.gradeType;
           if(gradeType === 'percent' || gradeType === 'gpa' && isNaN(+gradeValue)) {
