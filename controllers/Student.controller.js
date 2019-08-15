@@ -2,8 +2,9 @@ module.exports = context => {
   const removeNullValues = require('../utils/removeNullValues');
   const validationError = require('../utils/validationError');
   const Json2csvParser = require('json2csv').Parser;
-  const { models } = context;
-  const { Student, SchoolYear, StudentDisability, StudentTermInfo, Term } = models;
+  const { csvDataHelper, enums } = require('tgb-shared');
+  const { models, } = context;
+  const { Student, SchoolYear, StudentDisability, StudentTermInfo, Term, Disability} = models;
 
   class StudentController {
     getStudents() {
@@ -202,6 +203,290 @@ module.exports = context => {
         ]
       })
       .parse(studentTermInfos);
+    }
+
+    csvDataToObjects(csvData, disabilities) {
+      return csvData.map(row => {
+        const realObject = {}; 
+        for(const [columnName, valueObject] of Object.entries(row)) {
+          const columnBeingMapped = csvDataHelper.columns.find(col => col.field === columnName);
+          // metadata, like row uuid from the client
+          if(!columnBeingMapped) {
+            continue;
+          }
+          let columnValue = valueObject.value;
+          // try to convert to its real value
+          switch(columnBeingMapped.type) {
+            case csvDataHelper.types.boolean: 
+              // This will be a YesNoBoolean (used to have null/undefined treated differently than false)
+              columnValue = columnValue.booleanValue;
+              break;
+            case csvDataHelper.types.enum: 
+            case csvDataHelper.types.array:
+              // some of these have custom ways to remap to their values
+              columnValue = typeof columnBeingMapped.deserialize === 'function' ? columnBeingMapped.deserialize(columnValue) : columnValue;
+              break; 
+            case csvDataHelper.types.date:
+              columnValue = columnValue ? new Date(columnValue).toISOString() : null;
+              break;
+            case csvDataHelper.types.integer:
+            case csvDataHelper.types.float:
+              // convert to number, treat NaN as blank
+              const numberValue = +columnValue;
+              columnValue = isNaN(numberValue) ? '' : numberValue;
+          }
+
+          // If the column is disabilities, remap the string value to the id of the disability
+          if(columnBeingMapped.field === 'disabilities' && columnValue) {
+            columnValue = columnValue.map(provided => {
+              const mappedValue = disabilities.find(dis => dis.name === provided.toUpperCase() || dis.fullName === provided);
+              if(mappedValue) {
+                return mappedValue.id;
+              }
+              return null;
+            }).filter(value => !!value);
+          }
+
+          // Null out blank values
+          if(columnValue === '' && !columnBeingMapped.required) {
+            columnValue = null;
+          }
+
+          realObject[columnName] = columnValue;
+        }
+
+        const gradeValue = realObject.grade;
+        // If a grade is specified, make sure its a number for percent or gpa, or valid letter grade for letter
+        if(gradeValue) {
+          const gradeType = realObject.gradeType;
+          if(gradeType === 'percent' || gradeType === 'gpa' && isNaN(+gradeValue)) {
+            realObject.grade = null;
+          } else if(gradeType === 'letter') {
+            realObject.grade = enums.gradeLetters.find(letter => letter === gradeValue.toUpperCase()) || null;
+          }
+
+        }
+        return realObject;
+      });
+    }
+
+    async importNewStudent(schoolYearId, {
+      studentId,
+      firstName,
+      lastName,
+      birthday,
+      gender,
+      race,
+      ell,
+      disabilities,
+      gradeLevel,
+      postSchoolOutcome,
+      exitCategory,
+      gradeType,
+      grade,
+      absentPercent,
+      behaviorMarks,
+      suspended,
+      failingEnglish,
+      failingMath,
+      failingOther,
+      onTrack,
+      retained,
+      schoolsAttended,
+      hasExtracurricular,
+      hasSelfDeterminationSkills,
+      hasIndependentLivingSkills,
+      hasTravelSkills,
+      hasSocialSkills,
+      attendedIepMeeting,
+      iepRole,
+      postSchoolGoals,
+      hasGraduationPlan,
+    }) {
+      const existingStudent = await Student.query().where('studentId', studentId).first();
+      if(existingStudent) {
+        throw validationError(`A student already exists with the id "${studentId}"`);
+      }
+      const terms = await Term.query().where('schoolYearId', schoolYearId);
+
+
+      const student = await Student.query().insert({
+        studentId,
+        firstName,
+        lastName,
+        birthday,
+        gender,
+        race,
+        ell,
+      });
+
+      await this.setStudentDisabilities(student.id, disabilities);
+
+      let checkedPostSchoolOutcome = null;
+      let checkedExitCategory = null;
+      if(gradeLevel === 'Post-school') {
+        checkedPostSchoolOutcome = postSchoolOutcome;
+        checkedExitCategory = exitCategory;
+      }
+
+      const otherFields = removeNullValues({
+          gradeLevel,
+          postSchoolOutcome: checkedPostSchoolOutcome,
+          exitCategory: checkedExitCategory,
+          gradeType,
+          grade,
+          absentPercent,
+          behaviorMarks,
+          suspended,
+          failingEnglish,
+          failingMath,
+          failingOther,
+          onTrack,
+          retained,
+          schoolsAttended,
+          hasExtracurricular,
+          hasSelfDeterminationSkills,
+          hasIndependentLivingSkills,
+          hasTravelSkills,
+          hasSocialSkills,
+          attendedIepMeeting,
+          iepRole,
+          postSchoolGoals,
+          hasGraduationPlan,
+      });
+
+      const studentTermInfo = await StudentTermInfo
+        .query()
+        .insert(terms.map(term => {
+            return {
+              termId: term.id,
+              studentId: student.id,
+              ...otherFields,
+            }
+          })
+        );
+
+        return studentTermInfo;
+    }
+
+    async importExistingStudent(id, schoolYearId, termId, {
+      studentId,
+      firstName,
+      lastName,
+      birthday,
+      gender,
+      race,
+      ell,
+      disabilities,
+      gradeLevel,
+      postSchoolOutcome,
+      exitCategory,
+      gradeType,
+      grade,
+      absentPercent,
+      behaviorMarks,
+      suspended,
+      failingEnglish,
+      failingMath,
+      failingOther,
+      onTrack,
+      retained,
+      schoolsAttended,
+      hasExtracurricular,
+      hasSelfDeterminationSkills,
+      hasIndependentLivingSkills,
+      hasTravelSkills,
+      hasSocialSkills,
+      attendedIepMeeting,
+      iepRole,
+      postSchoolGoals,
+      hasGraduationPlan,
+    })  {
+      const existingStudent = studentId && await Student.query().where('studentId', studentId).first();
+      if(existingStudent && existingStudent.id !== id) {
+        throw validationError(`A student already exists with the id "${studentId}"`);
+      }
+      const term = await Term.query().where('schoolYearId', schoolYearId).andWhere('id', termId).first();
+
+      if(!term) {
+        throw validationError('Term does not exist', 404);
+      }
+
+      const fields = removeNullValues({
+        studentId,
+        firstName,
+        lastName,
+        birthday,
+        ell,
+        gender,
+        race,
+      });
+
+      await Student.query().where('id', id).first().patch(fields);
+      await StudentDisability.query().delete().where('studentId', id);
+      await StudentDisability.query().insert(disabilities.map(disabilityId => ({
+        disabilityId,
+        studentId: id
+      })));
+
+      let checkedPostSchoolOutcome = null;
+      let checkedExitCategory = null;
+      if(gradeLevel === 'Post-school') {
+        checkedPostSchoolOutcome = postSchoolOutcome;
+        checkedExitCategory = exitCategory;
+      }
+      
+      const otherFields = removeNullValues({
+        gradeType,
+        postSchoolOutcome: checkedPostSchoolOutcome,
+        exitCategory: checkedExitCategory,
+        grade,
+        absentPercent,
+        behaviorMarks,
+        suspended,
+        failingEnglish,
+        failingMath,
+        failingOther,
+        onTrack,
+        retained,
+        schoolsAttended,
+        hasExtracurricular,
+        hasSelfDeterminationSkills,
+        hasIndependentLivingSkills,
+        hasTravelSkills,
+        hasSocialSkills,
+        attendedIepMeeting,
+        iepRole,
+        postSchoolGoals,
+        hasGraduationPlan,
+    });
+
+      const studentTermInfos = await StudentTermInfo
+        .query()
+        .where('termId', termId)
+        .andWhere({studentId: id})
+        .patch({
+          ...otherFields,
+        })
+        .eager('student.disabilities')
+        .returning('*');
+
+      return studentTermInfos;
+    }
+
+    async importFromCSV(schoolYearId, termId, csvData) {
+      const disabilities = await Disability.query();
+      const rows = this.csvDataToObjects(csvData, disabilities);
+      await Promise.all(rows.map(async row => {
+        const existingStudent = await models.Student.query().where('studentId', row.studentId).first();
+        // Exists
+        if(existingStudent) {
+          await this.importExistingStudent(existingStudent.id, schoolYearId, termId, {...row});
+        } else {
+          // When they are a new student, populate all the terms of the year
+          await this.importNewStudent(schoolYearId, {...row});
+        }
+      }));
     }
   }
 
