@@ -22,17 +22,9 @@ module.exports = context => {
       });
     })
 
-    .post('/activities/:studentId/:schoolYearId', auth(), async ctx => {
-      const studentId = +ctx.params.studentId;
-      const schoolYearId = +ctx.params.schoolYearId;
-      const fields = {
-        ...ctx.request.body,
-        studentId,
-        schoolYearId,
-      };
-
+    .post('/activities', auth(), async ctx => {
       success(ctx, {
-        activity: await activityController.createActivity(fields),
+        activities: await activityController.createActivity(ctx.request.body),
       });
     })
 

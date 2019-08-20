@@ -11,13 +11,13 @@ module.exports = context => {
 
     getSchoolYearActivitiesForGroup(typeGroup, yearId, students) {
       let studentIds;
-      if(students) {
+      if (students) {
         studentIds = students.map(student => student.id);
-      } 
+      }
       return ActivityTypeGroup.query()
         .eager('[activityTypes.activities(inSchoolYear, inStudentIds).events]', {
           inSchoolYear: query => query.where('schoolYearId', yearId),
-          inStudentIds: query => studentIds ?  query.whereIn('studentId', studentIds) : query
+          inStudentIds: query => studentIds ? query.whereIn('studentId', studentIds) : query
         })
         .where('name', typeGroup)
         .first();
@@ -31,17 +31,22 @@ module.exports = context => {
     }
 
     async createActivity(fields) {
-      const { events, ...rest } = fields;
-      if(!events || !events.length) throw validationError('You must add at least one event.')
-      const activity = await Activity.query().insert(rest).returning('*').eager('[activityType]');
-      activity.events = await this.createActivityEvents(activity.id, events);
-      return activity;
+      const { events, studentIds, ...rest } = fields;
+      if (!events || !events.length) throw validationError('You must add at least one event.')
+      const activities = studentIds.map(async (id) => {
+        const payload = { studentId: id, ...rest }
+        const activity = await Activity.query().insert(payload).returning('*').eager('[activityType]');
+        activity.events = await this.createActivityEvents(activity.id, events);
+        return activity
+      })
+
+      return await Promise.all(activities);
     }
 
     async editActivity(activityId, fields) {
       const { events, ...rest } = fields;
-      
-      if(!events || !events.length) throw validationError('You must add at least one event.');
+
+      if (!events || !events.length) throw validationError('You must add at least one event.');
       await this.deleteActivityEvents(activityId);
       await this.createActivityEvents(activityId, events);
 
@@ -55,11 +60,11 @@ module.exports = context => {
     }
 
     deleteActivityEvents(activityId) {
-      return ActivityEvent.query().where({activityId}).delete();
+      return ActivityEvent.query().where({ activityId }).delete();
     }
 
     createActivityEvents(activityId, events) {
-      if(!events || !events.length) return [];
+      if (!events || !events.length) return [];
       return ActivityEvent.query().insert(events.map(event => {
         return { eventTime: event.eventTime, activityId };
       }));
