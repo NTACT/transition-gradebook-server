@@ -219,7 +219,8 @@ module.exports = context => {
           switch(columnBeingMapped.type) {
             case csvDataHelper.types.boolean: 
               // This will be a YesNoBoolean (used to have null/undefined treated differently than false)
-              columnValue = columnValue.booleanValue;
+              const yesNoValue = csvDataHelper.yesNoBooleanFromString(columnValue);
+              columnValue = yesNoValue ? yesNoValue.booleanValue : null;
               break;
             case csvDataHelper.types.enum: 
             case csvDataHelper.types.array:
