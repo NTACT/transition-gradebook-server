@@ -30,9 +30,7 @@ module.exports = {
       <p> There is a new version of Transition Gradebook that is available for installation. Please update your app to the latest version. </p>
       <p> Changes from the latest version: </p>
       <ul>
-        ${notes.forEach(note => `
-          <li>${note}</li>
-        `)}
+        ${notes.reduce((acc, note) => `${acc}<li>${note}</li>`, "")}
       </ul>
     `
   },
@@ -48,7 +46,7 @@ module.exports = {
 
       const packageData = (await this.getFileFromGithub(this.serverRepoURL('package.json'))).data
       if (semver.lt(npm_package_version, packageData.version)) {
-        rapid.log('Newer version is available, send email to admins.')
+        rapid.log('Newer version is available, sending email to admins.')
 
         const releaseNotes =
           NODE_ENV === 'production' ? (await this.getFileFromGithub(this.serverRepoURL('release-notes.json'))).data : require('../release-notes.json')
