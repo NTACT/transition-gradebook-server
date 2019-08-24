@@ -53,7 +53,7 @@ module.exports = {
         const [release] = releaseNotes.filter(note => note.version === packageData.version)
 
         const admins = (await rapid.models.User.query()).filter(user => user.admin)
-        admins.forEach(async (admin) => {
+        await Promise.all(admins.map(async (admin) => {
           const { email } = admin
           try {
             await rapid.sendMail({
@@ -64,7 +64,7 @@ module.exports = {
           } catch (e) {
             rapid.log(`Error sending version update email: ${e}`)
           }
-        })
+        }))
       }
     });
   }
