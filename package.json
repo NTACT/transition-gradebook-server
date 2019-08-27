@@ -1,10 +1,10 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "test": "export NODE_ENV=test && jest",
     "start": "rapid",
     "forever": "export NODE_ENV='production' && forever start -a --uid 'tgb' /home/bitnami/sites/tgb/current/server/index.js",
-    "watch": "rapid watch",
+    "watch": "export NODE_ENV='development' && rapid watch",
     "migrate": "rapid migrate",
     "seed": "rapid seed",
     "clear": "rapid clear",
@@ -30,7 +30,6 @@
     "d3": "^5.4.0",
     "d3-node": "^1.1.3",
     "d3pie": "^0.2.1",
-    "dotenv": "^8.1.0",
     "faker": "^4.1.0",
     "html-pdf": "^2.2.0",
     "jsdom": "^11.11.0",

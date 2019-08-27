@@ -1,8 +1,8 @@
 [{
-    "version": "1.0.0",
+    "version": "1.0.1",
     "notes": [
-        "note 1",
-        "note 2",
-        "note 3"
+        "Add student CSV import.",
+        "Allow adding activities to multiple students at once.",
+        "Add multi-day select to the activity event calendar dropdown."
     ]
 }]

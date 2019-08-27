@@ -6,18 +6,13 @@
 const axios = require('axios')
 const cron = require('node-cron')
 const semver = require('semver')
-require('dotenv').config()
 
 module.exports = {
   getFileFromGithub(url) {
-    const { GITHUB_TOKEN } = process.env
     return axios({
       method: 'get',
       url,
-      headers: {
-        Authorization: `Bearer ${GITHUB_TOKEN}`,
-        Accept: 'application/vnd.github.v3.raw'
-      }
+      headers: { Accept: 'application/vnd.github.v3.raw' }
     })
   },
 
@@ -36,20 +31,16 @@ module.exports = {
   },
 
   async webserverWillListen(rapid) {
-    const { npm_package_version, NODE_ENV, GITHUB_TOKEN } = process.env
+    const { npm_package_version } = process.env
 
-    if (!GITHUB_TOKEN) return rapid.log("Github credentials have not been properly set.")
-    const schedule = NODE_ENV === 'production' ? '0 0 * * *' : "* * * * *"
-
-    cron.schedule(schedule, async () => {
-      if (!rapid.sendMailEnabled) return rapid.log("Mail service is not available.")
+    cron.schedule('0 0 * * *', async () => {
+      if (!rapid.sendMailEnabled) return rapid.log("Cannot send version update email: mail service is not available.")
 
       const packageData = (await this.getFileFromGithub(this.serverRepoURL('package.json'))).data
       if (semver.lt(npm_package_version, packageData.version)) {
         rapid.log('Newer version is available, sending email to admins.')
 
-        const releaseNotes =
-          NODE_ENV === 'production' ? (await this.getFileFromGithub(this.serverRepoURL('release-notes.json'))).data : require('../release-notes.json')
+        const releaseNotes = await this.getFileFromGithub(this.serverRepoURL('release-notes.json')).data
         const [release] = releaseNotes.filter(note => note.version === packageData.version)
 
         const admins = (await rapid.models.User.query()).filter(user => user.admin)
@@ -65,6 +56,7 @@ module.exports = {
             rapid.log(`Error sending version update email: ${e}`)
           }
         }))
+        rapid.log(`Sent version update email to ${admins.length} admins.`)
       }
     });
   }
