@@ -1,5 +1,5 @@
 [{
-    "version": "1.0.1",
+    "version": "1.0.2",
     "notes": [
         "Add student CSV import.",
         "Allow adding activities to multiple students at once.",
