@@ -8,13 +8,14 @@ module.exports = context => {
     static get jsonSchema() {
       return {
         type: 'object',
-        required: ['studentId', 'firstName', 'lastName', 'birthday', 'gender', 'ell', 'race'],
+        required: ['studentId', 'firstName', 'lastName', 'birthday', 'gender', 'ell', 'race', 'plan504'],
         properties: {
           id: {type: 'integer'},
           studentId: {type: 'string', minLength: 1, maxLength: 255},
           firstName: {type: 'string', minLength: 1, maxLength: 255},
           lastName: {type: 'string', minLength: 1, maxLength: 255},
           ell: {type: 'boolean'},
+          plan504: {type: 'boolean'},
           gender: {type: 'string', enum: enums.genders},
           race: {type: 'string', enum: enums.races},
           birthday: {type: 'string', format: 'date-time'},
