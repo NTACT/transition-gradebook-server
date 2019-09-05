@@ -11,6 +11,11 @@ module.exports = context => {
         schoolYears: await schoolYearController.getSchoolYears()
       });
     })
+    .delete('/schoolYears/:schoolYearId', auth(), async ctx => {
+      const schoolYearId = +ctx.params.schoolYearId;
+      await schoolYearController.deleteSchoolYear(schoolYearId);
+      success(ctx);
+    })
     .post('/schoolYears', auth(), adminOnly(), async ctx => {
       success(ctx, {
         schoolYear: await schoolYearController.createSchoolYear(ctx.request.body)
@@ -39,6 +44,11 @@ module.exports = context => {
       const studentId = +ctx.params.studentId;
       await studentController.removeStudentFromYear(studentId, schoolYearId, ctx.request.body);
       success(ctx);
+    })
+    .delete('/schoolYears/:schoolYearId/students', auth(), async ctx => {
+      const schoolYearId = +ctx.params.schoolYearId; 
+      await studentController.removeAllStudentsFromYear(schoolYearId); 
+      success(ctx); 
     })
     .post('/schoolYears/:schoolYearId/students/:studentId', auth(), async ctx => {
       const schoolYearId = +ctx.params.schoolYearId;

@@ -156,6 +156,21 @@ module.exports = context => {
         .andWhere('studentId', studentId);
     }
 
+    async removeAllStudentsFromYear(schoolYearId){
+      // Get all term ids to remove the student from 
+      const termIds = await models.Term.query()
+        .where('schoolYearId', schoolYearId)
+        .map(term => term.id);
+
+      // Delete student's activitities
+      await models.Activity.query().delete()
+        .where('schoolYearId', schoolYearId);
+
+      // Remove student term info for each term
+      return StudentTermInfo.query().delete()
+      .whereIn('termId', termIds)    ;  
+    }
+
     // Gets students in a school year
     async getStudentsBySchoolYear(schoolYearId) {
       const schoolYear = await SchoolYear
