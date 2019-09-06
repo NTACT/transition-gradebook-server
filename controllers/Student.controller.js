@@ -197,6 +197,8 @@ module.exports = context => {
           {label: 'Last Name',    value: 'student.lastName'},
           {label: 'Student Id',   value: 'student.studentId'},
           {label: 'Gender',       value: 'student.gender'},
+          {label: 'ELL',          value: 'student.ell'},
+          {label: 'Date of Birth', value: 'student.birthday'},
           {label: 'Grade Level',  value: 'gradeLevel'},
           {label: 'Race',         value: s => s.student.race || 'N/A'},
           {label: 'Disabilities', value: s => s.student.disabilities.map(d => d.name).join(' ')},
