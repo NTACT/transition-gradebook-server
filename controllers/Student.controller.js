@@ -46,6 +46,7 @@ module.exports = context => {
       gradeLevel,
       postSchoolOutcome,
       exitCategory,
+      plan504,
     }) {
       const existingStudent = await Student.query().where('studentId', studentId).first();
       if(existingStudent) {
@@ -59,6 +60,7 @@ module.exports = context => {
         gender,
         race,
         ell,
+        plan504,
       });
 
       const insertedDisabilities = await this.setStudentDisabilities(student.id, disabilities);
@@ -96,6 +98,7 @@ module.exports = context => {
       gradeLevel,
       postSchoolOutcome,
       exitCategory,
+      plan504,
     }) {
       const existingStudent = studentId && await Student.query().where('studentId', studentId).first();
       if(existingStudent && existingStudent.id !== id) {
@@ -108,6 +111,7 @@ module.exports = context => {
         lastName,
         birthday,
         ell,
+        plan504,
         gender,
         race,
       });
