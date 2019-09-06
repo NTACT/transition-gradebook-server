@@ -65,7 +65,7 @@ describe('School years', () => {
 
   rapidTest('DELETE /api/schoolYears/:schoolYearId should delete school year and term info', async rapid => {
     const schoolYear = await testUtils.createSchoolYear(rapid);
-    const response = await rapid.axios.delete(`/api/schoolYears/${schoolYear.id}`, await rapid.auth());
+    const response = await rapid.axios.delete(`/api/schoolYears/${schoolYear.id}`, await rapid.auth(testUtils.credentials.admin));
     await shouldSucceed(response);
   });
 
@@ -75,7 +75,7 @@ describe('School years', () => {
       schoolYearId: schoolYear.id
     });
 
-    const response = await rapid.axios.delete(`api/schoolYears/${schoolYear.id}/students`, await rapid.auth());
+    const response = await rapid.axios.delete(`api/schoolYears/${schoolYear.id}/students`, await rapid.auth(testUtils.credentials.admin));
     await shouldSucceed(response);
   })
   rapidTest('Only admins should be able to create school years', async rapid => {

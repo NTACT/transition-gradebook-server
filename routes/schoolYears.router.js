@@ -11,7 +11,7 @@ module.exports = context => {
         schoolYears: await schoolYearController.getSchoolYears()
       });
     })
-    .delete('/schoolYears/:schoolYearId', auth(), async ctx => {
+    .delete('/schoolYears/:schoolYearId', auth(), adminOnly(), async ctx => {
       const schoolYearId = +ctx.params.schoolYearId;
       await schoolYearController.deleteSchoolYear(schoolYearId);
       success(ctx);
@@ -45,7 +45,7 @@ module.exports = context => {
       await studentController.removeStudentFromYear(studentId, schoolYearId, ctx.request.body);
       success(ctx);
     })
-    .delete('/schoolYears/:schoolYearId/students', auth(), async ctx => {
+    .delete('/schoolYears/:schoolYearId/students', auth(), adminOnly(), async ctx => {
       const schoolYearId = +ctx.params.schoolYearId; 
       await studentController.removeAllStudentsFromYear(schoolYearId); 
       success(ctx); 
