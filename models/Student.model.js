@@ -8,7 +8,7 @@ module.exports = context => {
     static get jsonSchema() {
       return {
         type: 'object',
-        required: ['studentId', 'firstName', 'lastName', 'birthday', 'gender', 'ell', 'race', 'plan504'],
+        required: ['studentId', 'firstName', 'lastName', 'birthday', 'gender', 'ell', 'race'],
         properties: {
           id: {type: 'integer'},
           studentId: {type: 'string', minLength: 1, maxLength: 255},
