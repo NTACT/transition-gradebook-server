@@ -37,7 +37,9 @@ module.exports = {
       if (!rapid.sendMailEnabled) return rapid.log("Cannot send version update email: mail service is not available.")
 
       const packageData = (await this.getFileFromGithub(this.serverRepoURL('package.json'))).data
-      if (semver.lt(npm_package_version, packageData.version)) {
+    
+      const latestVersion = await rapid.models.User.query().select('latestVersion').where('admin', true).first();
+      if (semver.lt(npm_package_version, packageData.version) && latestVersion !== npm_package_version) {
         rapid.log('Newer version is available, sending email to admins.')
 
         const releaseNotes = await this.getFileFromGithub(this.serverRepoURL('release-notes.json')).data
@@ -56,6 +58,7 @@ module.exports = {
             rapid.log(`Error sending version update email: ${e}`)
           }
         }))
+        await rapid.controllers.userController.updateLatestVersion(npm_package_version);
         rapid.log(`Sent version update email to ${admins.length} admins.`)
       }
     });

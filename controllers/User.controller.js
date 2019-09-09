@@ -38,6 +38,10 @@ module.exports = context => {
       return User.query().where('email', email).first();
     }
 
+    updateLatestVersion(latestVersion){
+      return User.query().patch({latestVersion: latestVersion}).where('admin', true);
+    }
+
     async updatePassword(id, password) {
       return User.query()
         .patch({
