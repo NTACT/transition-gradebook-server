@@ -424,7 +424,8 @@ module.exports = context => {
       postSchoolGoals,
       hasGraduationPlan,
     })  {
-      const existingStudent = studentId && await Student.query().where('studentId', studentId).first();
+
+      const existingStudent = studentId && await Student.query().where('studentId', studentId).first(); 
       if(existingStudent && existingStudent.id !== id) {
         throw validationError(`A student already exists with the id "${studentId}"`);
       }
@@ -482,6 +483,20 @@ module.exports = context => {
         postSchoolGoals,
         hasGraduationPlan,
     });
+    
+      // insert student record into term table
+      const terms = await Term.query().where('schoolYearId', schoolYearId);
+      const studentTermData =  terms.map(term => {
+          return {
+            termId: term.id,
+            studentId: id,
+            gradeLevel: gradeLevel,
+            exitCategory: gradeLevel === 'Post-school' ? (student.exitCategory || null) : null,
+            postSchoolOutcome: gradeLevel === 'Post-school' ? (student.postSchoolOutcome || null) : null,
+          };
+        });
+
+      await StudentTermInfo.query().insert(studentTermData);
 
       const studentTermInfos = await StudentTermInfo
         .query()
