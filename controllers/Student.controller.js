@@ -220,6 +220,8 @@ module.exports = context => {
           {label: 'Date of Birth', value: 'student.birthday'},
           {label: 'Grade Level',  value: 'gradeLevel'},
           {label: 'Race',         value: s => s.student.race || 'N/A'},
+          {label: 'Exit Category', value: 'exitCategory'},
+          {label: 'Post-school outcomes', value: 'postSchoolOutcome'},
           {label: 'Disabilities', value: s => s.student.disabilities.map(d => d.name).join(' ')},
         ]
       })
