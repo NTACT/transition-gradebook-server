@@ -9,17 +9,28 @@ module.exports = context => {
       ctx.request.socket.setTimeout(timeout);
       const reportName = 'summary';
       const template = require('../reportTemplates/summaryReport');
-      const { startYearId, startTermId, grades, disabilities, riskLevels, supportNeeded, races, } = ctx.request.query;
+      const {
+        startYearId,
+        startTermId,
+        grades,
+        disabilities,
+        riskLevels,
+        supportNeeded,
+        races
+      } = ctx.request.query;
       const options = {
         startYearId: +startYearId,
         startTermId: +startTermId,
-        gradesFilter: grades, 
+        gradesFilter: grades,
         disabilitiesFilter: disabilities,
         riskLevelsFilter: riskLevels,
         supportNeededFilter: supportNeeded,
-        racesFilter: races,
+        racesFilter: races
       };
-      const data = await controllers.reportController.runReport(reportName, options);
+      const data = await controllers.reportController.runReport(
+        reportName,
+        options
+      );
       const html = template(data);
       const stream = await createPDF(siteUrl, html);
       ctx.response.body = stream;
@@ -29,17 +40,59 @@ module.exports = context => {
       ctx.request.socket.setTimeout(timeout);
       const reportName = 'riskRoster';
       const template = require('../reportTemplates/riskRosterReport');
-      const { startYearId, startTermId, grades, disabilities, riskLevels, supportNeeded, races, } = ctx.request.query;
+      const {
+        startYearId,
+        startTermId,
+        grades,
+        disabilities,
+        riskLevels,
+        supportNeeded,
+        races
+      } = ctx.request.query;
       const options = {
         startYearId: +startYearId,
         startTermId: +startTermId,
-        gradesFilter: grades, 
+        gradesFilter: grades,
         disabilitiesFilter: disabilities,
         riskLevelsFilter: riskLevels,
         supportNeededFilter: supportNeeded,
-        racesFilter: races,
+        racesFilter: races
       };
-      const data = await controllers.reportController.runReport(reportName, options);
+      const data = await controllers.reportController.runReport(
+        reportName,
+        options
+      );
+      const html = template(data);
+      const stream = await createPDF(siteUrl, html);
+      ctx.response.body = stream;
+    })
+
+    .get('/reports/preEts', middleware.auth(), async ctx => {
+      ctx.request.socket.setTimeout(timeout);
+      const reportName = 'preEts';
+      const template = require('../reportTemplates/preEtsReport');
+      const {
+        startYearId,
+        startTermId,
+        grades,
+        disabilities,
+        riskLevels,
+        supportNeeded,
+        races
+      } = ctx.request.query;
+      const options = {
+        startYearId: +startYearId,
+        startTermId: +startTermId,
+        gradesFilter: grades,
+        disabilitiesFilter: disabilities,
+        riskLevelsFilter: riskLevels,
+        supportNeededFilter: supportNeeded,
+        racesFilter: races
+      };
+      const data = await controllers.reportController.runReport(
+        reportName,
+        options
+      );
       const html = template(data);
       const stream = await createPDF(siteUrl, html);
       ctx.response.body = stream;
@@ -49,19 +102,32 @@ module.exports = context => {
       ctx.request.socket.setTimeout(timeout);
       const reportName = 'riskSummary';
       const template = require('../reportTemplates/riskSummaryReport');
-      const { startYearId, startTermId, endYearId, endTermId, grades, disabilities, riskLevels, supportNeeded, races, } = ctx.request.query;
+      const {
+        startYearId,
+        startTermId,
+        endYearId,
+        endTermId,
+        grades,
+        disabilities,
+        riskLevels,
+        supportNeeded,
+        races
+      } = ctx.request.query;
       const options = {
         startYearId: +startYearId,
         startTermId: +startTermId,
         endYearId: +endYearId,
         endTermId: +endTermId,
-        gradesFilter: grades, 
+        gradesFilter: grades,
         disabilitiesFilter: disabilities,
         riskLevelsFilter: riskLevels,
         supportNeededFilter: supportNeeded,
-        racesFilter: races,
+        racesFilter: races
       };
-      const data = await controllers.reportController.runReport(reportName, options);
+      const data = await controllers.reportController.runReport(
+        reportName,
+        options
+      );
       const html = template(data);
       const stream = await createPDF(siteUrl, html);
       ctx.response.body = stream;
@@ -71,11 +137,7 @@ module.exports = context => {
       ctx.request.socket.setTimeout(timeout);
       const reportName = 'numberOfStudentsStandard';
       const template = require('../reportTemplates/numberOfStudentsStandard');
-      const {
-        startYearId,
-        startTermId,
-        primaryCriteria,
-      } = ctx.request.query;
+      const { startYearId, startTermId, primaryCriteria } = ctx.request.query;
       const options = {
         startYearId: +startYearId,
         startTermId: +startTermId,
@@ -87,45 +149,55 @@ module.exports = context => {
         byDisability: primaryCriteria === 'disability',
         byActivityGroupTypes: primaryCriteria === 'activityGroupTypes',
         byRaces: primaryCriteria === 'race',
-        byGenders: primaryCriteria === 'gender',
+        byGenders: primaryCriteria === 'gender'
       };
-      const data = await controllers.reportController.runReport(reportName, options);
+      const data = await controllers.reportController.runReport(
+        reportName,
+        options
+      );
       const html = template(data);
       const stream = await createPDF(siteUrl, html);
       ctx.response.body = stream;
     })
 
-    .get('/reports/numberOfStudents/longitudinal', middleware.auth(), async ctx => {
-      ctx.request.socket.setTimeout(timeout);
-      const reportName = 'numberOfStudentsLongitudinal';
-      const template = require('../reportTemplates/numberOfStudentsLongitudinal');
-      const {
-        startYearId,
-        startTermId,
-        endYearId,
-        endTermId,
-        primaryCriteria,
-      } = ctx.request.query;
-      const options = {
-        startYearId: +startYearId,
-        startTermId: +startTermId,
-        endYearId: +endYearId,
-        endTermId: +endTermId,
-        byPostSchoolOutcome: primaryCriteria === 'postSchoolOutcome',
-        byRiskLevel: primaryCriteria === 'riskLevel',
-        bySkillTraining: primaryCriteria === 'skillTraining',
-        bySupportNeed: primaryCriteria === 'supportNeed',
-        byIEPRole: primaryCriteria === 'iepRole',
-        byDisability: primaryCriteria === 'disability',
-        byActivityGroupTypes: primaryCriteria === 'activityGroupTypes',
-        byRaces: primaryCriteria === 'race',
-        byGenders: primaryCriteria === 'gender',
-      };
-      const data = await controllers.reportController.runReport(reportName, options);
-      const html = template(data);
-      const stream = await createPDF(siteUrl, html);
-      ctx.response.body = stream;
-    })
+    .get(
+      '/reports/numberOfStudents/longitudinal',
+      middleware.auth(),
+      async ctx => {
+        ctx.request.socket.setTimeout(timeout);
+        const reportName = 'numberOfStudentsLongitudinal';
+        const template = require('../reportTemplates/numberOfStudentsLongitudinal');
+        const {
+          startYearId,
+          startTermId,
+          endYearId,
+          endTermId,
+          primaryCriteria
+        } = ctx.request.query;
+        const options = {
+          startYearId: +startYearId,
+          startTermId: +startTermId,
+          endYearId: +endYearId,
+          endTermId: +endTermId,
+          byPostSchoolOutcome: primaryCriteria === 'postSchoolOutcome',
+          byRiskLevel: primaryCriteria === 'riskLevel',
+          bySkillTraining: primaryCriteria === 'skillTraining',
+          bySupportNeed: primaryCriteria === 'supportNeed',
+          byIEPRole: primaryCriteria === 'iepRole',
+          byDisability: primaryCriteria === 'disability',
+          byActivityGroupTypes: primaryCriteria === 'activityGroupTypes',
+          byRaces: primaryCriteria === 'race',
+          byGenders: primaryCriteria === 'gender'
+        };
+        const data = await controllers.reportController.runReport(
+          reportName,
+          options
+        );
+        const html = template(data);
+        const stream = await createPDF(siteUrl, html);
+        ctx.response.body = stream;
+      }
+    )
 
     .get('/reports/numberOfStudentsCross', middleware.auth(), async ctx => {
       ctx.request.socket.setTimeout(timeout);
@@ -135,15 +207,18 @@ module.exports = context => {
         startYearId,
         startTermId,
         primaryCriteria,
-        secondaryCriteria,
+        secondaryCriteria
       } = ctx.request.query;
       const options = {
         startYearId: +startYearId,
         startTermId: +startTermId,
         criteria1: primaryCriteria,
-        criteria2: secondaryCriteria,
+        criteria2: secondaryCriteria
       };
-      const data = await controllers.reportController.runReport(reportName, options);
+      const data = await controllers.reportController.runReport(
+        reportName,
+        options
+      );
       const html = template(data);
       const stream = await createPDF(siteUrl, html);
       ctx.response.body = stream;
@@ -151,20 +226,19 @@ module.exports = context => {
 
     .get('/reports/student', middleware.auth(), async ctx => {
       ctx.request.socket.setTimeout(timeout);
-      const {
-        startYearId,
-        startTermId,
-        studentId,
-      } = ctx.request.query;
+      const { startYearId, startTermId, studentId } = ctx.request.query;
 
       const template = require('../reportTemplates/studentReport');
       const reportName = 'student';
       const options = {
         startYearId: +startYearId,
         startTermId: +startTermId,
-        studentIds: studentId ? [+studentId] : null,
+        studentIds: studentId ? [+studentId] : null
       };
-      const data = await controllers.reportController.runReport(reportName, options);
+      const data = await controllers.reportController.runReport(
+        reportName,
+        options
+      );
       const html = template(data);
       const stream = await createPDF(siteUrl, html);
       ctx.response.body = stream;
@@ -172,20 +246,19 @@ module.exports = context => {
 
     .get('/reports/studentRisk/standard', middleware.auth(), async ctx => {
       ctx.request.socket.setTimeout(timeout);
-      const {
-        startYearId,
-        startTermId,
-        studentId,
-      } = ctx.request.query;
+      const { startYearId, startTermId, studentId } = ctx.request.query;
 
       const template = require('../reportTemplates/studentRiskStandardReport');
       const reportName = 'studentRiskStandard';
       const options = {
         startYearId: +startYearId,
         startTermId: +startTermId,
-        studentIds: studentId ? [+studentId] : null,
+        studentIds: studentId ? [+studentId] : null
       };
-      const data = await controllers.reportController.runReport(reportName, options);
+      const data = await controllers.reportController.runReport(
+        reportName,
+        options
+      );
       const html = template(data);
       const stream = await createPDF(siteUrl, html);
       ctx.response.body = stream;
@@ -198,7 +271,7 @@ module.exports = context => {
         startTermId,
         endYearId,
         endTermId,
-        studentId,
+        studentId
       } = ctx.request.query;
 
       const template = require('../reportTemplates/studentRiskLongitudinalReport');
@@ -208,9 +281,12 @@ module.exports = context => {
         startTermId: +startTermId,
         endYearId: +endYearId,
         endTermId: +endTermId,
-        studentIds: studentId ? [+studentId] : null,
+        studentIds: studentId ? [+studentId] : null
       };
-      const data = await controllers.reportController.runReport(reportName, options);
+      const data = await controllers.reportController.runReport(
+        reportName,
+        options
+      );
       const html = template(data);
       const stream = await createPDF(siteUrl, html);
       ctx.response.body = stream;
@@ -218,20 +294,19 @@ module.exports = context => {
 
     .get('/reports/postSchoolStudent', middleware.auth(), async ctx => {
       ctx.request.socket.setTimeout(timeout);
-      const {
-        startYearId,
-        startTermId,
-        studentId,
-      } = ctx.request.query;
+      const { startYearId, startTermId, studentId } = ctx.request.query;
 
       const template = require('../reportTemplates/postSchoolStudentReport');
       const reportName = 'postSchoolStudent';
       const options = {
         startYearId: +startYearId,
         startTermId: +startTermId,
-        studentIds: studentId ? [+studentId] : null,
+        studentIds: studentId ? [+studentId] : null
       };
-      const data = await controllers.reportController.runReport(reportName, options);
+      const data = await controllers.reportController.runReport(
+        reportName,
+        options
+      );
       const html = template(data);
       const stream = await createPDF(siteUrl, html);
       ctx.response.body = stream;
@@ -244,7 +319,7 @@ module.exports = context => {
         startTermId,
         endYearId,
         endTermId,
-        studentId,
+        studentId
       } = ctx.request.query;
 
       const template = require('../reportTemplates/studentActivitiesReport');
@@ -255,12 +330,14 @@ module.exports = context => {
         endYearId: +endYearId,
         endTermId: +endTermId,
         studentIds: studentId ? [+studentId] : null,
-        studentId,
+        studentId
       };
-      const data = await controllers.reportController.runReport(reportName, options);
+      const data = await controllers.reportController.runReport(
+        reportName,
+        options
+      );
       const html = template(data);
       const stream = await createPDF(siteUrl, html);
       ctx.response.body = stream;
     });
-
 };

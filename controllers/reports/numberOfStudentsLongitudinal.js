@@ -1,4 +1,3 @@
-
 module.exports = context => {
   const { reportUtils } = context;
   const { enums } = require('tgb-shared');
@@ -20,7 +19,7 @@ module.exports = context => {
       byDisability,
       byActivityGroupTypes,
       byGenders,
-      byRaces,
+      byRaces
     } = options;
 
     const {
@@ -31,8 +30,13 @@ module.exports = context => {
       startYear,
       startTerm,
       endYear,
-      endTerm,
-    } = await reportUtils.getLongitudinalReportData({startYearId, startTermId, endYearId, endTermId});
+      endTerm
+    } = await reportUtils.getLongitudinalReportData({
+      startYearId,
+      startTermId,
+      endYearId,
+      endTermId
+    });
 
     const data = {
       schoolSettings,
@@ -45,56 +49,61 @@ module.exports = context => {
         labels: [
           {
             key: 'postSecondaryEducation',
-            label: 'Post-Secondary Education',
+            label: 'Post-Secondary Education'
           },
           {
             key: 'postSchoolEmployment',
-            label: 'Post-School Employment',
+            label: 'Post-School Employment'
           },
           {
             key: 'both',
-            label: 'Both',
-          },
+            label: 'Both'
+          }
         ],
 
         values: flatMap(schoolYears, year =>
           map(year.terms, term => {
-            const postSchoolOutcomeCounts = countBy(term.postSchoolStudents, 'postSchoolOutcome');
+            const postSchoolOutcomeCounts = countBy(
+              term.postSchoolStudents,
+              'postSchoolOutcome'
+            );
             return {
               termId: term.id,
               label: term.name,
-              postSecondaryEducation: postSchoolOutcomeCounts['Postsecondary Education'] || 0,
-              postSchoolEmployment: postSchoolOutcomeCounts['Post-School Employment'] || 0,
-              both: postSchoolOutcomeCounts['Both'] || 0,
+              postSecondaryEducation:
+                postSchoolOutcomeCounts['Postsecondary Education'] || 0,
+              postSchoolEmployment:
+                postSchoolOutcomeCounts['Post-School Employment'] || 0,
+              both: postSchoolOutcomeCounts['Both'] || 0
             };
           })
-        ),
+        )
       },
 
       risks: byRiskLevel && {
         labels: [
           {
             key: 'No Data',
-            label: 'No Data',
+            label: 'No Data'
           },
           {
             key: 'low',
-            label: 'Low',
+            label: 'Low'
           },
           {
             key: 'medium',
-            label: 'Medium',
+            label: 'Medium'
           },
           {
             key: 'high',
-            label: 'High',
+            label: 'High'
           },
           {
             key: 'ultra',
             label: 'Ultra'
-          },
+          }
         ],
-        values: flatMap(schoolYears, year => 
+        values: flatMap(schoolYears, year =>
           map(year.terms, term => {
             const riskCounts = countBy(term.inSchoolStudents, 'risk');
             return {
@@ -104,91 +113,101 @@ module.exports = context => {
               low: riskCounts.low || 0,
               medium: riskCounts.medium || 0,
               high: riskCounts.high || 0,
-              ultra: riskCounts.ultra || 0,
+              ultra: riskCounts.ultra || 0
             };
           })
-        ),
+        )
       },
 
       skills: bySkillTraining && {
         labels: [
           {
             key: 'hasSelfDeterminationSkills',
-            label: 'Self-Determination Skills',
+            label: 'Self-Determination Skills/self advocacy training'
           },
           {
             key: 'hasIndependentLivingSkills',
-            label: 'Independent-Living Skills',
+            label: 'Independent-Living Skills'
           },
           {
             key: 'hasTravelSkills',
-            label: 'Travel Skills',
+            label: 'Travel Skills'
           },
           {
             key: 'hasSocialSkills',
-            label: 'Social Skills',
-          },
+            label: 'Social Skills'
+          }
         ],
         values: flatMap(schoolYears, year =>
           map(year.terms, term => {
             const { inSchoolStudents } = term;
-            const counts = reportUtils.countMultipleWith(inSchoolStudents, student => {
-              const counts = [];
-              if(student.hasSelfDeterminationSkills) counts.push('hasSelfDeterminationSkills');
-              if(student.hasIndependentLivingSkills) counts.push('hasIndependentLivingSkills');
-              if(student.hasTravelSkills) counts.push('hasTravelSkills');
-              if(student.hasSocialSkills) counts.push('hasSocialSkills');
-              return counts;
-            });
+            const counts = reportUtils.countMultipleWith(
+              inSchoolStudents,
+              student => {
+                const counts = [];
+                if (student.hasSelfDeterminationSkills)
+                  counts.push('hasSelfDeterminationSkills');
+                if (student.hasIndependentLivingSkills)
+                  counts.push('hasIndependentLivingSkills');
+                if (student.hasTravelSkills) counts.push('hasTravelSkills');
+                if (student.hasSocialSkills) counts.push('hasSocialSkills');
+                return counts;
+              }
+            );
 
             return {
               termId: term.id,
               label: term.name,
-              hasSelfDeterminationSkills: counts.hasSelfDeterminationSkills || 0,
-              hasIndependentLivingSkills: counts.hasIndependentLivingSkills || 0,
+              hasSelfDeterminationSkills:
+                counts.hasSelfDeterminationSkills || 0,
+              hasIndependentLivingSkills:
+                counts.hasIndependentLivingSkills || 0,
               hasTravelSkills: counts.hasTravelSkills || 0,
-              hasSocialSkills: counts.hasSocialSkills || 0,
+              hasSocialSkills: counts.hasSocialSkills || 0
             };
           })
-        ),
+        )
       },
 
       supportNeeded: bySupportNeed && {
         labels: [
           {
             key: 'attendance',
-            label: 'Attendance',
+            label: 'Attendance'
           },
           {
             key: 'behavior',
-            label: 'Behavior',
+            label: 'Behavior'
           },
           {
             key: 'engagement',
-            label: 'Engagement',
+            label: 'Engagement'
           },
           {
             key: 'english',
-            label: 'English',
+            label: 'English'
           },
           {
             key: 'math',
-            label: 'Math',
-          },
+            label: 'Math'
+          }
         ],
         values: flatMap(schoolYears, year =>
           map(year.terms, term => {
             const { inSchoolStudents } = term;
-            const counts = reportUtils.countMultipleWith(inSchoolStudents, student => {
-              const { interventions } = student;
-              const counts = [];
-              if(interventions.attendance) counts.push('attendance');
-              if(interventions.behavior) counts.push('behavior');
-              if(interventions.engagement) counts.push('engagement');
-              if(interventions.english) counts.push('english');
-              if(interventions.math) counts.push('math');
-              return counts;
-            });
+            const counts = reportUtils.countMultipleWith(
+              inSchoolStudents,
+              student => {
+                const { interventions } = student;
+                const counts = [];
+                if (interventions.attendance) counts.push('attendance');
+                if (interventions.behavior) counts.push('behavior');
+                if (interventions.engagement) counts.push('engagement');
+                if (interventions.english) counts.push('english');
+                if (interventions.math) counts.push('math');
+                return counts;
+              }
+            );
 
             return {
               termId: term.id,
@@ -197,36 +216,36 @@ module.exports = context => {
               behavior: counts.behavior || 0,
               engagement: counts.engagement || 0,
               english: counts.english || 0,
-              math: counts.math || 0,
-            }
-          }),
-        ),
+              math: counts.math || 0
+            };
+          })
+        )
       },
 
       roleInIEPMeeting: byIEPRole && {
         labels: [
           {
             key: 'attended',
-            label: 'Attended',
+            label: 'Attended'
           },
           {
             key: 'introduced',
             label: 'Introduced',
-            value: 3,
+            value: 3
           },
           {
             key: 'reviewedProgress',
             label: 'Reviewed Progress',
-            value: 1,
+            value: 1
           },
           {
             key: 'madeSuggestions',
-            label: 'Made Suggestions',
+            label: 'Made Suggestions'
           },
           {
             key: 'ledMostOfMeeting',
-            label: 'Led Most of the Meeting',
-          },
+            label: 'Led Most of the Meeting'
+          }
         ],
         values: flatMap(schoolYears, year =>
           map(year.terms, term => {
@@ -240,58 +259,69 @@ module.exports = context => {
               introduced: iepRoleCounts['Introduced'] || 0,
               reviewedProgress: iepRoleCounts['Reviewed progress'] || 0,
               madeSuggestions: iepRoleCounts['Made suggestions'] || 0,
-              ledMostOfMeeting: iepRoleCounts['Led most of the meeting'] || 0,
-            }
+              ledMostOfMeeting: iepRoleCounts['Led most of the meeting'] || 0
+            };
           })
-        ),
+        )
       },
-      
+
       disabilities: byDisability && {
         labels: [
           ...disabilities.map(disability => {
             return {
               key: disability.name,
-              label: disability.name,
-            }
+              label: disability.name
+            };
           }),
-          {key: 'NONE', label: 'NONE'},
+          { key: 'NONE', label: 'NONE' }
         ],
         values: flatMap(schoolYears, year =>
           map(year.terms, term => {
             const { inSchoolStudents } = term;
-            const disabilityCounts = reportUtils.countMultipleWith(inSchoolStudents, student => {
-              const { disabilities } = student;
-              if(!disabilities.length) return ['NONE'];
-              return student.disabilities.map(disability => disability.name);
-            });
+            const disabilityCounts = reportUtils.countMultipleWith(
+              inSchoolStudents,
+              student => {
+                const { disabilities } = student;
+                if (!disabilities.length) return ['NONE'];
+                return student.disabilities.map(disability => disability.name);
+              }
+            );
 
             return {
               termId: term.id,
               label: term.name,
               NONE: 0,
               // default each disability count to 0
-              ...disabilities.map(d => d.name).reduce((defaults, disabilityName) => {
-                defaults[disabilityName] = 0;
-                return defaults;
-              }, {}),
-              ...disabilityCounts,
+              ...disabilities
+                .map(d => d.name)
+                .reduce((defaults, disabilityName) => {
+                  defaults[disabilityName] = 0;
+                  return defaults;
+                }, {}),
+              ...disabilityCounts
             };
           })
-        ),
+        )
       },
 
       activities: byActivityGroupTypes && {
         labels: activityTypeGroups.map(activityTypeGroup => ({
           key: activityTypeGroup.id,
-          label: activityTypeGroup.name,
+          label: activityTypeGroup.name
         })),
 
-        values: flatMap(schoolYears, year => 
+        values: flatMap(schoolYears, year =>
           map(year.terms, term => {
             const { inSchoolStudents } = term;
-            const counts = reportUtils.countMultipleWith(inSchoolStudents, student => {
-              return map(student.activities, 'activityType.activityTypeGroup.id');
-            });
+            const counts = reportUtils.countMultipleWith(
+              inSchoolStudents,
+              student => {
+                return map(
+                  student.activities,
+                  'activityType.activityTypeGroup.id'
+                );
+              }
+            );
             return {
               termId: term.id,
               label: term.name,
@@ -299,16 +329,16 @@ module.exports = context => {
                 defaults[group.id] = 0;
                 return defaults;
               }, {}),
-              ...counts,
+              ...counts
             };
           })
-        ),
+        )
       },
 
       genders: byGenders && {
         labels: enums.genders.map(gender => ({
           key: gender,
-          label: gender,
+          label: gender
         })),
         values: flatMap(schoolYears, year =>
           map(year.terms, term => {
@@ -321,33 +351,39 @@ module.exports = context => {
                 defaults[gender] = 0;
                 return defaults;
               }, {}),
-              ...counts,
+              ...counts
             };
-          })  
+          })
         )
       },
 
       races: byRaces && {
         labels: enums.races.map(race => ({
           key: race,
-          label: race,
+          label: race
         })),
         values: flatMap(schoolYears, year =>
           map(year.terms, term => {
             const { inSchoolStudents } = term;
-            const counts = countBy(inSchoolStudents, student => student.race || 'N/A');
+            const counts = countBy(
+              inSchoolStudents,
+              student => student.race || 'N/A'
+            );
             return {
               termId: term.id,
               label: term.name,
-              ...enums.races.reduce((defaults, race) => {
-                defaults[race] = 0;
-                return defaults;
-              }, { 'N/A': 0 }),
-              ...counts,
+              ...enums.races.reduce(
+                (defaults, race) => {
+                  defaults[race] = 0;
+                  return defaults;
+                },
+                { 'N/A': 0 }
+              ),
+              ...counts
             };
-          })  
+          })
         )
-      },
+      }
     };
 
     return data;

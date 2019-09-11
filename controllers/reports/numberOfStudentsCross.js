@@ -4,11 +4,10 @@ const uniq = require('lodash/uniq');
 const validationError = require('../../utils/validationError');
 const enums = require('../../enums');
 
-
 function getBarWidth(barCount) {
-  if(barCount <= 10) return 30;
-  if(barCount <= 20) return 20;
-  if(barCount <= 30) return 10;
+  if (barCount <= 10) return 30;
+  if (barCount <= 20) return 20;
+  if (barCount <= 30) return 10;
 
   return 5;
 }
@@ -25,22 +24,23 @@ module.exports = context => {
     'iepRole',
     'race',
     'gender',
-    'activityGroupTypes',
+    'activityGroupTypes'
   ];
 
   return async function createNumberOfStudentsCrossReport(options) {
-    const {
+    const { startYearId, startTermId, criteria1, criteria2 } = options;
+
+    if (!criteria1 || !criteria2)
+      throw validationError('You must select 2 categories to graph');
+    if (!validCriteria.includes(criteria1))
+      throw validationError(`Invalid criteria "${criteria1}"`);
+    if (!validCriteria.includes(criteria2))
+      throw validationError(`Invalid criteria "${criteria2}"`);
+
+    const reportData = await reportUtils.getSingleTermReportData({
       startYearId,
-      startTermId,
-      criteria1,
-      criteria2,
-    } = options;
-
-    if(!criteria1 || !criteria2) throw validationError('You must select 2 categories to graph');
-    if(!validCriteria.includes(criteria1)) throw validationError(`Invalid criteria "${criteria1}"`);
-    if(!validCriteria.includes(criteria2)) throw validationError(`Invalid criteria "${criteria2}"`);
-
-    const reportData = await reportUtils.getSingleTermReportData({startYearId, startTermId});
+      startTermId
+    });
     const {
       schoolSettings,
       inSchoolStudents,
@@ -48,19 +48,31 @@ module.exports = context => {
       term,
       schoolYear,
       disabilities,
-      activityTypeGroups,
+      activityTypeGroups
     } = reportData;
 
-    const students = criteria1 === 'postSchoolOutcome' || criteria2 === 'postSchoolOutcome'
-      ? postSchoolStudents
-      : inSchoolStudents;
+    const students =
+      criteria1 === 'postSchoolOutcome' || criteria2 === 'postSchoolOutcome'
+        ? postSchoolStudents
+        : inSchoolStudents;
 
     const reportName = getTitleFromCriteria(criteria1, criteria2);
-    const studentGroups = countStudentsByTwoCategories(students, criteria1, criteria2, reportData);
+    const studentGroups = countStudentsByTwoCategories(
+      students,
+      criteria1,
+      criteria2,
+      reportData
+    );
     const criteria1Labels = getCriteriaLabels(criteria1, reportData);
     const criteria2Labels = getCriteriaLabels(criteria2, reportData);
-    const values = Object.entries(studentGroups).map(([label, counts]) => ({ label, ...counts }));
-    const barCount = Object.values(studentGroups).reduce((count, value) => count + Object.values(value).length, 0);
+    const values = Object.entries(studentGroups).map(([label, counts]) => ({
+      label,
+      ...counts
+    }));
+    const barCount = Object.values(studentGroups).reduce(
+      (count, value) => count + Object.values(value).length,
+      0
+    );
     const barSize = getBarWidth(barCount);
     const columnWidth = columnWidths[criteria1];
     const data = { labels: criteria2Labels, values };
@@ -80,7 +92,7 @@ module.exports = context => {
       studentGroups,
 
       criteria1Labels,
-      criteria2Labels,
+      criteria2Labels
     };
 
     return resultData;
@@ -96,7 +108,7 @@ const criteriaNames = {
   disability: 'Disabilities',
   activityGroupTypes: 'Activity Group',
   race: 'Race',
-  gender: 'Gender',
+  gender: 'Gender'
 };
 
 const columnWidths = {
@@ -108,7 +120,7 @@ const columnWidths = {
   race: 50,
   gender: 100,
   disability: 25,
-  activityGroupTypes: 75,
+  activityGroupTypes: 75
 };
 
 const criteriaLabels = {
@@ -116,20 +128,20 @@ const criteriaLabels = {
     return [
       {
         key: 'Post-Secondary Education',
-        label: 'Post-Secondary Education',
+        label: 'Post-Secondary Education'
       },
       {
         key: 'Post-School Employment',
-        label: 'Post-School Employment',
+        label: 'Post-School Employment'
       },
       {
         key: 'Other',
-        label: 'Other',
+        label: 'Other'
       },
       {
         key: 'Both',
-        label: 'Both',
-      },
+        label: 'Both'
+      }
     ];
   },
 
@@ -137,24 +149,24 @@ const criteriaLabels = {
     return [
       {
         key: 'No Data',
-        label: 'No Data',
+        label: 'No Data'
       },
       {
         key: 'low',
-        label: 'Low',
+        label: 'Low'
       },
       {
         key: 'medium',
-        label: 'Medium',
+        label: 'Medium'
       },
       {
         key: 'high',
-        label: 'High',
+        label: 'High'
       },
       {
         key: 'ultra',
         label: 'Ultra'
-      },
+      }
     ];
   },
 
@@ -162,20 +174,20 @@ const criteriaLabels = {
     return [
       {
         key: 'hasSelfDeterminationSkills',
-        label: 'Self-Determination Skills',
+        label: 'Self-Determination Skills/self advocacy training'
       },
       {
         key: 'hasIndependentLivingSkills',
-        label: 'Independent-Living Skills',
+        label: 'Independent-Living Skills'
       },
       {
         key: 'hasTravelSkills',
-        label: 'Travel Skills',
+        label: 'Travel Skills'
       },
       {
         key: 'hasSocialSkills',
-        label: 'Social Skills',
-      },
+        label: 'Social Skills'
+      }
     ];
   },
 
@@ -183,24 +195,24 @@ const criteriaLabels = {
     return [
       {
         key: 'attendance',
-        label: 'Attendance',
+        label: 'Attendance'
       },
       {
         key: 'behavior',
-        label: 'Behavior',
+        label: 'Behavior'
       },
       {
         key: 'engagement',
-        label: 'Engagement',
+        label: 'Engagement'
       },
       {
         key: 'english',
-        label: 'English',
+        label: 'English'
       },
       {
         key: 'math',
-        label: 'Math',
-      },
+        label: 'Math'
+      }
     ];
   },
 
@@ -208,26 +220,26 @@ const criteriaLabels = {
     return [
       {
         key: 'Attended',
-        label: 'Attended',
+        label: 'Attended'
       },
       {
         key: 'Introduced',
         label: 'Introduced',
-        value: 3,
+        value: 3
       },
       {
         key: 'Reviewed progress',
         label: 'Reviewed progress',
-        value: 1,
+        value: 1
       },
       {
         key: 'Made suggestions',
-        label: 'Made suggestions',
+        label: 'Made suggestions'
       },
       {
         key: 'Led most of the meeting',
-        label: 'Led most of the meeting',
-      },
+        label: 'Led most of the meeting'
+      }
     ];
   },
 
@@ -236,41 +248,44 @@ const criteriaLabels = {
       ...reportData.disabilities.map(disability => {
         return {
           key: disability.name,
-          label: disability.name,
-        }
+          label: disability.name
+        };
       }),
-      {key: 'NONE', label: 'NONE'},
+      { key: 'NONE', label: 'NONE' }
     ];
   },
 
   activityGroupTypes(reportData) {
     return reportData.activityTypeGroups.map(activityTypeGroup => ({
       key: activityTypeGroup.name,
-      label: activityTypeGroup.name,
+      label: activityTypeGroup.name
     }));
   },
 
   race() {
-    return Object.entries(enums.raceLabels).map(([ key, label ]) => ({ key, label }));
+    return Object.entries(enums.raceLabels).map(([key, label]) => ({
+      key,
+      label
+    }));
   },
 
   gender() {
     return enums.genders.map(gender => ({ key: gender, label: gender }));
-  },
+  }
 };
 
 const criteriaGroupers = {
   postSchoolOutcome(students) {
     const groups = groupBy(students, student => {
       const { postSchoolOutcome } = student;
-      if(!enums.postSchoolOutcomes.includes(postSchoolOutcome)) return 'Other';
+      if (!enums.postSchoolOutcomes.includes(postSchoolOutcome)) return 'Other';
       return postSchoolOutcome;
     });
     const defaultGroups = enums.postSchoolOutcomes.reduce((groups, key) => {
       groups[key] = [];
       return groups;
     }, {});
-    return {...defaultGroups, ...groups};
+    return { ...defaultGroups, ...groups };
   },
 
   riskLevel(students) {
@@ -280,17 +295,19 @@ const criteriaGroupers = {
       low: groups['low'] || [],
       medium: groups['medium'] || [],
       high: groups['high'] || [],
-      ultra: groups['ultra'] || [],
+      ultra: groups['ultra'] || []
     };
   },
 
   skillTraining(students) {
     const groups = groupMultipleWith(students, student => {
       const counts = [];
-      if(student.hasSelfDeterminationSkills) counts.push('hasSelfDeterminationSkills');
-      if(student.hasIndependentLivingSkills) counts.push('hasIndependentLivingSkills');
-      if(student.hasTravelSkills) counts.push('hasTravelSkills');
-      if(student.hasSocialSkills) counts.push('hasSocialSkills');
+      if (student.hasSelfDeterminationSkills)
+        counts.push('hasSelfDeterminationSkills');
+      if (student.hasIndependentLivingSkills)
+        counts.push('hasIndependentLivingSkills');
+      if (student.hasTravelSkills) counts.push('hasTravelSkills');
+      if (student.hasSocialSkills) counts.push('hasSocialSkills');
       return counts;
     });
 
@@ -298,7 +315,7 @@ const criteriaGroupers = {
       hasSelfDeterminationSkills: groups.hasSelfDeterminationSkills || [],
       hasIndependentLivingSkills: groups.hasIndependentLivingSkills || [],
       hasTravelSkills: groups.hasTravelSkills || [],
-      hasSocialSkills: groups.hasSocialSkills || [],
+      hasSocialSkills: groups.hasSocialSkills || []
     };
   },
 
@@ -306,11 +323,11 @@ const criteriaGroupers = {
     const groups = groupMultipleWith(students, student => {
       const { interventions } = student;
       const counts = [];
-      if(interventions.attendance) counts.push('attendance');
-      if(interventions.behavior) counts.push('behavior');
-      if(interventions.engagement) counts.push('engagement');
-      if(interventions.english) counts.push('english');
-      if(interventions.math) counts.push('math');
+      if (interventions.attendance) counts.push('attendance');
+      if (interventions.behavior) counts.push('behavior');
+      if (interventions.engagement) counts.push('engagement');
+      if (interventions.english) counts.push('english');
+      if (interventions.math) counts.push('math');
       return counts;
     });
 
@@ -319,7 +336,7 @@ const criteriaGroupers = {
       behavior: groups.behavior || [],
       engagement: groups.engagement || [],
       english: groups.english || [],
-      math: groups.math || [],
+      math: groups.math || []
     };
   },
 
@@ -331,21 +348,24 @@ const criteriaGroupers = {
       return groups;
     }, {});
 
-    return {...defaultGroups, ...groups};
+    return { ...defaultGroups, ...groups };
   },
 
   disability(students, reportData) {
     const { disabilities } = reportData;
-    const defaultGroups = disabilities.reduce((groups, disability) => {
-      groups[disability.name] = [];
-      return groups;
-    }, { NONE: [] });
+    const defaultGroups = disabilities.reduce(
+      (groups, disability) => {
+        groups[disability.name] = [];
+        return groups;
+      },
+      { NONE: [] }
+    );
     const groups = groupMultipleWith(students, student => {
       const { disabilities } = student;
-      if(!disabilities.length) return ['NONE'];
+      if (!disabilities.length) return ['NONE'];
       return student.disabilities.map(disability => disability.name);
     });
-    return {...defaultGroups, ...groups};
+    return { ...defaultGroups, ...groups };
   },
 
   activityGroupTypes(students, reportData) {
@@ -353,11 +373,14 @@ const criteriaGroupers = {
     const groups = groupMultipleWith(students, student => {
       return map(student.activities, 'activityType.activityTypeGroup.name');
     });
-    const defaultGroups = activityTypeGroups.reduce((groups, activityTypeGroup) => {
-      groups[activityTypeGroup.name] = [];
-      return groups;
-    }, {});
-    return {...defaultGroups, ...groups};
+    const defaultGroups = activityTypeGroups.reduce(
+      (groups, activityTypeGroup) => {
+        groups[activityTypeGroup.name] = [];
+        return groups;
+      },
+      {}
+    );
+    return { ...defaultGroups, ...groups };
   },
 
   race(students) {
@@ -368,7 +391,7 @@ const criteriaGroupers = {
       return groups;
     }, {});
 
-    return {...defaultGroups, ...groups};
+    return { ...defaultGroups, ...groups };
   },
 
   gender(students) {
@@ -379,32 +402,43 @@ const criteriaGroupers = {
       return groups;
     }, {});
 
-    return {...defaultGroups, ...groups};
-  },
+    return { ...defaultGroups, ...groups };
+  }
 };
 
 function getCriteriaLabels(criteria, reportData) {
-  if(!criteriaLabels.hasOwnProperty(criteria)) throw validationError(`Invalid criteria: "${criteria}"`);
+  if (!criteriaLabels.hasOwnProperty(criteria))
+    throw validationError(`Invalid criteria: "${criteria}"`);
   return criteriaLabels[criteria](reportData);
 }
 
 function groupStudentsByCriteria(students, criteria, reportData) {
-  if(!criteriaGroupers.hasOwnProperty(criteria)) throw validationError(`Invalid criteria: "${criteria}"`);
+  if (!criteriaGroupers.hasOwnProperty(criteria))
+    throw validationError(`Invalid criteria: "${criteria}"`);
   return criteriaGroupers[criteria](students, reportData);
 }
 
 function countStudentsByCriteria(students, criteria, reportData) {
   const groups = groupStudentsByCriteria(students, criteria, reportData);
-  return Object.entries(groups).reduce((counts, [ key, values ]) => {
+  return Object.entries(groups).reduce((counts, [key, values]) => {
     counts[key] = values.length;
     return counts;
   }, {});
 }
 
-function countStudentsByTwoCategories(students, criteria1, criteria2, reportData) {
+function countStudentsByTwoCategories(
+  students,
+  criteria1,
+  criteria2,
+  reportData
+) {
   const outerGroup = groupStudentsByCriteria(students, criteria1, reportData);
-  return Object.entries(outerGroup).reduce((crossedGroups, [ key, students ]) => {
-    crossedGroups[key] = countStudentsByCriteria(students, criteria2, reportData);
+  return Object.entries(outerGroup).reduce((crossedGroups, [key, students]) => {
+    crossedGroups[key] = countStudentsByCriteria(
+      students,
+      criteria2,
+      reportData
+    );
     return crossedGroups;
   }, {});
 }
@@ -418,10 +452,10 @@ function getTitleFromCriteria(criteria1, criteria2) {
 function groupMultipleWith(array, fn) {
   const { length } = array;
   let groups = {};
-  for(let i = 0; i < length; i++) {
+  for (let i = 0; i < length; i++) {
     const countKeys = uniq(fn(array[i], i, array));
-    for(let key of countKeys) {
-      if(!groups[key]) groups[key] = [];
+    for (let key of countKeys) {
+      if (!groups[key]) groups[key] = [];
       groups[key].push(array[i]);
     }
   }
@@ -434,5 +468,5 @@ module.exports.forTesting = {
   countStudentsByCriteria,
   countStudentsByTwoCategories,
   getTitleFromCriteria,
-  groupMultipleWith,
+  groupMultipleWith
 };
