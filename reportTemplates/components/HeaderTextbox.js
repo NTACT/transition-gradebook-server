@@ -1,6 +1,6 @@
 const React = require('react');
 
-const headerWithTextStyle = require('../styles/headerText');
+const headerTextboxStyle = require('../styles/headerTextbox');
 
 module.exports = ({
   data,
@@ -12,5 +12,5 @@ module.exports = ({
     className: "header-title"
   }, title), React.createElement("div", {
     className: "text-item"
-  }, data ? data : 'Not indicated'), React.createElement("style", null, headerWithTextStyle));
+  }, data ? data : 'Not indicated'), React.createElement("style", null, headerTextboxStyle));
 };
