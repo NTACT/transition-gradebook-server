@@ -6,7 +6,7 @@ module.exports = context => {
 
   function maybeKey(key) {
     const getValue = property(key);
-    return object => object ? getValue(object) : null;
+    return object => (object ? getValue(object) : null);
   }
 
   return async function runStudentRiskLongitudinalReport(options) {
@@ -17,10 +17,10 @@ module.exports = context => {
       startYear,
       startTerm,
       endYear,
-      endTerm,
+      endTerm
     } = reportData;
     const students = uniqBy(flatMap(terms, term => term.students), 'id');
-    
+
     reportData.studentInfo = reportData.terms.map(term => {
       term.student = term.students[0];
       return term.student;
@@ -37,10 +37,12 @@ module.exports = context => {
         const termStudents = map(terms, term => ({
           term,
           student: term.students.find(s => s.id === student.id) || null,
-          studentTermInfo: term.studentTermInfos.find(info => info.studentId === student.id) || {}
+          studentTermInfo:
+            term.studentTermInfos.find(info => info.studentId === student.id) ||
+            {}
         }));
         const students = map(termStudents, 'student');
-        const termInfos = map(termStudents, 'studentTermInfo')
+        const termInfos = map(termStudents, 'studentTermInfo');
         const maxRisk = findMaxRisk(map(compact(students), 'risk'));
         return {
           id: student.id,
@@ -57,46 +59,46 @@ module.exports = context => {
             disabilities: map(student.disabilities, 'name'),
             iep: {
               attended: student.attendedIepMeeting,
-              roleDetails: student.iepRole,
-            },
+              roleDetails: student.iepRole
+            }
           },
           riskFactors: {
             header: map(termStudents, ({ term, student }) => ({
               label: term.name,
-              risk: student ? student.risk : 'No Data',
+              risk: student ? student.risk : 'No Data'
             })),
             rows: [
               {
                 label: 'Percentage of time absent',
-                values: map(students, maybeKey('absentPercent')),
+                values: map(students, maybeKey('absentPercent'))
               },
               {
                 label: 'Behavior marks / referrals',
-                values: map(students, maybeKey('behaviorMarks')),
+                values: map(students, maybeKey('behaviorMarks'))
               },
               {
                 label: 'Suspended?',
-                values: map(students, maybeKey('suspended')),
+                values: map(students, maybeKey('suspended'))
               },
               {
                 label: 'GPA',
-                values: map(students, maybeKey('gpa')),
+                values: map(students, maybeKey('gpa'))
               },
               {
                 label: 'Failing English / LEA class?',
-                values: map(students, maybeKey('failingEnglish')),
+                values: map(students, maybeKey('failingEnglish'))
               },
               {
                 label: 'Failing math class?',
-                values: map(students, maybeKey('failingMath')),
+                values: map(students, maybeKey('failingMath'))
               },
               {
                 label: 'Failing other course(s)?',
-                values: map(students, maybeKey('failingOther')),
+                values: map(students, maybeKey('failingOther'))
               },
               {
                 label: 'On-track for grade level?',
-                values: map(students, maybeKey('onTrack')),
+                values: map(students, maybeKey('onTrack'))
               },
               {
                 label: 'Retained one or more years?',
@@ -104,38 +106,38 @@ module.exports = context => {
               },
               {
                 label: 'Number of schools attended K-present',
-                values: map(students, maybeKey('schoolsAttended')),
+                values: map(students, maybeKey('schoolsAttended'))
               },
               {
                 label: 'One or more extracurricular activities?',
-                values: map(students, maybeKey('hasExtracurricular')),
-              },
-            ],
+                values: map(students, maybeKey('hasExtracurricular'))
+              }
+            ]
           },
           studentNeeds: {
             header: [],
             rows: [
               {
                 label: 'Attendance',
-                values: map(students, maybeKey('interventions.attendance')),
+                values: map(students, maybeKey('interventions.attendance'))
               },
               {
                 label: 'Behavior',
-                values: map(students, maybeKey('interventions.behavior')),
+                values: map(students, maybeKey('interventions.behavior'))
               },
               {
                 label: 'Engagement',
-                values: map(students, maybeKey('interventions.engagement')),
+                values: map(students, maybeKey('interventions.engagement'))
               },
               {
                 label: 'English / ELA',
-                values: map(students, maybeKey('interventions.english')),
+                values: map(students, maybeKey('interventions.english'))
               },
               {
                 label: 'Mathematics',
-                values: map(students, maybeKey('interventions.math')),
-              },
-            ],
+                values: map(students, maybeKey('interventions.math'))
+              }
+            ]
           },
           iepRoles: termInfos.map(info => info.iepRole),
           graduationPlans: termInfos.map(info => info.hasGraduationPlan),
@@ -143,7 +145,7 @@ module.exports = context => {
             header: [],
             rows: [
               {
-                label: 'Self-Determination Skills',
+                label: 'Self-Determination Skills/self advocacy training',
                 values: map(students, maybeKey('hasSelfDeterminationSkills'))
               },
               {
@@ -157,11 +159,11 @@ module.exports = context => {
               {
                 label: 'Social Skills',
                 values: map(students, maybeKey('hasSocialSkills'))
-              },
-            ],
+              }
+            ]
           }
         };
-      }),
+      })
     };
   };
 };

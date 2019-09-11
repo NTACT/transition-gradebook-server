@@ -3,7 +3,8 @@ module.exports = context => {
   const { map } = _;
   const { reportUtils } = context;
 
-  const isActivityGroupType = groupTypeName => activity => activity.activityType.activityTypeGroup.name === groupTypeName;
+  const isActivityGroupType = groupTypeName => activity =>
+    activity.activityType.activityTypeGroup.name === groupTypeName;
   const isCareerAwarenessActivity = isActivityGroupType('Career Awareness');
   const isWorkExperienceActivity = isActivityGroupType('Work Experience');
   const isInclusionActivity = isActivityGroupType('Inclusion');
@@ -14,7 +15,7 @@ module.exports = context => {
     label: activity.activityType.name,
     frequency: activity.frequency,
     events: activity.events.length,
-    notes: activity.notes || '',
+    notes: activity.notes || ''
   });
 
   return async function runStudentReport(options) {
@@ -22,7 +23,7 @@ module.exports = context => {
       schoolSettings,
       inSchoolStudents,
       schoolYear,
-      term,
+      term
     } = await reportUtils.getSingleTermReportData(options);
 
     return {
@@ -32,7 +33,7 @@ module.exports = context => {
       activitiesHeaders: {
         events: '# Events',
         frequency: 'Frequency',
-        notes: 'Notes',
+        notes: 'Notes'
       },
       students: map(inSchoolStudents, student => {
         return {
@@ -51,37 +52,32 @@ module.exports = context => {
             disabilities: map(student.disabilities, 'name'),
             iep: {
               attended: student.attendedIepMeeting,
-              roleDetails: student.iepRole,
+              roleDetails: student.iepRole
             },
-            postSchoolGoals: student.postSchoolGoals,
+            postSchoolGoals: student.postSchoolGoals
           },
 
-          careerAwareness: _
-            .chain(student.activities)
+          careerAwareness: _.chain(student.activities)
             .filter(isCareerAwarenessActivity)
             .map(toActivityRow)
             .value(),
 
-          paidWork: _
-            .chain(student.activities)
+          paidWork: _.chain(student.activities)
             .filter(isWorkExperienceActivity)
             .map(toActivityRow)
             .value(),
 
-          inclusion: _
-            .chain(student.activities)
+          inclusion: _.chain(student.activities)
             .filter(isInclusionActivity)
             .map(toActivityRow)
             .value(),
 
-          support: _
-            .chain(student.activities)
+          support: _.chain(student.activities)
             .filter(isStudentSupportsActivity)
             .map(toActivityRow)
             .value(),
 
-          collaboration: _
-            .chain(student.activities)
+          collaboration: _.chain(student.activities)
             .filter(isCollaborationActivity)
             .map(toActivityRow)
             .value(),
@@ -89,95 +85,96 @@ module.exports = context => {
           riskFactors: [
             {
               label: 'Suspended this year?',
-              value: student.suspended,
+              value: student.suspended
             },
             {
               label: 'Failing math class?',
-              value: student.failingMath,
+              value: student.failingMath
             },
             {
               label: 'Retained one or more years?',
-              value: student.retained,
+              value: student.retained
             },
             {
               label: 'Percentage of time absent',
-              value: student.absentPercent == null ? 'No Data' : (student.absentPercent + '%'),
+              value:
+                student.absentPercent == null
+                  ? 'No Data'
+                  : student.absentPercent + '%'
             },
             {
               label: 'GPA',
-              value: student.gpa,
+              value: student.gpa
             },
             {
               label: 'Failing other course(s)?',
-              value: student.failingOther,
+              value: student.failingOther
             },
             {
               label: 'Number of schools attended K-present',
-              value: student.schoolsAttended,
+              value: student.schoolsAttended
             },
             {
               label: 'Number of behavior marks / office referrals this year',
-              value: student.behaviorMarks,
+              value: student.behaviorMarks
             },
             {
               label: 'Failing English / LEA class?',
-              value: student.failingEnglish,
+              value: student.failingEnglish
             },
             {
               label: 'On-track for grade level?',
-              value: student.onTrack,
+              value: student.onTrack
             },
             {
               label: 'Participated in at least one extracurricular activitiy?',
-              value: student.hasExtracurricular,
-            },
+              value: student.hasExtracurricular
+            }
           ],
 
           skills: [
             {
-              label: 'Self-determination Skills',
-              value: student.hasSelfDeterminationSkills,
+              label: 'Self-determination Skills/self advocacy training',
+              value: student.hasSelfDeterminationSkills
             },
             {
               label: 'Independent-living Skills',
-              value: student.hasIndependentLivingSkills,
+              value: student.hasIndependentLivingSkills
             },
             {
               label: 'Travel Skills',
-              value: student.hasTravelSkills,
+              value: student.hasTravelSkills
             },
             {
               label: 'Social Skills',
-              value: student.hasSocialSkills,
-            },
+              value: student.hasSocialSkills
+            }
           ],
 
           studentNeeds: [
             {
               label: 'Attendance',
-              value: student.interventions.attendance,
+              value: student.interventions.attendance
             },
             {
               label: 'Behavior',
-              value: student.interventions.behavior,
+              value: student.interventions.behavior
             },
             {
               label: 'Engagement',
-              value: student.interventions.engagement,
+              value: student.interventions.engagement
             },
             {
               label: 'English / LEA',
-              value: student.interventions.english,
+              value: student.interventions.english
             },
             {
               label: 'Math',
-              value: student.interventions.math,
-            },
+              value: student.interventions.math
+            }
           ]
         };
       })
     };
-
-  }
-
+  };
 };

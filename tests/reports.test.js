@@ -560,7 +560,7 @@ describe('reports', () => {
     expect(Array.isArray(receivedSkillsTraining)).toBeTruthy();
     expect(receivedSkillsTraining.length).toEqual(4);
     /*
-      Self-determination skills
+      Self-determination skills/self advocacy training
       Independent living skills
       Travel skills
       Social skills
@@ -1303,7 +1303,7 @@ describe('reports', () => {
           .filter(t => t.gradeLevel !== 'Post-school')
           .filter(t => {
             switch (label) {
-              case 'Self-Determination Skills':
+              case 'Self-Determination Skills/self advocacy training':
                 return t.hasSelfDeterminationSkills;
               case 'Independent-Living Skills':
                 return t.hasIndependentLivingSkills;
