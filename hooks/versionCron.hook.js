@@ -23,7 +23,7 @@ module.exports = {
 
   versionEmailTemplate(notes, version) {
     return `
-      <p> Version ${version} of Transition Gradebook available for installation. Please update your app to the latest version. </p>
+      <p> Version ${version} of the Transition Gradebook is available for installation. Please update your app to the latest version. </p>
       <p> Changes from the latest version: </p>
       <ul>
         ${notes.reduce((acc, note) => `${acc}<li>${note}</li>`, "")}
@@ -37,7 +37,7 @@ module.exports = {
 
       const packageData = (await this.getFileFromGithub(this.serverRepoURL('package.json'))).data;
     
-      const latestVersion = await rapid.models.User.query().select('latestVersion').where('admin', true).first();
+      const { latestVersion } = await rapid.models.User.query().select('latestVersion').where('admin', true).first();
       if (semver.lt(version, packageData.version) && latestVersion !== version) {
         rapid.log('Newer version is available, sending email to admins.');
 
