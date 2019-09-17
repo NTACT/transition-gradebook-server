@@ -3,6 +3,10 @@
     "notes": [
         "Add student CSV import.",
         "Allow adding activities to multiple students at once.",
-        "Add multi-day select to the activity event calendar dropdown."
+        "Add multi-day select to the activity event calendar dropdown.",
+        "New student level field: Has 504 plan",
+        "New Pre-ETS activities report",
+        "Manage school years page for admins, enabling school year deletion",
+        "Notify admins of new app versions via email"
     ]
 }]
