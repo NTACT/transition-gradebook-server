@@ -46,6 +46,7 @@ module.exports = context => {
       gradeLevel,
       postSchoolOutcome,
       exitCategory,
+      plan504,
     }) {
       const existingStudent = await Student.query().where('studentId', studentId).first();
       if(existingStudent) {
@@ -59,6 +60,7 @@ module.exports = context => {
         gender,
         race,
         ell,
+        plan504,
       });
 
       const insertedDisabilities = await this.setStudentDisabilities(student.id, disabilities);
@@ -96,6 +98,7 @@ module.exports = context => {
       gradeLevel,
       postSchoolOutcome,
       exitCategory,
+      plan504,
     }) {
       const existingStudent = studentId && await Student.query().where('studentId', studentId).first();
       if(existingStudent && existingStudent.id !== id) {
@@ -108,6 +111,7 @@ module.exports = context => {
         lastName,
         birthday,
         ell,
+        plan504,
         gender,
         race,
       });
@@ -156,6 +160,21 @@ module.exports = context => {
         .andWhere('studentId', studentId);
     }
 
+    async removeAllStudentsFromYear(schoolYearId){
+      // Get all term ids to remove the student from 
+      const termIds = await models.Term.query()
+        .where('schoolYearId', schoolYearId)
+        .map(term => term.id);
+
+      // Delete student's activitities
+      await models.Activity.query().delete()
+        .where('schoolYearId', schoolYearId);
+
+      // Remove student term info for each term
+      return StudentTermInfo.query().delete()
+      .whereIn('termId', termIds)    ;  
+    }
+
     // Gets students in a school year
     async getStudentsBySchoolYear(schoolYearId) {
       const schoolYear = await SchoolYear
@@ -197,8 +216,12 @@ module.exports = context => {
           {label: 'Last Name',    value: 'student.lastName'},
           {label: 'Student Id',   value: 'student.studentId'},
           {label: 'Gender',       value: 'student.gender'},
+          {label: 'ELL',          value: 'student.ell'},
+          {label: 'Date of Birth', value: 'student.birthday'},
           {label: 'Grade Level',  value: 'gradeLevel'},
           {label: 'Race',         value: s => s.student.race || 'N/A'},
+          {label: 'Exit Category', value: 'exitCategory'},
+          {label: 'Post-school outcomes', value: 'postSchoolOutcome'},
           {label: 'Disabilities', value: s => s.student.disabilities.map(d => d.name).join(' ')},
         ]
       })
@@ -403,7 +426,8 @@ module.exports = context => {
       postSchoolGoals,
       hasGraduationPlan,
     })  {
-      const existingStudent = studentId && await Student.query().where('studentId', studentId).first();
+
+      const existingStudent = studentId && await Student.query().where('studentId', studentId).first(); 
       if(existingStudent && existingStudent.id !== id) {
         throw validationError(`A student already exists with the id "${studentId}"`);
       }
@@ -461,6 +485,20 @@ module.exports = context => {
         postSchoolGoals,
         hasGraduationPlan,
     });
+    
+      // insert student record into term table
+      const terms = await Term.query().where('schoolYearId', schoolYearId);
+      const studentTermData =  terms.map(term => {
+          return {
+            termId: term.id,
+            studentId: id,
+            gradeLevel: gradeLevel,
+            exitCategory: gradeLevel === 'Post-school' ? (student.exitCategory || null) : null,
+            postSchoolOutcome: gradeLevel === 'Post-school' ? (student.postSchoolOutcome || null) : null,
+          };
+        });
+
+      await StudentTermInfo.query().insert(studentTermData);
 
       const studentTermInfos = await StudentTermInfo
         .query()

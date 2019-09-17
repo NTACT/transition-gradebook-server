@@ -15,6 +15,7 @@ module.exports = context => {
           firstName: {type: 'string', minLength: 1, maxLength: 255},
           lastName: {type: 'string', minLength: 1, maxLength: 255},
           ell: {type: 'boolean'},
+          plan504: {type: 'boolean'},
           gender: {type: 'string', enum: enums.genders},
           race: {type: 'string', enum: enums.races},
           birthday: {type: 'string', format: 'date-time'},

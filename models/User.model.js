@@ -18,6 +18,7 @@ module.exports = context => {
           email: {type: 'string', minLength: 6},
           password: {type: 'string', minLength: 8},
           admin: {type: 'boolean'},
+          latestVersion: {type: 'string'}, 
         },
       };
     }

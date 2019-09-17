@@ -1,9 +1,9 @@
 {
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "test": "export NODE_ENV=test && jest",
     "start": "rapid",
-    "forever": "export NODE_ENV='production' && forever start -a --uid 'tgb' /home/bitnami/sites/tgb/current/server/index.js",
+    "forever": "export NODE_ENV='production' && forever start -a --uid 'tgb' /home/bitnami/sites/tgb/current/index.js",
     "watch": "export NODE_ENV='development' && rapid watch",
     "migrate": "rapid migrate",
     "seed": "rapid seed",

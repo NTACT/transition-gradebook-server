@@ -1,6 +1,8 @@
 module.exports = context => ({
   numberOfStudentsCross: require('./numberOfStudentsCross')(context),
-  numberOfStudentsLongitudinal: require('./numberOfStudentsLongitudinal')(context),
+  numberOfStudentsLongitudinal: require('./numberOfStudentsLongitudinal')(
+    context
+  ),
   numberOfStudentsStandard: require('./numberOfStudentsStandard')(context),
   postSchoolStudent: require('./postSchoolStudent')(context),
   riskRoster: require('./riskRoster')(context),
@@ -10,4 +12,5 @@ module.exports = context => ({
   studentActivities: require('./studentActivities')(context),
   studentRiskStandard: require('./studentRiskStandard')(context),
   studentRiskLongitudinal: require('./studentRiskLongitudinal')(context),
+  preEts: require('./preEts')(context)
 });

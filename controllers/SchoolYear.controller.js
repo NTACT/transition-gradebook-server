@@ -69,6 +69,12 @@ module.exports = context => {
       return SchoolYear.query().where('id', schoolYear.id).eager('terms.studentTermInfos.student').first();
     }
 
+    async deleteSchoolYear(schoolYearId){
+      // Delete school year term info
+      await models.Term.query().delete().where('schoolYearId', schoolYearId);
+      return SchoolYear.query().delete().where('id', schoolYearId);
+    }
+
     async getCurrentSchoolYear() {
       return SchoolYear.query()
         .where('year', '<=', new Date().getFullYear())
