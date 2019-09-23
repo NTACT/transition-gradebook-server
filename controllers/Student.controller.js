@@ -283,7 +283,7 @@ module.exports = context => {
         // If a grade is specified, make sure its a number for percent or gpa, or valid letter grade for letter
         if(gradeValue) {
           const gradeType = realObject.gradeType;
-          if(gradeType === 'percent' || gradeType === 'gpa' && isNaN(+gradeValue)) {
+          if((gradeType === 'percent' || gradeType === 'gpa') && isNaN(+gradeValue)) {
             realObject.grade = null;
           } else if(gradeType === 'letter') {
             realObject.grade = enums.gradeLetters.find(letter => letter === gradeValue.toUpperCase()) || null;
