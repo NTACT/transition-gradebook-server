@@ -488,29 +488,32 @@ module.exports = context => {
     
       // insert student record into term table
       const terms = await Term.query().where('schoolYearId', schoolYearId);
-      const studentTermData =  terms.map(term => {
-          return {
-            termId: term.id,
-            studentId: id,
-            gradeLevel: gradeLevel,
-            exitCategory: gradeLevel === 'Post-school' ? (student.exitCategory || null) : null,
-            postSchoolOutcome: gradeLevel === 'Post-school' ? (student.postSchoolOutcome || null) : null,
-          };
-        });
-
-      await StudentTermInfo.query().insert(studentTermData);
-
-      const studentTermInfos = await StudentTermInfo
-        .query()
-        .where('termId', termId)
-        .andWhere({studentId: id})
-        .patch({
-          ...otherFields,
-        })
-        .eager('student.disabilities')
-        .returning('*');
-
-      return studentTermInfos;
+      const termIds = terms.map(term => term.id);  
+      const existingTermInfos = await StudentTermInfo.query().whereIn('termId', termIds);
+      // The student exists but the school year was dropped and re-created.
+      if(!existingTermInfos.length) {
+        return await StudentTermInfo
+          .query()
+          .insert(terms.map(term => {
+              return {
+                termId: term.id,
+                studentId: existingStudent.id,
+                gradeLevel,
+                ...otherFields,
+              }
+            })
+          );
+      } else {
+        return await StudentTermInfo
+          .query()
+          .where('termId', termId)
+          .andWhere({studentId: id})
+          .patch({
+            ...otherFields
+          })
+          .eager('student.disabilities')
+          .returning('*');
+      }
     }
 
     async importFromCSV(schoolYearId, termId, csvData) {
