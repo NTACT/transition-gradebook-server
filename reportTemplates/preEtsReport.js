@@ -12,6 +12,8 @@ const {
 
 const chunk = require('lodash/chunk');
 
+const partition = require('lodash/partition');
+
 const SingleTermReportTitle = require('./components/SingleTermReportTitle');
 
 class PreEtsReport extends Component {
@@ -23,15 +25,24 @@ class PreEtsReport extends Component {
       schoolYear,
       appliedFilters
     } = this.props.data;
-    const studentPages = chunk(inSchoolStudents, 6);
+    let counter = 1;
+    const [firstPage, remaining] = partition(inSchoolStudents, () => {
+      const isFirstPage = counter <= 6;
+      counter += 1;
+      return isFirstPage;
+    }); // first page has 6 students, remaining has 7. 
+
+    const studentPages = [firstPage, ...chunk(remaining, 7)];
     return React.createElement(React.Fragment, null, React.createElement(SingleTermReportTitle, {
       reportName: "Pre-ETS Activity Report",
       schoolSettings: schoolSettings,
       schoolYear: schoolYear,
       term: term,
       appliedFilters: appliedFilters
-    }), studentPages.map(students => React.createElement(PreETSTable, {
-      inSchoolStudents: students
+    }), studentPages.map((students, index) => React.createElement(PreETSTable, {
+      key: `page_${index + 1}`,
+      inSchoolStudents: students,
+      pageNumber: index + 1
     })));
   }
 
@@ -54,15 +65,17 @@ function TableRow(props) {
 
 const PreETSTable = (_ref) => {
   let {
-    inSchoolStudents
+    inSchoolStudents,
+    pageNumber
   } = _ref,
-      rest = _objectWithoutProperties(_ref, ["inSchoolStudents"]);
+      rest = _objectWithoutProperties(_ref, ["inSchoolStudents", "pageNumber"]);
 
   return React.createElement("table", _extends({
     style: {
       width: '100%',
       textAlign: 'center',
-      borderCollapse: 'collapse'
+      borderCollapse: 'collapse',
+      pageBreakAfter: pageNumber > 1 ? 'always' : 'avoid'
     }
   }, rest), React.createElement("thead", null, React.createElement("tr", {
     style: {
