@@ -133,7 +133,11 @@ describe('students', () => {
     testModel.gradeType.value = 'percent';
     const invalidGradeTest = studentController.csvDataToObjects([testModel], disabilities)[0];
     expect(invalidGradeTest.grade).toEqual(null);
+    testModel.grade.value = '75';
+    const validPercentTest = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(validPercentTest.grade).toEqual('75');
     testModel.gradeType.value = 'letter';
+    testModel.grade.value = 'B+';
     const validGradeTest = studentController.csvDataToObjects([testModel], disabilities)[0];
     expect(validGradeTest.grade).toEqual('B+');
 
