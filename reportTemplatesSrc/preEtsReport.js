@@ -1,6 +1,7 @@
 const React = require('react');
 const { Component } = React;
 const chunk = require('lodash/chunk');
+const partition = require('lodash/partition');
 const SingleTermReportTitle = require('./components/SingleTermReportTitle');
 
 class PreEtsReport extends Component {
@@ -13,7 +14,15 @@ class PreEtsReport extends Component {
       appliedFilters
     } = this.props.data;
 
-    const studentPages = chunk(inSchoolStudents, 6);
+    let counter = 1;
+    const [firstPage, remaining] = partition(inSchoolStudents, () => {
+      const isFirstPage = counter <= 6;
+      counter += 1;
+      return isFirstPage;
+    });
+    // first page has 6 students, remaining has 7. 
+    const studentPages = [firstPage, ...chunk(remaining, 7)];
+
 
     return (
       <React.Fragment>
@@ -24,7 +33,7 @@ class PreEtsReport extends Component {
           term={term}
           appliedFilters={appliedFilters}
         />
-        {studentPages.map(students => <PreETSTable inSchoolStudents={students} />)}
+        {studentPages.map((students, index) => <PreETSTable key={`page_${index + 1}`} inSchoolStudents={students} pageNumber={index + 1} />)}
       </React.Fragment>
     );
   }
@@ -44,12 +53,13 @@ function TableRow(props) {
   );
 }
 
-const PreETSTable = ({ inSchoolStudents, ...rest }) => (
+const PreETSTable = ({ inSchoolStudents, pageNumber, ...rest }) => (
   <table
     style={{
       width: '100%',
       textAlign: 'center',
-      borderCollapse: 'collapse'
+      borderCollapse: 'collapse',
+      pageBreakAfter: pageNumber > 1 ? 'always' : 'avoid'
     }}
     {...rest}
   >
