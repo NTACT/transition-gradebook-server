@@ -488,24 +488,13 @@ module.exports = context => {
     
       // insert student record into term table
       const terms = await Term.query().where('schoolYearId', schoolYearId);
-      const studentTermData =  terms.map(term => {
-          return {
-            termId: term.id,
-            studentId: id,
-            gradeLevel: gradeLevel,
-            exitCategory: gradeLevel === 'Post-school' ? (student.exitCategory || null) : null,
-            postSchoolOutcome: gradeLevel === 'Post-school' ? (student.postSchoolOutcome || null) : null,
-          };
-        });
-
-      await StudentTermInfo.query().insert(studentTermData);
-
+      const termIds = terms.map(term => term.id);  
       const studentTermInfos = await StudentTermInfo
         .query()
-        .where('termId', termId)
+        .whereIn('termId', termIds)
         .andWhere({studentId: id})
         .patch({
-          ...otherFields,
+          ...otherFields
         })
         .eager('student.disabilities')
         .returning('*');
