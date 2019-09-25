@@ -8,6 +8,7 @@ module.exports = context => ({
   riskRoster: require('./riskRoster')(context),
   riskSummary: require('./riskSummary')(context),
   summary: require('./summary')(context),
+  trackToGraduate: require('./trackToGraduate')(context),
   student: require('./student')(context),
   studentActivities: require('./studentActivities')(context),
   studentRiskStandard: require('./studentRiskStandard')(context),
