@@ -1,5 +1,8 @@
 const React = require('react');
-const { first, capitalize, chunk, truncate } = require('lodash');
+const first = require('lodash/first'); 
+const capitalize = require('lodash/capitalize'); 
+const chunk = require('lodash/chunk'); 
+const truncate = require('lodash/truncate'); 
 const riskRosterTableStyle = require('../styles/riskRosterTable');
 const { riskIndicatorKeys } = require('../styles/riskIndicatorColors');
 const AtRisk = require('./AtRisk');
