@@ -67,6 +67,37 @@ module.exports = context => {
       ctx.response.body = stream;
     })
 
+    .get('/reports/trackToGraduate', middleware.auth(), async ctx => {
+      ctx.request.socket.setTimeout(timeout);
+      const reportName = 'trackToGraduate';
+      const template = require('../reportTemplates/trackToGraduateReport');
+      const {
+        startYearId,
+        startTermId,
+        grades,
+        disabilities,
+        riskLevels,
+        supportNeeded,
+        races
+      } = ctx.request.query;
+      const options = {
+        startYearId: +startYearId,
+        startTermId: +startTermId,
+        gradesFilter: grades,
+        disabilitiesFilter: disabilities,
+        riskLevelsFilter: riskLevels,
+        supportNeededFilter: supportNeeded,
+        racesFilter: races
+      };
+      const data = await controllers.reportController.runReport(
+        reportName,
+        options
+      );
+      const html = template(data);
+      const stream = await createPDF(siteUrl, html);
+      ctx.response.body = stream;
+    })
+
     .get('/reports/preEts', middleware.auth(), async ctx => {
       ctx.request.socket.setTimeout(timeout);
       const reportName = 'preEts';
