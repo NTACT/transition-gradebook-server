@@ -1,11 +1,12 @@
 const React = require('react');
 
-const {
-  first,
-  capitalize,
-  chunk,
-  truncate
-} = require('lodash');
+const first = require('lodash/first');
+
+const capitalize = require('lodash/capitalize');
+
+const chunk = require('lodash/chunk');
+
+const truncate = require('lodash/truncate');
 
 const riskRosterTableStyle = require('../styles/riskRosterTable');
 
@@ -52,7 +53,7 @@ const RiskRosterHeader = () => React.createElement("div", {
 }, "Category"), React.createElement("div", {
   className: "risk-roster-header-student risk-roster-ell"
 }, "ELL"), React.createElement("div", {
-  className: "risk-roster-header-risk"
+  className: "risk-roster-header-risk text-center"
 }, "On Track to Graduate"), React.createElement("div", {
   className: "risk-roster-header-risk",
   style: {

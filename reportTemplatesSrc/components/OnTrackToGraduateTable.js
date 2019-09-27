@@ -39,7 +39,7 @@ const RiskRosterHeader = () =>
     <div className='risk-roster-header-student risk-roster-ell'>
       ELL
     </div>
-    <div className='risk-roster-header-risk'>
+    <div className='risk-roster-header-risk text-center'>
       On Track to Graduate
     </div>
     <div className='risk-roster-header-risk' style={{width: '1000px'}}/>

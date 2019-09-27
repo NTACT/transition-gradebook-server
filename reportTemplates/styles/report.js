@@ -40,6 +40,10 @@ module.exports = `
     margin-bottom: 20px;
   }
 
+  .text-center {
+    text-align: center;
+  }
+
   @font-face {
     font-family: Open Sans;
     font-weight: 400;
