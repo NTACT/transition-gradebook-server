@@ -333,6 +333,7 @@ module.exports = context => {
       iepRole,
       postSchoolGoals,
       hasGraduationPlan,
+      plan504,
     }) {
       const existingStudent = await Student.query().where('studentId', studentId).first();
       if(existingStudent) {
@@ -349,6 +350,7 @@ module.exports = context => {
         gender,
         race,
         ell,
+        plan504,
       });
 
       await this.setStudentDisabilities(student.id, disabilities);
@@ -432,6 +434,7 @@ module.exports = context => {
       iepRole,
       postSchoolGoals,
       hasGraduationPlan,
+      plan504,
     })  {
 
       const existingStudent = studentId && await Student.query().where('studentId', studentId).first(); 
@@ -452,6 +455,7 @@ module.exports = context => {
         ell,
         gender,
         race,
+        plan504,
       });
 
       await Student.query().where('id', id).first().patch(fields);
