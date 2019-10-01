@@ -491,6 +491,7 @@ module.exports = context => {
         iepRole,
         postSchoolGoals,
         hasGraduationPlan,
+        gradeLevel,
     });
     
       // insert student record into term table
@@ -505,7 +506,6 @@ module.exports = context => {
               return {
                 termId: term.id,
                 studentId: existingStudent.id,
-                gradeLevel,
                 ...otherFields,
               }
             })
