@@ -541,6 +541,27 @@ module.exports = context => {
         }
       }));
     }
+
+    async getAllStudents() {
+      const schoolYears = await SchoolYear
+        .query()
+        .eager('terms(first).studentTermInfos.student', {
+          first: query => query.first()
+        })
+
+      return schoolYears
+        .map(schoolYear => 
+          schoolYear.terms[0].studentTermInfos.map(t => {
+            return {
+              student: t.student,
+              schoolYearId: schoolYear.id,
+            }
+          })
+        )
+        .reduce((list, currentYearList) => {
+          return [...list, ...currentYearList]
+        }, []);
+    }
   }
 
   return StudentController;

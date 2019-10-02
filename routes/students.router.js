@@ -22,5 +22,9 @@ module.exports = context => {
       success(ctx, {
         studentTermInfo: await studentController.updateStudentTermInfo(studentTermInfoId, ctx.request.body)
       });
+    }).get('/students/all', auth(), async ctx => {
+      success(ctx, {
+        students: await studentController.getAllStudents()
+      });
     });
 };
