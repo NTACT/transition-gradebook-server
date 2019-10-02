@@ -133,7 +133,11 @@ describe('students', () => {
     testModel.gradeType.value = 'percent';
     const invalidGradeTest = studentController.csvDataToObjects([testModel], disabilities)[0];
     expect(invalidGradeTest.grade).toEqual(null);
+    testModel.grade.value = '75';
+    const validPercentTest = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(validPercentTest.grade).toEqual('75');
     testModel.gradeType.value = 'letter';
+    testModel.grade.value = 'B+';
     const validGradeTest = studentController.csvDataToObjects([testModel], disabilities)[0];
     expect(validGradeTest.grade).toEqual('B+');
 
@@ -166,6 +170,25 @@ describe('students', () => {
     const invalidRaceLabelTest = studentController.csvDataToObjects([testModel], disabilities)[0];
     expect(invalidRaceLabelTest.race).toEqual(null);
 
+    // boolloney
+    testModel.ell.value = 'Yes';
+    const validYesOne = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(validYesOne.ell).toEqual(true);
+    testModel.ell.value = 'y';
+    const validYesTwo = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(validYesTwo.ell).toEqual(true);  
+    testModel.ell.value = '1';
+    const validYesThree = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(validYesThree.ell).toEqual(true);  
+    testModel.ell.value.booleanValue = true;
+    const validYesFour = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(validYesFour.ell).toEqual(true);  
+    testModel.ell.value = '0';
+    const validYesFive = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(validYesFive.ell).toEqual(false);  
+    testModel.ell.value = null;
+    const validYesSix = studentController.csvDataToObjects([testModel], disabilities)[0];
+    expect(validYesSix.ell).toEqual(null);  
   });
 });
 

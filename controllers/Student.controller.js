@@ -242,8 +242,15 @@ module.exports = context => {
           switch(columnBeingMapped.type) {
             case csvDataHelper.types.boolean: 
               // This will be a YesNoBoolean (used to have null/undefined treated differently than false)
-              const yesNoValue = csvDataHelper.yesNoBooleanFromString(columnValue);
-              columnValue = yesNoValue ? yesNoValue.booleanValue : null;
+              // It should come across as { value: { booleanValue: true|false }}, but try to convert the strings to a YesNoBoolean if not
+              if(!columnValue) {
+                break;
+              } else if(typeof columnValue.booleanValue === 'undefined') {
+                const yesNoValue = csvDataHelper.yesNoBooleanFromString(columnValue);
+                columnValue = yesNoValue ? yesNoValue.booleanValue : null;
+              } else {
+                columnValue = columnValue.booleanValue;
+              }
               break;
             case csvDataHelper.types.enum: 
             case csvDataHelper.types.array:
@@ -283,7 +290,7 @@ module.exports = context => {
         // If a grade is specified, make sure its a number for percent or gpa, or valid letter grade for letter
         if(gradeValue) {
           const gradeType = realObject.gradeType;
-          if(gradeType === 'percent' || gradeType === 'gpa' && isNaN(+gradeValue)) {
+          if((gradeType === 'percent' || gradeType === 'gpa') && isNaN(+gradeValue)) {
             realObject.grade = null;
           } else if(gradeType === 'letter') {
             realObject.grade = enums.gradeLetters.find(letter => letter === gradeValue.toUpperCase()) || null;
@@ -488,29 +495,32 @@ module.exports = context => {
     
       // insert student record into term table
       const terms = await Term.query().where('schoolYearId', schoolYearId);
-      const studentTermData =  terms.map(term => {
-          return {
-            termId: term.id,
-            studentId: id,
-            gradeLevel: gradeLevel,
-            exitCategory: gradeLevel === 'Post-school' ? (student.exitCategory || null) : null,
-            postSchoolOutcome: gradeLevel === 'Post-school' ? (student.postSchoolOutcome || null) : null,
-          };
-        });
-
-      await StudentTermInfo.query().insert(studentTermData);
-
-      const studentTermInfos = await StudentTermInfo
-        .query()
-        .where('termId', termId)
-        .andWhere({studentId: id})
-        .patch({
-          ...otherFields,
-        })
-        .eager('student.disabilities')
-        .returning('*');
-
-      return studentTermInfos;
+      const termIds = terms.map(term => term.id);  
+      const existingTermInfos = await StudentTermInfo.query().whereIn('termId', termIds);
+      // The student exists but the school year was dropped and re-created.
+      if(!existingTermInfos.length) {
+        return await StudentTermInfo
+          .query()
+          .insert(terms.map(term => {
+              return {
+                termId: term.id,
+                studentId: existingStudent.id,
+                gradeLevel,
+                ...otherFields,
+              }
+            })
+          );
+      } else {
+        return await StudentTermInfo
+          .query()
+          .where('termId', termId)
+          .andWhere({studentId: id})
+          .patch({
+            ...otherFields
+          })
+          .eager('student.disabilities')
+          .returning('*');
+      }
     }
 
     async importFromCSV(schoolYearId, termId, csvData) {
