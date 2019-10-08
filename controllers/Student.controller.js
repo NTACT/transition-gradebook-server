@@ -333,6 +333,7 @@ module.exports = context => {
       iepRole,
       postSchoolGoals,
       hasGraduationPlan,
+      plan504,
     }) {
       const existingStudent = await Student.query().where('studentId', studentId).first();
       if(existingStudent) {
@@ -349,6 +350,7 @@ module.exports = context => {
         gender,
         race,
         ell,
+        plan504,
       });
 
       await this.setStudentDisabilities(student.id, disabilities);
@@ -432,6 +434,7 @@ module.exports = context => {
       iepRole,
       postSchoolGoals,
       hasGraduationPlan,
+      plan504,
     })  {
 
       const existingStudent = studentId && await Student.query().where('studentId', studentId).first(); 
@@ -452,6 +455,7 @@ module.exports = context => {
         ell,
         gender,
         race,
+        plan504,
       });
 
       await Student.query().where('id', id).first().patch(fields);
@@ -491,6 +495,7 @@ module.exports = context => {
         iepRole,
         postSchoolGoals,
         hasGraduationPlan,
+        gradeLevel,
     });
     
       // insert student record into term table
@@ -505,7 +510,6 @@ module.exports = context => {
               return {
                 termId: term.id,
                 studentId: existingStudent.id,
-                gradeLevel,
                 ...otherFields,
               }
             })
@@ -536,6 +540,27 @@ module.exports = context => {
           await this.importNewStudent(schoolYearId, {...row});
         }
       }));
+    }
+
+    async getAllStudents() {
+      const schoolYears = await SchoolYear
+        .query()
+        .eager('terms(first).studentTermInfos.student', {
+          first: query => query.first()
+        })
+
+      return schoolYears
+        .map(schoolYear => 
+          schoolYear.terms[0].studentTermInfos.map(t => {
+            return {
+              student: t.student,
+              schoolYearId: schoolYear.id,
+            }
+          })
+        )
+        .reduce((list, currentYearList) => {
+          return [...list, ...currentYearList]
+        }, []);
     }
   }
 

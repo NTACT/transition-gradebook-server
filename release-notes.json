@@ -9,4 +9,10 @@
         "Manage school years page for admins, enabling school year deletion",
         "Notify admins of new app versions via email"
     ]
+},{
+    "version": "1.0.4",
+    "notes": [
+        "Bug fixes to student CSV import.",
+        "New On Track to Graduate report"
+    ]
 }]
