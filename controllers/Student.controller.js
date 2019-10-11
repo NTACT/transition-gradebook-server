@@ -223,6 +223,7 @@ module.exports = context => {
           {label: 'Exit Category', value: 'exitCategory'},
           {label: 'Post-school outcomes', value: 'postSchoolOutcome'},
           {label: 'Disabilities', value: s => s.student.disabilities.map(d => d.name).join(' ')},
+          {label: 'Has 504 Plan', value: 'student.plan504'}
         ]
       })
       .parse(studentTermInfos);
