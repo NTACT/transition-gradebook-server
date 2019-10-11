@@ -208,7 +208,11 @@ module.exports = context => {
         })
         .first();
 
-      const studentTermInfos = schoolYear.terms[0].studentTermInfos;
+      let studentTermInfos = schoolYear.terms[0].studentTermInfos;
+      
+      studentTermInfos.map(termObj =>{
+        termObj.student.birthday = termObj.student.birthday.toISOString().split(/[T ]/i, 1)[0]; 
+      })
 
       return new Json2csvParser({
         fields: [
