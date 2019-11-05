@@ -208,7 +208,11 @@ module.exports = context => {
         })
         .first();
 
-      const studentTermInfos = schoolYear.terms[0].studentTermInfos;
+      let studentTermInfos = schoolYear.terms[0].studentTermInfos;
+      
+      studentTermInfos.map(termObj =>{
+        termObj.student.birthday = termObj.student.birthday.toISOString().split(/[T ]/i, 1)[0]; 
+      })
 
       return new Json2csvParser({
         fields: [
@@ -223,6 +227,7 @@ module.exports = context => {
           {label: 'Exit Category', value: 'exitCategory'},
           {label: 'Post-school outcomes', value: 'postSchoolOutcome'},
           {label: 'Disabilities', value: s => s.student.disabilities.map(d => d.name).join(' ')},
+          {label: 'Has 504 Plan', value: 'student.plan504'}
         ]
       })
       .parse(studentTermInfos);
