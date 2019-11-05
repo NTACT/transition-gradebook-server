@@ -15,4 +15,10 @@
         "Bug fixes to student CSV import.",
         "New On Track to Graduate report"
     ]
+},{
+    "version": "1.0.5",
+    "notes": [
+        "Bug fixes to student CSV import.",
+        "Add has 504 plan to CSV export"
+    ]
 }]
