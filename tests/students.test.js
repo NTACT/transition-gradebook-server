@@ -122,6 +122,35 @@ describe('students', () => {
     }
   });
 
+  rapidTest('Should be able to import an existing student to new year with CSV', async rapid => {
+    const { studentController, schoolYearController } = rapid.controllers;
+    const { Student, SchoolYear } = rapid.models;
+    const [yearFrom, yearTo] = await SchoolYear.query().eager('terms.studentTermInfos');
+    const studentId = uuid();
+    await studentController.createStudent(yearFrom.id, {
+      studentId,
+      firstName: 'test',
+      lastName: 'stu',
+      birthday: new Date().toISOString(),
+      gender: 'male',
+      race: 'WH7',
+      ell: true,
+      disabilities: [],
+      gradeLevel: '8',
+      plan504: true,
+    })
+    const csvModel = generateCSVUploadModel();
+    csvModel.studentId.value = studentId;
+    const csv = [csvModel];
+    const term = yearTo.terms[0].id;
+    await studentController.importFromCSV(yearTo.id, term, csv);
+    const schoolYear = await schoolYearController.getSchoolYear(yearTo.id);
+    const studentTerm = schoolYear.terms.find(t => t.id === term);
+    const students = studentTerm.studentTermInfos.map(st => st.student).reduce((list, current) => [...list, current], []);
+    const updatedStudent = students.find(stu => stu.studentId == studentId);
+    expect(updatedStudent).toBeDefined();
+  });
+
   rapidTest('CSV import -> csvDataToObjects tests', async rapid => {
     const { studentController} = rapid.controllers;
     const { Student, SchoolYear, Disability } = rapid.models;
