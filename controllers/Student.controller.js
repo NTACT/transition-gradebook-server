@@ -520,6 +520,22 @@ module.exports = context => {
             })
           );
       } else {
+        const existingInfo = await StudentTermInfo
+          .query()
+          .where('termId', termId)
+          .andWhere({studentId: id});
+        // The student exists, but isn't in the given year's terms
+        if(!existingInfo.length) {
+          return await StudentTermInfo
+            .query()
+            .insert({
+              termId,
+              studentId: id,
+              ...otherFields
+            })
+            .eager('student.disabilities')
+            .returning('*');
+        }
         return await StudentTermInfo
           .query()
           .where('termId', termId)
