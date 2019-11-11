@@ -21,4 +21,9 @@
         "Bug fixes to student CSV import.",
         "Add has 504 plan to CSV export"
     ]
+},{
+    "version": "1.0.6",
+    "notes": [
+        "Fix issue that prevented existing students from being imported into new year."
+    ]
 }]
