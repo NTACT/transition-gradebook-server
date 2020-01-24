@@ -26,4 +26,9 @@
     "notes": [
         "Fix issue that prevented existing students from being imported into new year."
     ]
+},{
+    "version": "1.0.7",
+    "notes": [
+        "Add app version number to About page."
+    ]
 }]
