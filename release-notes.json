@@ -31,4 +31,9 @@
     "notes": [
         "Add app version number to About page."
     ]
+},{
+    "version": "1.0.8",
+    "notes": [
+        "Allow the database SSL reject unauthorized option to be set using the DATABASE_SSL_REJECT_UNAUTHORIZED environmental variable."
+    ]
 }]
