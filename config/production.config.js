@@ -44,7 +44,12 @@ module.exports = {
 
   database: {
     ssl: true,
-    connection: databaseUrl,
+    connection: {
+      connectionString: databaseUrl,
+      ssl: {
+        rejectUnauthorized: false
+      }
+    },
   },
 
   emailService: emailAddress && emailPassword && {
