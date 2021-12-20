@@ -47,7 +47,7 @@ module.exports = {
     connection: {
       connectionString: databaseUrl,
       ssl: {
-        rejectUnauthorized: false
+        rejectUnauthorized: env.DATABASE_SSL_REJECT_UNAUTHORIZED !== 'false'
       }
     },
   },
