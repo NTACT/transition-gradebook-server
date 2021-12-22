@@ -5,7 +5,8 @@
   "logo": "https://avatars1.githubusercontent.com/u/44178248?s=200&v=4",
   "keywords": ["node"],
   "addons": [
-    "heroku-postgresql"
+    "heroku-postgresql",
+    "mailgun"
   ],
   "scripts": {
     "postdeploy": "npm run migrate && npm run seed"
