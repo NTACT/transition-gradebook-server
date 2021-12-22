@@ -23,6 +23,7 @@ module.exports = {
           from: `"Transition Gradebook" <${emailService.fromEmail}>`,
         };
 
+        console.log(`Sending email`, options);
         transport.sendMail(options, (error, info) => {
           if (error) {
             reject(error);
