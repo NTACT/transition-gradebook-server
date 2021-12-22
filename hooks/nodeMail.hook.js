@@ -20,7 +20,7 @@ module.exports = {
       return new Promise((resolve, reject) => {
         options = {
           ...options,
-          from: `"Transition Gradebook " <${emailService.fromEmail}>`,
+          from: `"Transition Gradebook" <${emailService.fromEmail}>`,
         };
 
         transport.sendMail(options, (error, info) => {
