@@ -18,15 +18,7 @@ module.exports = {
 
     const nodemailer = require('nodemailer');
 
-    const transport = nodemailer.createTransport({
-      host: emailService.host,
-      port: emailService.port,
-      secure: emailService.secure || emailService.port === 465,
-      auth: {
-        user: emailService.auth.user,
-        pass: emailService.auth.pass,
-      },
-    });
+    const transport = nodemailer.createTransport(emailService);
 
     function noOpSend() {
       return Promise.resolve();
