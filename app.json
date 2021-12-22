@@ -1,7 +1,6 @@
 {
   "name": "Transition Gradebook",
   "description": "",
-  "repository": "https://github.com/NTACT/transition-gradebook-server",
   "logo": "https://avatars1.githubusercontent.com/u/44178248?s=200&v=4",
   "keywords": ["node"],
   "addons": [
@@ -10,5 +9,23 @@
   ],
   "scripts": {
     "postdeploy": "npm run migrate && npm run seed"
+  },
+  "env": {
+    "SECRET": {
+      "description": "A secret key for signing and verifying tokens used for authentication.",
+      "generator": "secret"
+    },
+    "DATABASE_SSL_REJECT_UNAUTHORIZED": {
+      "description": "Fixes PG self-signed certificate error.",
+      "value": "false"
+    },
+    "PGSSLMODE": {
+      "description": "Fixes PG self-signed certificate error.",
+      "value": "no-verify"
+    },
+    "EMAIL_FROM": {
+      "description": "Email address users will see when they receive emails from the app.",
+      "value": "noreply@example.com"
+    }
   }
 }
