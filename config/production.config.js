@@ -31,8 +31,8 @@ let emailService = null;
 if(mailgunEnabled) {
   const createMailgunTransport = require('nodemailer-mailgun-transport');
   emailService = createMailgunTransport({
-    api_key: MAILGUN_API_KEY,
-    domain: MAILGUN_DOMAIN
+    api_key: mailgunApiKey,
+    domain: mailgunDomain
   });
 } else  {
   if(!emailAddress) console.warn(
