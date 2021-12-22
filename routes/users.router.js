@@ -140,6 +140,7 @@ module.exports = context => {
         await context.sendMail(mailOptions)
         success(ctx, { message: `An email was sent to ${username}.`, uid: uid});
       } catch(error) {
+        console.error(error);
         fail(ctx, 'The email service was unable to send an email.', 500);
       }
     })
