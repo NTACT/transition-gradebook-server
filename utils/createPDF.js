@@ -24,7 +24,8 @@ module.exports = function (siteUrl, data) {
         contents: {
           default: `<span style="font-family: arial; font-size:10px">Page {{page}}/{{pages}} ${getDateString()}</span>`, // fallback value
         }
-      }
+      },
+      childProcessOptions: { env: { OPENSSL_CONF: '/dev/null' }
     };
     pdf.create(html, options).toStream((error, stream) => {
       if(error) return reject(error);
